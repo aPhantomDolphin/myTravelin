@@ -9,8 +9,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import io.realm.ObjectServerError;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.SyncConfiguration;
+import io.realm.SyncCredentials;
+import io.realm.SyncUser;
 
 public class MainActivity extends AppCompatActivity {
     private Realm realm;
@@ -22,7 +26,34 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         realm = Realm.getDefaultInstance();
+
+        //I hardcoded in a login and password. I am trying to figure out
+        //how to actually sync with the online server
+        SyncCredentials credentials = SyncCredentials.usernamePassword("stephen", "password");
+        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+        SyncUser user = SyncUser.current();
+
+        //setting the realm up remotely is differently from locally
+        //realm here is cloud, one above is local. need to debug
+        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
+        SyncConfiguration config = user.createConfiguration(url).build();
+        Realm actualRealm = Realm.getInstance(config);
+
+        SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
+            @Override
+            public void onSuccess(SyncUser user) {
+                SyncConfiguration config = user.getDefaultConfiguration();
+                Realm realm = Realm.getInstance(config);
+                // Use Realm
+            }
+
+            @Override
+            public void onError(ObjectServerError error) {
+                // Handle error
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
