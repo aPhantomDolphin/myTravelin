@@ -13,34 +13,28 @@ public class User extends RealmObject {
     @PrimaryKey
     private int id;
 
-    @Required
     private String password;
 
-    @Required
     private String email;
 
     private int age;
 
-    @Required
     private String gender;
 
     private RealmList<Post> review;
 
     private int reportCount = 0;
 
-    @Required
     private String bio;
 
     private RealmList<Tag> interests;
 
     private RealmList<User> blocked;
 
-    @Required
     private String name;
 
     private RealmList<DirectMessage> messages;
 
-    @Required
     private String username;
 
     private String profilePictureURL;
