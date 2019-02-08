@@ -30,11 +30,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmList;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import io.realm.SyncConfiguration;
+import io.realm.SyncCredentials;
+import io.realm.SyncUser;
+import io.realm.ObjectServerError;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.activation.*;
+//import javax.activation.*;
+
+
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -66,6 +81,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +90,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+
+        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+        SyncUser user = SyncUser.current();
+        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
+        SyncConfiguration config = user.createConfiguration(url).build();
+        realm = Realm.getInstance(config);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -223,6 +246,49 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return false;
     }
 
+    public void resetPassword(String email) {
+        // Recipient's email ID needs to be mentioned.
+        String recipient = email;
+
+        // Sender's email ID needs to be mentioned
+        String from = "web@gmail.com";
+
+        // Assuming you are sending email from localhost
+        String host = "localhost";
+
+        // Get system properties
+        Properties properties = System.getProperties();
+
+        // Setup mail server
+        properties.setProperty("mail.smtp.host", host);
+
+        // Get the default Session object.
+        Session session = Session.getDefaultInstance(properties);
+
+        try {
+            // Create a default MimeMessage object.
+            MimeMessage message = new MimeMessage(session);
+
+            // Set From: header field of the header.
+            message.setFrom(new InternetAddress(from));
+
+            // Set To: header field of the header.
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+
+            // Set Subject: header field
+            message.setSubject("This is the Subject Line!");
+
+            // Now set the actual message
+            message.setText("This is actual message");
+
+            // Send message
+            Transport.send(message);
+            System.out.println("Sent message successfully....");
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+        }
+    }
+
     /**
      * Shows the progress UI and hides the login form.
      */
@@ -337,7 +403,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             query.equalTo("email", mEmail);
             RealmResults<User> result1 = query.findAll();
             if (result1.size() != 0) {
-                if (result1.get(0) != mPassword) {
+                if (result1.get(0).getPassword() != mPassword) {
                     System.out.println("Invalid email or password");
                 } else {
                     // TODO: implement successful login
@@ -345,13 +411,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         }
 
+
+        // TODO: move to correct class
         public void createUser(String email, String pass) {
             SyncCredentials credentials = SyncCredentials.usernamePassword(email, pass, true);
             // TODO: implement account created
         }
 
         // TODO: change variable names
-        public RealmResults<T> genderFilter(String gender) {
+        // TODO: move to correct class
+        public RealmResults<User> genderFilter(String gender) {
             RealmQuery<User> query = realm.where(User.class);
             query.equalTo("gender", gender);
 
@@ -359,8 +428,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return resultGender;
         }
 
-        // TODO: change variable names;
-        public RealmList<T> reviewQuery(String username) {
+        // TODO: change variable names
+        // TODO: move to correct class
+        public RealmList<Post> reviewQuery(String username) {
             RealmQuery<User> query = realm.where(User.class);
             query.equalTo("username", username);
 
