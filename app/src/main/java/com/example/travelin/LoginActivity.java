@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
+import android.net.Credentials;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -192,19 +196,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email.matches(".*@purdue\\.edu");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        boolean containsNum;
+        boolean correctLength = false;
+        boolean containsSpecial = true;
+        boolean containsUpper;
+        boolean containsLower;
+
+        containsNum = password.matches(".*[0-9].*");
+        if ((password.length() > 4) && (password.length() < 32)) {
+            correctLength = true;
+        }
+        if (password.matches("[a-zA-Z0-9]*")) {
+            containsSpecial = false;
+        }
+        containsUpper = password.matches(".*[A-Z].*");
+        containsLower = password.matches(".*[a-z].*");
+
+        if ((containsNum == true) && (correctLength == true) && (containsSpecial == true)
+                && (containsUpper == true) && (containsLower == true)) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    //@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
@@ -301,8 +323,49 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mPassword;
 
         UserLoginTask(String email, String password) {
+
+            //sets email and password from login
+            //sets credentials to input information
             mEmail = email;
             mPassword = password;
+            boolean createUser = false;
+            SyncCredentials credentials = SyncCredentials.usernamePassword(mEmail, mPassword, createUser);
+
+            //Query the database to see if a user with that email address exists
+            //if no, print "invalid username or password"
+            RealmQuery<User> query = realm.where(User.class);
+            query.equalTo("email", mEmail);
+            RealmResults<User> result1 = query.findAll();
+            if (result1.size() != 0) {
+                if (result1.get(0) != mPassword) {
+                    System.out.println("Invalid email or password");
+                } else {
+                    // TODO: implement successful login
+                }
+            }
+        }
+
+        public void createUser(String email, String pass) {
+            SyncCredentials credentials = SyncCredentials.usernamePassword(email, pass, true);
+            // TODO: implement account created
+        }
+
+        // TODO: change variable names
+        public RealmResults<T> genderFilter(String gender) {
+            RealmQuery<User> query = realm.where(User.class);
+            query.equalTo("gender", gender);
+
+            RealmResults<User> resultGender = query.findAll();
+            return resultGender;
+        }
+
+        // TODO: change variable names;
+        public RealmList<T> reviewQuery(String username) {
+            RealmQuery<User> query = realm.where(User.class);
+            query.equalTo("username", username);
+
+            RealmResults<User> userReviews = query.findAll();
+            return userReviews.get(0).getReviews();
         }
 
         @Override
