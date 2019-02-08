@@ -27,6 +27,7 @@
 
         <LinearLayout
             android:id="@+id/email_login_form"
+            android:layout_marginTop="950px"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -39,7 +40,7 @@
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
+                    android:hint="Email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -54,7 +55,7 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
+                    android:hint="Password"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
@@ -73,14 +74,13 @@
                 android:text="@string/action_sign_up"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/sign_up_button"
-                style="?android:textAppearanceSmall"
+            <TextView
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textStyle="bold" />
+                android:text="Forgot Password?"
+                android:textAlignment="center" />
+
 
         </LinearLayout>
     </ScrollView>
