@@ -218,10 +218,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    //must be purdue.edu email
     private boolean isEmailValid(String email) {
         return email.matches(".*@purdue\\.edu");
     }
 
+
+    //password requires a number, special character,
+    //upper case letter, lower case letter,
+    //must be longer than 4 characters and shorter than 32 characters
     private boolean isPasswordValid(String password) {
         boolean containsNum;
         boolean correctLength = false;
@@ -244,6 +249,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
         return false;
+    }
+
+
+    public int generatePass() {
+        // TODO: write algorithm to generate random password
+        return 0;
     }
 
     public void resetPassword(String email) {
@@ -276,10 +287,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
 
             // Set Subject: header field
-            message.setSubject("This is the Subject Line!");
+            message.setSubject("Temporary Password");
 
             // Now set the actual message
-            message.setText("This is actual message");
+            message.setText("Below is the temporary password for your travelin account. " +
+                    "You may use this password to login and then change your password from your " +
+                    "profile settings.\n" + generatePass());
 
             // Send message
             Transport.send(message);
@@ -398,7 +411,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             SyncCredentials credentials = SyncCredentials.usernamePassword(mEmail, mPassword, createUser);
 
             //Query the database to see if a user with that email address exists
-            //if no, print "invalid username or password"
+            //if no, print "invalid email or password"
+            //if yes, login to the server
             RealmQuery<User> query = realm.where(User.class);
             query.equalTo("email", mEmail);
             RealmResults<User> result1 = query.findAll();
@@ -407,19 +421,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     System.out.println("Invalid email or password");
                 } else {
                     // TODO: implement successful login
+                    String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+                    SyncUser user = SyncUser.current();
+                    SyncUser.logIn(credentials, authURL);
                 }
             }
         }
 
 
         // TODO: move to correct class
+        // if the email and password are valid, create the account
+        // and automatically log them in. Otherwise, prompt
+        // them with the password requirements
         public void createUser(String email, String pass) {
             SyncCredentials credentials = SyncCredentials.usernamePassword(email, pass, true);
             // TODO: implement account created
+             if (isEmailValid(email) && (isPasswordValid(pass))) {
+                String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+                SyncUser user = SyncUser.current();
+                SyncUser.logIn(credentials, authURL);
+            } else {
+                 System.out.println("Invalid username or password. Your password must " +
+                         "contain a number, a special character, an uppercase letter, " +
+                         "a lowercase letter, and be between 5 and 31 characters long");
+             }
+
         }
 
         // TODO: change variable names
         // TODO: move to correct class
+        // returns all users whose gender matches the gender
+        // in the filter
         public RealmResults<User> genderFilter(String gender) {
             RealmQuery<User> query = realm.where(User.class);
             query.equalTo("gender", gender);
@@ -430,6 +462,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // TODO: change variable names
         // TODO: move to correct class
+        // returns the reviews for the user with a given username
         public RealmList<Post> reviewQuery(String username) {
             RealmQuery<User> query = realm.where(User.class);
             query.equalTo("username", username);
