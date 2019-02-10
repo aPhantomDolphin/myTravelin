@@ -62,6 +62,10 @@ public class User extends RealmObject {
         this.password = password;
     }
 
+    public void setAge(int age) { this.age = age; }
+
+    public int getAge() { return age; }
+
     public String getEmail() {
         return email;
     }
@@ -118,6 +122,8 @@ public class User extends RealmObject {
         blocked.remove(user);
     }
 
+    public RealmList<User> getBlockedUsers() { return blocked; }
+
     public void addMessage(DirectMessage message) {
         messages.add(message);
     }
@@ -125,6 +131,8 @@ public class User extends RealmObject {
     public void deleteMessage(DirectMessage message) {
         messages.remove(message);
     }
+
+    public RealmList<DirectMessage> getMessages() { return messages; }
 
     public String getUsername() {
         return username;
