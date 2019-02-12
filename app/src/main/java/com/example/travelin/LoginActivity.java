@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.net.Credentials;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 
 
 import io.realm.Realm;
+import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmQuery;
@@ -81,7 +83,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
-    private Realm realm;
+    private Realm realm = null;
+    private RealmAsyncTask realmAsyncTask;
+    private static SyncConfiguration config;
+    private SyncUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,19 +96,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
-
-//        if (SyncUser.current() == null) {
-
- //       }
-        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-        String email = "burns140@purdue.edu";
-        String password = "testPassword";
-        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
-        SyncUser user = SyncUser.logIn(credentials, authURL);
-//        SyncUser user = SyncUser.current();
-        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
-        SyncConfiguration config = user.createConfiguration(url).build();
-        realm = Realm.getInstance(config);
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder() //
+                .name("travelin.realm") //
+                .build();
+        Realm.setDefaultConfiguration(config);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -124,35 +121,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 attemptLogin();
             }
         });
-//        mEmailSignUpButton.setOnClickListener();
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    public void UserLoginTask(String email, String password) {
-
-        //sets email and password from login
-        //sets credentials to input information
-        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
-        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-        SyncUser user = SyncUser.logIn(credentials, authURL);
-
-/**        RealmQuery<User> query = realm.where(User.class);
-        query.equalTo("email", email);
-        RealmResults<User> result1 = query.findAll();
-        if (result1.size() != 0) {
-            if (result1.get(0).getPassword() != password) {
-                System.out.println("Invalid email or password");
-            } else {
-                // TODO: implement successful login
-                String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-                SyncUser user = SyncUser.current();
-                SyncUser.logIn(credentials, authURL);
-            }
-        }
- **/
-    }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -220,45 +193,81 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+/**        if (!isPasswordValid(password)) {
+            mPasswordView.setError("Login failed: invalid email or password");
             focusView = mPasswordView;
             cancel = true;
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+        if (!isEmailValid(email)) {
+            mEmailView.setError("Login failed: invalid email or password");
             focusView = mEmailView;
             cancel = true;
         }
-
+**/
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
+        }
+        /**
+        else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-//            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
+         **/
+
+/**        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                String mEmail = "burns140@purdue.edu";
+                String mPassword = "password";
+                String authURLTest = "https://my-realm.us1a.cloud.realm.io";
+                SyncCredentials credentials = SyncCredentials.usernamePassword(mEmail, mPassword, true);
+                user = SyncUser.logIn(credentials, authURLTest);
+            }
+        };
+
+        Thread thread = new Thread(myRunnable);
+        thread.start();
+ **/
+        email = "burns140@purdue.edu";
+        password = "password";
+        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
+        RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
+            @Override
+            public void onSuccess(SyncUser result) {
+                user = result;
+            }
+
+            @Override
+            public void onError(ObjectServerError error) {
+                System.out.println("failed");
+            }
+        });
+
+        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
+        config = SyncUser.current().createConfiguration(url).build();
     }
 
-    //must be purdue.edu email
+    /**
+     * must be purdue email
+     */
     private boolean isEmailValid(String email) {
         return email.matches(".*@purdue\\.edu");
     }
 
 
-    //password requires a number, special character,
-    //upper case letter, lower case letter,
-    //must be longer than 4 characters and shorter than 32 characters
+    /**
+     * password requires a number, special character,
+     * upper case letter, lower case letter,
+     * must be longer than 4 characters and shorter than 32 characters
+     */
     private boolean isPasswordValid(String password) {
         boolean containsNum;
         boolean correctLength = false;
@@ -289,6 +298,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return 0;
     }
 
+    /**
+     * sends email to user for resetting password
+     * @param email
+     */
     public void resetPassword(String email) {
         // Recipient's email ID needs to be mentioned.
         String recipient = email;
@@ -429,13 +442,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        //private final String mEmail;
-        //private final String mPassword;
-
-
-
-
         // TODO: move to correct class
         // if the email and password are valid, create the account
         // and automatically log them in. Otherwise, prompt
@@ -448,33 +454,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 SyncUser user = SyncUser.current();
                 SyncUser.logIn(credentials, authURL);
             } else {
-                 System.out.println("Invalid username or password. Your password must " +
+                 System.out.println("Invalid email or password. Your password must " +
                          "contain a number, a special character, an uppercase letter, " +
                          "a lowercase letter, and be between 5 and 31 characters long");
              }
 
         }
 
-        // TODO: move to correct class
-        // returns all users whose gender matches the gender
-        // in the filter
-        public RealmResults<User> genderFilter(String gender) {
-            RealmQuery<User> query = realm.where(User.class);
-            query.equalTo("gender", gender);
 
-            RealmResults<User> resultGender = query.findAll();
-            return resultGender;
-        }
-
-        // TODO: move to correct class
-        // returns the reviews for the user with a given username
-        public RealmList<Post> reviewQuery(String username) {
-            RealmQuery<User> query = realm.where(User.class);
-            query.equalTo("username", username);
-
-            RealmResults<User> userReviews = query.findAll();
-            return userReviews.get(0).getReviews();
-        }
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -518,5 +505,39 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
+
+    public class LoginThread extends Thread {
+        public void run() {
+
+        }
+    }
+    /**
+     * TODO: move to correct class
+     * returns all users whose gender matches the gender
+     * in the filter
+     */
+    public RealmResults<User> genderFilter(String gender) {
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("gender", gender);
+
+        RealmResults<User> resultGender = query.findAll();
+        return resultGender;
+    }
+
+    /**
+     * TODO: move to correct class
+     * returns the reviews for the user with a given username
+     * @param username
+     * @return
+     */
+    public RealmList<Post> reviewQuery(String username) {
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("username", username);
+
+        RealmResults<User> userReviews = query.findAll();
+        return userReviews.get(0).getReviews();
+    }
 }
+
+
 
