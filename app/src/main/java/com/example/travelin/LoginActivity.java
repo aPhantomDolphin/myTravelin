@@ -91,8 +91,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
+
+//        if (SyncUser.current() == null) {
+
+ //       }
         String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-        SyncUser user = SyncUser.current();
+        String email = "burns140@purdue.edu";
+        String password = "testPassword";
+        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
+        SyncUser user = SyncUser.logIn(credentials, authURL);
+//        SyncUser user = SyncUser.current();
         String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
         SyncConfiguration config = user.createConfiguration(url).build();
         realm = Realm.getInstance(config);
@@ -120,6 +128,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    public void UserLoginTask(String email, String password) {
+
+        //sets email and password from login
+        //sets credentials to input information
+        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
+        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+        SyncUser user = SyncUser.logIn(credentials, authURL);
+
+/**        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email", email);
+        RealmResults<User> result1 = query.findAll();
+        if (result1.size() != 0) {
+            if (result1.get(0).getPassword() != password) {
+                System.out.println("Invalid email or password");
+            } else {
+                // TODO: implement successful login
+                String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+                SyncUser user = SyncUser.current();
+                SyncUser.logIn(credentials, authURL);
+            }
+        }
+ **/
     }
 
     private void populateAutoComplete() {
@@ -213,7 +245,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+//            mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -398,35 +430,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
+        //private final String mEmail;
+        //private final String mPassword;
 
-        UserLoginTask(String email, String password) {
 
-            //sets email and password from login
-            //sets credentials to input information
-            mEmail = email;
-            mPassword = password;
-            boolean createUser = false;
-            SyncCredentials credentials = SyncCredentials.usernamePassword(mEmail, mPassword, createUser);
-
-            //Query the database to see if a user with that email address exists
-            //if no, print "invalid email or password"
-            //if yes, login to the server
-            RealmQuery<User> query = realm.where(User.class);
-            query.equalTo("email", mEmail);
-            RealmResults<User> result1 = query.findAll();
-            if (result1.size() != 0) {
-                if (result1.get(0).getPassword() != mPassword) {
-                    System.out.println("Invalid email or password");
-                } else {
-                    // TODO: implement successful login
-                    String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-                    SyncUser user = SyncUser.current();
-                    SyncUser.logIn(credentials, authURL);
-                }
-            }
-        }
 
 
         // TODO: move to correct class
@@ -448,7 +455,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         }
 
-        // TODO: change variable names
         // TODO: move to correct class
         // returns all users whose gender matches the gender
         // in the filter
@@ -460,7 +466,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return resultGender;
         }
 
-        // TODO: change variable names
         // TODO: move to correct class
         // returns the reviews for the user with a given username
         public RealmList<Post> reviewQuery(String username) {
@@ -484,10 +489,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
+ //               if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+ //                   return pieces[1].equals(mPassword);
+   //             }
             }
 
             // TODO: register the new account here.
