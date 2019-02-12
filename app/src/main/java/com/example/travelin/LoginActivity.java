@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    //private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -177,9 +177,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -193,7 +190,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-/**        if (!isPasswordValid(password)) {
+        if (!isPasswordValid(password)) {
             mPasswordView.setError("Login failed: invalid email or password");
             focusView = mPasswordView;
             cancel = true;
@@ -205,13 +202,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             focusView = mEmailView;
             cancel = true;
         }
-**/
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
         }
         /**
+        I'm not entirely sure what this does but the UserLoginTask cannot be used
         else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -221,22 +219,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
          **/
 
-/**        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                String mEmail = "burns140@purdue.edu";
-                String mPassword = "password";
-                String authURLTest = "https://my-realm.us1a.cloud.realm.io";
-                SyncCredentials credentials = SyncCredentials.usernamePassword(mEmail, mPassword, true);
-                user = SyncUser.logIn(credentials, authURLTest);
-            }
-        };
 
-        Thread thread = new Thread(myRunnable);
-        thread.start();
- **/
-        email = "burns140@purdue.edu";
-        password = "password";
+        //email = "burns140@purdue.edu";
+        //password = "password";
         String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
         SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
         RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
@@ -437,80 +422,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        // TODO: move to correct class
-        // if the email and password are valid, create the account
-        // and automatically log them in. Otherwise, prompt
-        // them with the password requirements
-        public void createUser(String email, String pass) {
-            SyncCredentials credentials = SyncCredentials.usernamePassword(email, pass, true);
-            // TODO: implement account created
-             if (isEmailValid(email) && (isPasswordValid(pass))) {
-                String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-                SyncUser user = SyncUser.current();
-                SyncUser.logIn(credentials, authURL);
-            } else {
-                 System.out.println("Invalid email or password. Your password must " +
-                         "contain a number, a special character, an uppercase letter, " +
-                         "a lowercase letter, and be between 5 and 31 characters long");
-             }
-
-        }
 
 
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
- //               if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
- //                   return pieces[1].equals(mPassword);
-   //             }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
-
-    public class LoginThread extends Thread {
-        public void run() {
-
-        }
-    }
     /**
      * TODO: move to correct class
      * returns all users whose gender matches the gender
