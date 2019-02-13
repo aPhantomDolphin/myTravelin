@@ -3,6 +3,8 @@ package com.example.travelin;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Credentials;
 import android.support.annotation.MainThread;
@@ -88,10 +90,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static SyncConfiguration config;
     private SyncUser user;
 
+    //This is to keep the user logged in between sessions
+    SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //Checks if user is logged in
+        //If logged in, go to home page (Main activity)
+        sp = getSharedPreferences("login", MODE_PRIVATE);
+        if(sp.getBoolean("logged",false)){
+            goToHomeActivity();
+        }
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -219,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
          **/
 
-
+        //Following code is to create a user and log them in
         //email = "burns140@purdue.edu";
         //password = "password";
         String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
@@ -238,6 +251,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
         config = SyncUser.current().createConfiguration(url).build();
+
+        //Marking user as logged in and going to the home page of the app
+        sp.edit().putBoolean("logged", true).apply();
+        goToHomeActivity();
     }
 
     /**
@@ -450,6 +467,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         RealmResults<User> userReviews = query.findAll();
         return userReviews.get(0).getReviews();
     }
+
+    public void goToHomeActivity(){
+        Intent i = new Intent(this, HomeAcitvity.class);
+        startActivity(i);
+    }
+
 }
 
 
