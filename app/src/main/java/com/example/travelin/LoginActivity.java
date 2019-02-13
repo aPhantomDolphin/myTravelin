@@ -30,11 +30,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
+import io.realm.Realm;
+import io.realm.RealmAsyncTask;
+import io.realm.RealmConfiguration;
+import io.realm.RealmList;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import io.realm.SyncConfiguration;
+import io.realm.SyncCredentials;
+import io.realm.SyncUser;
+import io.realm.ObjectServerError;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.activation.*;
+//import javax.activation.*;
+
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -58,13 +73,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    //private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    private Realm realm = null;
+    private RealmAsyncTask realmAsyncTask;
+    private static SyncConfiguration config;
+    private SyncUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +93,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder() //
+                .name("travelin.realm") //
+                .build();
+        Realm.setDefaultConfiguration(config);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -93,11 +119,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 attemptLogin();
             }
         });
-//        mEmailSignUpButton.setOnClickListener();
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
+
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -149,9 +175,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -165,19 +188,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        if (!isPasswordValid(password)) {
+            mPasswordView.setError("Login failed: invalid email or password");
             focusView = mPasswordView;
             cancel = true;
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+        if (!isEmailValid(email)) {
+            mEmailView.setError("Login failed: invalid email or password");
             focusView = mEmailView;
             cancel = true;
         }
@@ -186,19 +205,52 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
+        }
+        /**
+        I'm not entirely sure what this does but the UserLoginTask cannot be used
+        else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
+         **/
+
+
+        //email = "burns140@purdue.edu";
+        //password = "password";
+        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
+        RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
+            @Override
+            public void onSuccess(SyncUser result) {
+                user = result;
+            }
+
+            @Override
+            public void onError(ObjectServerError error) {
+                System.out.println("failed");
+            }
+        });
+
+        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
+        config = SyncUser.current().createConfiguration(url).build();
     }
 
+    /**
+     * must be purdue email
+     */
     private boolean isEmailValid(String email) {
         return email.matches(".*@purdue\\.edu");
     }
 
+
+    /**
+     * password requires a number, special character,
+     * upper case letter, lower case letter,
+     * must be longer than 4 characters and shorter than 32 characters
+     */
     private boolean isPasswordValid(String password) {
         boolean containsNum;
         boolean correctLength = false;
@@ -221,6 +273,61 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
         return false;
+    }
+
+
+    public int generatePass() {
+        // TODO: write algorithm to generate random password
+        return 0;
+    }
+
+    /**
+     * sends email to user for resetting password
+     * @param email
+     */
+    public void resetPassword(String email) {
+        // Recipient's email ID needs to be mentioned.
+        String recipient = email;
+
+        // Sender's email ID needs to be mentioned
+        String from = "web@gmail.com";
+
+        // Assuming you are sending email from localhost
+        String host = "localhost";
+
+        // Get system properties
+        Properties properties = System.getProperties();
+
+        // Setup mail server
+        properties.setProperty("mail.smtp.host", host);
+
+        // Get the default Session object.
+        Session session = Session.getDefaultInstance(properties);
+
+        try {
+            // Create a default MimeMessage object.
+            MimeMessage message = new MimeMessage(session);
+
+            // Set From: header field of the header.
+            message.setFrom(new InternetAddress(from));
+
+            // Set To: header field of the header.
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+
+            // Set Subject: header field
+            message.setSubject("Temporary Password");
+
+            // Now set the actual message
+            message.setText("Below is the temporary password for your travelin account. " +
+                    "You may use this password to login and then change your password from your " +
+                    "profile settings.\n" + generatePass());
+
+            // Send message
+            Transport.send(message);
+            System.out.println("Sent message successfully....");
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+        }
     }
 
     /**
@@ -313,102 +420,34 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
+
     /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
+     * TODO: move to correct class
+     * returns all users whose gender matches the gender
+     * in the filter
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public RealmResults<User> genderFilter(String gender) {
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("gender", gender);
 
-        private final String mEmail;
-        private final String mPassword;
+        RealmResults<User> resultGender = query.findAll();
+        return resultGender;
+    }
 
-        UserLoginTask(String email, String password) {
+    /**
+     * TODO: move to correct class
+     * returns the reviews for the user with a given username
+     * @param username
+     * @return
+     */
+    public RealmList<Post> reviewQuery(String username) {
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("username", username);
 
-            //sets email and password from login
-            //sets credentials to input information
-            mEmail = email;
-            mPassword = password;
-            boolean createUser = false;
-            SyncCredentials credentials = SyncCredentials.usernamePassword(mEmail, mPassword, createUser);
-
-            //Query the database to see if a user with that email address exists
-            //if no, print "invalid username or password"
-            RealmQuery<User> query = realm.where(User.class);
-            query.equalTo("email", mEmail);
-            RealmResults<User> result1 = query.findAll();
-            if (result1.size() != 0) {
-                if (result1.get(0) != mPassword) {
-                    System.out.println("Invalid email or password");
-                } else {
-                    // TODO: implement successful login
-                }
-            }
-        }
-
-        public void createUser(String email, String pass) {
-            SyncCredentials credentials = SyncCredentials.usernamePassword(email, pass, true);
-            // TODO: implement account created
-        }
-
-        // TODO: change variable names
-        public RealmResults<T> genderFilter(String gender) {
-            RealmQuery<User> query = realm.where(User.class);
-            query.equalTo("gender", gender);
-
-            RealmResults<User> resultGender = query.findAll();
-            return resultGender;
-        }
-
-        // TODO: change variable names;
-        public RealmList<T> reviewQuery(String username) {
-            RealmQuery<User> query = realm.where(User.class);
-            query.equalTo("username", username);
-
-            RealmResults<User> userReviews = query.findAll();
-            return userReviews.get(0).getReviews();
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
+        RealmResults<User> userReviews = query.findAll();
+        return userReviews.get(0).getReviews();
     }
 }
+
+
 
