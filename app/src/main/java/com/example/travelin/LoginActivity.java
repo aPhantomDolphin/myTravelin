@@ -95,7 +95,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
-
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder() //
                 .name("travelin.realm") //
@@ -203,10 +202,39 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
+
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+        } else {
+            String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+            SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
+            RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
+                @Override
+                public void onSuccess(SyncUser result) {
+                    user = result;
+                }
+
+                @Override
+                public void onError(ObjectServerError error) {
+                    System.out.println("failed");
+                }
+            });
+
+            String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+            config = SyncUser.current().createConfiguration(url).build();
+
+            realm = Realm.getInstance(config);
+
+            RealmResults<User> users = realm.where(User.class)
+                    .equalTo("user.email", email)
+                    .findAll();
+
+            if (users.size() == 0) {
+                cancel = true;
+            }
         }
         /**
         I'm not entirely sure what this does but the UserLoginTask cannot be used
@@ -220,24 +248,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
          **/
 
 
-        //email = "burns140@purdue.edu";
-        //password = "password";
-        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
-        RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
-            @Override
-            public void onSuccess(SyncUser result) {
-                user = result;
-            }
+//        email = "burns140@purdue.edu";
+//        password = "passwordTest";
 
-            @Override
-            public void onError(ObjectServerError error) {
-                System.out.println("failed");
-            }
-        });
+        realm.beginTransaction();
+        User user = realm.createObject(User.class, 12);
+        user.setEmail(email);
+        user.setPassword(password);
+        realm.commitTransaction();
+        realm.close();
 
-        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
-        config = SyncUser.current().createConfiguration(url).build();
     }
 
     /**
