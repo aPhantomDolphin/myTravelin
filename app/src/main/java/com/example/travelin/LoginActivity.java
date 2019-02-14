@@ -437,6 +437,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return resultGender;
     }
 
+
+    public RealmResults<User> ratingFilter(double rating) {
+        RealmQuery<User> query = realm.where(User.class);
+        query.between("rating",rating,5.0);
+
+        RealmResults<User> resultRatings = query.findAll();
+        return resultRatings;
+    }
+
+
     /**
      * TODO: move to correct class
      * returns the reviews for the user with a given username
