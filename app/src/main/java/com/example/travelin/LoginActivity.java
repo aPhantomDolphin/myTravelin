@@ -187,10 +187,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Map<String, SyncUser> map  = SyncUser.all();
 
         /**
-         * if there is someone logged in, set the user2 equal to the first one
-         * this appears to break the code completely
+         * this is here for debugging purposes. It logs out any users
+         * that are currently logged in on this device. this functionality
+         * will later be transferred to a logout button
          */
-
         if (map.size() != 0) {
             for (Map.Entry<String, SyncUser> entry : map.entrySet()) {
                 entry.getValue().logOut();
@@ -203,11 +203,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
         // Store values at the time of the login attempt.
-        //final String email = mEmailView.getText().toString();
-        //final String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
-        final String email = "burns140@purdue.edu";
-        final String password = "passwordTest";
+//        final String email = "burns140@purdue.edu";
+//        final String password = "passwordTest";
 
         boolean cancel = false;
         View focusView = null;
@@ -236,6 +236,40 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+        } else {
+            //this is the URL for our main server
+            final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+
+            //credentials stores the username, email, and a createUser variable
+            //if that value is true, it will create the user if it doesn't exist
+            //which is used to create account
+            //if it is false, it can only be used to login
+            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
+
+            /**
+             * this creates a separate thread that allows the server to login while
+             * other things go on with the UI
+             * Doing this asynchronously straight up didn't work
+             */
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    user = SyncUser.logIn(credentials, authURL);
+                    String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+
+                    //this is supposed to create the realm for this user at our specific URL
+                    config = user.createConfiguration(url).build();
+                    realm = Realm.getInstance(config);
+
+                    realm.beginTransaction();
+                    User user = realm.createObject(User.class, 42);
+                    user.setEmail("whoa");
+                    user.setPassword("lel");
+                    realm.commitTransaction();
+                }
+            });
+
+            thread.start();
         }
         /**
         I'm not entirely sure what this does but the UserLoginTask cannot be used
@@ -251,57 +285,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
 
-        //this is the URL for our main server
-        final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-
-        //credentials stores the username, email, and a createUser variable
-        //if that value is true, it will create the user if the credentials are wrong
-        //which is used to create account
-        //if it is false, it can only be used to login
-        final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
-
-        //I have no idea why this doesn't enter the onSuccess or the onError functions
-        //pretty sure that is part of why this code breaks
-/**        RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
-            @Override
-            public void onSuccess(SyncUser result) {
-                user = result;
-            }
-
-            @Override
-            public void onError(ObjectServerError error) {
-                System.out.println("failed");
-            }
-        });
-**/
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                user = SyncUser.logIn(credentials, authURL);
-                String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
-
-                //this is supposed to create the realm for this user at our specific URL
-                config = user.createConfiguration(url).build();
-                realm = Realm.getInstance(config);
-
-                realm.beginTransaction();
-                User user = realm.createObject(User.class, 42);
-                user.setEmail("whoa");
-                user.setPassword("lel");
-                realm.commitTransaction();
-            }
-        });
-
-        thread.start();
-
-
-
-
-        //this is the URL to our specific realm /travelin
-
-
-        //initialize the realm
-        //SyncUser.current().logOut();
     }
 
     /**
