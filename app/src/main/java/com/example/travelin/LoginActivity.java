@@ -45,6 +45,7 @@ import io.realm.ObjectServerError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.*;
@@ -95,6 +96,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder() //
                 .name("travelin.realm") //
@@ -181,9 +183,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
+        //this returns a map with all of the currently logged in users
+        Map<String, SyncUser> map  = SyncUser.all();
+
+        /**
+         * if there is someone logged in, set the user2 equal to the first one
+         * this appears to break the code completely
+         */
+
+        if (map.size() != 0) {
+            for (Map.Entry<String, SyncUser> entry : map.entrySet()) {
+                entry.getValue().logOut();
+            }
+        }
+        map = SyncUser.all();
+
+
+
+
+
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        //final String email = mEmailView.getText().toString();
+        //final String password = mPasswordView.getText().toString();
+
+        final String email = "burns140@purdue.edu";
+        final String password = "passwordTest";
 
         boolean cancel = false;
         View focusView = null;
@@ -204,37 +228,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
 
+        /**
+         * there will eventually be an if statement here, but for
+         * debugging purposes, I have left it outside the if
+         */
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
-            String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-            SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
-            RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
-                @Override
-                public void onSuccess(SyncUser result) {
-                    user = result;
-                }
-
-                @Override
-                public void onError(ObjectServerError error) {
-                    System.out.println("failed");
-                }
-            });
-
-            String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
-            config = SyncUser.current().createConfiguration(url).build();
-
-            realm = Realm.getInstance(config);
-
-            RealmResults<User> users = realm.where(User.class)
-                    .equalTo("user.email", email)
-                    .findAll();
-
-            if (users.size() == 0) {
-                cancel = true;
-            }
         }
         /**
         I'm not entirely sure what this does but the UserLoginTask cannot be used
@@ -248,16 +249,59 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
          **/
 
 
-//        email = "burns140@purdue.edu";
-//        password = "passwordTest";
 
-        realm.beginTransaction();
-        User user = realm.createObject(User.class, 12);
-        user.setEmail(email);
-        user.setPassword(password);
-        realm.commitTransaction();
-        realm.close();
 
+        //this is the URL for our main server
+        final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+
+        //credentials stores the username, email, and a createUser variable
+        //if that value is true, it will create the user if the credentials are wrong
+        //which is used to create account
+        //if it is false, it can only be used to login
+        final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
+
+        //I have no idea why this doesn't enter the onSuccess or the onError functions
+        //pretty sure that is part of why this code breaks
+/**        RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
+            @Override
+            public void onSuccess(SyncUser result) {
+                user = result;
+            }
+
+            @Override
+            public void onError(ObjectServerError error) {
+                System.out.println("failed");
+            }
+        });
+**/
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                user = SyncUser.logIn(credentials, authURL);
+                String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+
+                //this is supposed to create the realm for this user at our specific URL
+                config = user.createConfiguration(url).build();
+                realm = Realm.getInstance(config);
+
+                realm.beginTransaction();
+                User user = realm.createObject(User.class, 42);
+                user.setEmail("whoa");
+                user.setPassword("lel");
+                realm.commitTransaction();
+            }
+        });
+
+        thread.start();
+
+
+
+
+        //this is the URL to our specific realm /travelin
+
+
+        //initialize the realm
+        //SyncUser.current().logOut();
     }
 
     /**
@@ -470,7 +514,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         RealmResults<User> userReviews = query.findAll();
         return userReviews.get(0).getReviews();
     }
+
 }
+
+
 
 
 
