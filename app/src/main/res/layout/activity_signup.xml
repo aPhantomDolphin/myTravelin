@@ -30,10 +30,10 @@
 
 
         <LinearLayout
-            android:id="@+id/email_login_form"
+            android:id="@+id/email_signin_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="50dp"
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
@@ -67,14 +67,24 @@
                     android:maxLines="1"
                     android:singleLine="true" />
 
-                <TextView
-                    android:id="@+id/textView"
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/confirmpassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="150px"
-                    android:layout_marginRight="150px"
-                    android:text="Forgot Password?"
-                    android:textAlignment="center" />
+                    android:hint="Confirm Password"
+                    android:imeActionId="6"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionUnspecified"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
 
             </android.support.design.widget.TextInputLayout>
 
@@ -86,9 +96,9 @@
                 android:layout_marginLeft="150px"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="150px"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="6dp"
                 android:background="#229cfd"
-                android:text="login"
+                android:text="Sign UP"
                 android:textColor="#fff"
                 android:textStyle="bold" />
 
@@ -97,8 +107,8 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Signup here!"
-                android:textAlignment="center"/>
+                android:text="Login here!"
+                android:textAlignment="center" />
 
 
         </LinearLayout>
@@ -107,7 +117,7 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="297dp"
+        android:layout_height="275dp"
         app:srcCompat="@drawable/logo" />
 
 </LinearLayout>

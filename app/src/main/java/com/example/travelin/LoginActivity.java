@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_log_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,8 +181,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -205,6 +205,42 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+        } else {
+            showProgress(true);
+
+            //this is the URL for our main server
+            final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+
+            //credentials stores the username, email, and a createUser variable
+            //if that value is true, it will create the user if it doesn't exist
+            //which is used to create account
+            //if it is false, it can only be used to login
+            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
+
+            /**
+             * this creates a separate thread that allows the server to login while
+             * other things go on with the UI
+             * Doing this asynchronously straight up didn't work
+             */
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    user = SyncUser.logIn(credentials, authURL);
+                    String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+
+                    //this is supposed to create the realm for this user at our specific URL
+                    config = user.createConfiguration(url).build();
+                    realm = Realm.getInstance(config);
+
+                    realm.beginTransaction();
+                    User user = realm.createObject(User.class, 42);
+                    user.setEmail("whoa");
+                    user.setPassword("lel");
+                    realm.commitTransaction();
+                }
+            });
+
+            thread.start();
         }
         /**
         I'm not entirely sure what this does but the UserLoginTask cannot be used
