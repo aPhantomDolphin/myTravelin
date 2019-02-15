@@ -44,6 +44,7 @@ import io.realm.ObjectServerError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.*;
@@ -180,6 +181,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
+        //this returns a map with all of the currently logged in users
+        Map<String, SyncUser> map  = SyncUser.all();
+
+        /**
+         * this is here for debugging purposes. It logs out any users
+         * that are currently logged in on this device. this functionality
+         * will later be transferred to a logout button
+         */
+        if (map.size() != 0) {
+            for (Map.Entry<String, SyncUser> entry : map.entrySet()) {
+                entry.getValue().logOut();
+            }
+        }
+        map = SyncUser.all();
+
+
+
+
+
         // Store values at the time of the login attempt.
         final String email = mEmailView.getText().toString();
         final String password = mPasswordView.getText().toString();
@@ -201,6 +221,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
+
+
+        /**
+         * there will eventually be an if statement here, but for
+         * debugging purposes, I have left it outside the if
+         */
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -247,33 +273,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
          **/
 
 
-        //email = "burns140@purdue.edu";
-        //password = "password";
-        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
-        RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
-            @Override
-            public void onSuccess(SyncUser result) {
-                user = result;
-            }
 
-            @Override
-            public void onError(ObjectServerError error) {
-                System.out.println("failed");
-            }
-        });
-
-        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
-        config = SyncUser.current().createConfiguration(url).build();
     }
 
+    
     /**
      * must be purdue email
      */
@@ -483,7 +492,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         RealmResults<User> userReviews = query.findAll();
         return userReviews.get(0).getReviews();
     }
+
 }
+
+
 
 
 
