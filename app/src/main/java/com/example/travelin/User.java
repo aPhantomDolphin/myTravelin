@@ -21,7 +21,7 @@ public class User extends RealmObject {
 
     private String gender;
 
-    private RealmList<Post> review;
+    private RealmList<Rating> review;
 
     private int reportCount = 0;
 
@@ -74,11 +74,11 @@ public class User extends RealmObject {
         this.email = email;
     }
 
-    public void addReview(Post review) {
+    public void addReview(Rating review) {
         this.review.add(review);
     }
 
-    public RealmList<Post> getReviews() {
+    public RealmList<Rating> getReviews() {
         return review;
     }
 
