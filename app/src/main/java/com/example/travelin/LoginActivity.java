@@ -237,6 +237,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // form field with an error.
             focusView.requestFocus();
         } else {
+            showProgress(true);
+
             //this is the URL for our main server
             final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
 
@@ -276,7 +278,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
@@ -287,6 +288,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
+    
     /**
      * must be purdue email
      */
