@@ -460,6 +460,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return userReviews.get(0).getRatings();
     }
 
+    /**
+     * TODO: move to correct class
+     * returns the ratings for the user with a given username
+     * @param username
+     * @return
+     */
     public double ratingQuery(String username){
         int rating;
 
