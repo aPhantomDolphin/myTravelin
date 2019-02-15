@@ -4,8 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
-import android.net.Credentials;
-import android.support.annotation.MainThread;
+//import android.media.Rating;
+import com.example.travelin.MyRating;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,12 +15,10 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -440,7 +438,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public RealmResults<User> ratingFilter(double rating) {
         RealmQuery<User> query = realm.where(User.class);
-        query.between("rating",rating,5.0);
+        query.between("avgRating",rating,5.0);
 
         RealmResults<User> resultRatings = query.findAll();
         return resultRatings;
@@ -453,13 +451,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * @param username
      * @return
      */
-    public RealmList<Post> reviewQuery(String username) {
+    public RealmList<MyRating> reviewQuery(String username) {
         RealmQuery<User> query = realm.where(User.class);
         query.equalTo("username", username);
 
         RealmResults<User> userReviews = query.findAll();
-        return userReviews.get(0).getReviews();
+        //return userReviews.get(0).getReviews();
+        return userReviews.get(0).getRatings();
     }
+
+    public double ratingQuery(String username){
+        int rating;
+
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("username", username);
+
+        RealmResults<User> userReviews = query.findAll();
+        return userReviews.get(0).getAvgRating();
+
+    }
+
 }
 
 

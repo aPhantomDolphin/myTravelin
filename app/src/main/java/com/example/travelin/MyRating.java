@@ -6,7 +6,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Required;
 
-public class Rating extends RealmObject {
+public class MyRating extends RealmObject {
 
     private String type;
 
@@ -16,12 +16,12 @@ public class Rating extends RealmObject {
 
     private String body;
 
-    private double rating;
+    private double rating=0.0;
 
     //constructors
-    public Rating(){}
+    public MyRating(){}
 
-    public Rating(String type, User author, Date datePosted, String body) {
+    public MyRating(String type, User author, Date datePosted, String body) {
         this.type = type;
         this.author = author;
         this.datePosted = datePosted;
@@ -61,4 +61,11 @@ public class Rating extends RealmObject {
         return body;
     }
 
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
 }
