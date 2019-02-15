@@ -257,7 +257,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //email = "burns140@purdue.edu";
         //password = "password";
         String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
+        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
         RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
             @Override
             public void onSuccess(SyncUser result) {
