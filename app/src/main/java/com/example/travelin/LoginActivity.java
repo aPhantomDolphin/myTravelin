@@ -118,7 +118,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                try {
+                    attemptLogin();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
@@ -259,7 +264,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //email = "burns140@purdue.edu";
         //password = "password";
         String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
+        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
         RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
             @Override
             public void onSuccess(SyncUser result) {
@@ -290,19 +295,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * must be longer than 4 characters and shorter than 32 characters
      */
     private boolean isPasswordValid(String password) {
-        boolean containsNum;
+        boolean containsNum = true;
         boolean correctLength = false;
         boolean containsSpecial = true;
         boolean containsUpper;
         boolean containsLower;
 
-        containsNum = password.matches(".*[0-9].*");
+        //containsNum = password.matches(".*[0-9].*");
         if ((password.length() > 4) && (password.length() < 32)) {
             correctLength = true;
         }
-        if (password.matches("[a-zA-Z0-9]*")) {
+        /*if (password.matches("[a-zA-Z0-9]*")) {
             containsSpecial = false;
-        }
+        }*/
         containsUpper = password.matches(".*[A-Z].*");
         containsLower = password.matches(".*[a-z].*");
 
@@ -467,7 +472,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public RealmResults<User> genderFilter(String gender) {
         RealmQuery<User> query = realm.where(User.class);
-        query.equalTo("gender", gender);
+        query.equalTo("deleted",false).equalTo("gender", gender);
 
         RealmResults<User> resultGender = query.findAll();
         return resultGender;
@@ -481,10 +486,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public RealmList<Post> reviewQuery(String username) {
         RealmQuery<User> query = realm.where(User.class);
-        query.equalTo("username", username);
+        query.equalTo("deleted",false).equalTo("username", username);
 
         RealmResults<User> userReviews = query.findAll();
         return userReviews.get(0).getReviews();
+    }
+
+    /**
+     * TODO: move to correct class
+     * searches for other users
+     */
+    public RealmResults<User> searchUser(String searchName){
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("deleted",false).contains("name",searchName).or().contains("username",searchName);
+
+        RealmResults<User> resultUsers = query.findAll();
+        return resultUsers;
     }
 
     /**
