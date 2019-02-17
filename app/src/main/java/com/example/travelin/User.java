@@ -31,6 +31,8 @@ public class User extends RealmObject {
 
     private RealmList<User> blocked;
 
+    private boolean deleted = false;
+
     private String name;
 
     private RealmList<DirectMessage> messages;
@@ -63,6 +65,14 @@ public class User extends RealmObject {
     }
 
     public void setAge(int age) { this.age = age; }
+
+    public void setGender(String gender) { this.gender = gender; }
+
+    public String getGender() { return gender; }
+
+    public void setName(String name) { this.name = name; }
+
+    public String getName() { return name; }
 
     public int getAge() { return age; }
 
@@ -180,5 +190,29 @@ public class User extends RealmObject {
 
     public RealmList showPosts() {
         return posts;
+    }
+
+    public void deleteUser() {
+        deleted = true;
+        setAge(0);
+        setBio("");
+        setProfilePictureURL("");
+        setGender("");
+        setName("");
+        for(EventLocation loc: previousTrips){
+            previousTrips.remove(loc);
+        }
+        for(User user: favorites){
+            favorites.remove(user);
+        }
+        for(Post post: posts){
+            posts.remove(post);
+        }
+        for(DirectMessage dm: messages){
+            messages.remove(dm);
+        }
+        for(Tag tag: interests){
+            interests.remove(tag);
+        }
     }
 }

@@ -486,6 +486,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         RealmResults<User> userReviews = query.findAll();
         return userReviews.get(0).getReviews();
     }
+
+    /**
+     * TODO: move to correct class
+     * deletes the user's profile
+     */
+    public void deleteUser(){
+
+        final User DeleteThisUser = realm.where(User.class).equalTo("id",user.getIdentity()).findFirst();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                DeleteThisUser.deleteUser();
+            }
+        });
+
+        user.logOut();
+    }
+
 }
 
 
