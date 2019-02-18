@@ -94,4 +94,8 @@ public class Post extends RealmObject {
     public void deleteImageURL(String url) {
         imageURLs.remove(url);
     }
+
+    public int getupvotes() { return rateUp; }
+
+    public int getdownvotes() { return rateDown; }
 }

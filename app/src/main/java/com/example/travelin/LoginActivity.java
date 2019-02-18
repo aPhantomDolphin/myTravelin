@@ -245,14 +245,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             thread.start();
         }
         /**
-        I'm not entirely sure what this does but the UserLoginTask cannot be used
-        else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }
+         I'm not entirely sure what this does but the UserLoginTask cannot be used
+         else {
+         // Show a progress spinner, and kick off a background task to
+         // perform the user login attempt.
+         showProgress(true);
+         mAuthTask = new UserLoginTask(email, password);
+         mAuthTask.execute((Void) null);
+         }
          **/
 
 
@@ -321,6 +321,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * sends email to user for resetting password
+     *
      * @param email
      */
     public void resetPassword(String email) {
@@ -458,27 +459,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
-
-
-    /**
-     * TODO: move to correct class
-     * returns all users whose gender matches the gender
-     * in the filter
-     */
-    public RealmResults<User> genderFilter(String gender) {
+    // TODO: move to correct class
+    public RealmList<Post> getRatings(String username) {
         RealmQuery<User> query = realm.where(User.class);
-        query.equalTo("gender", gender);
-
-        RealmResults<User> resultGender = query.findAll();
-        return resultGender;
+        query.equalTo("username", username);
+        RealmResults<User> userRatings = query.findAll();
+        return userRatings.get(0).getReviews();
     }
 
-    /**
-     * TODO: move to correct class
-     * returns the reviews for the user with a given username
-     * @param username
-     * @return
-     */
+    // TODO: change variable names
+    // TODO: move to correct class
+    // returns the reviews for the user with a given username
+
     public RealmList<Post> reviewQuery(String username) {
         RealmQuery<User> query = realm.where(User.class);
         query.equalTo("username", username);
