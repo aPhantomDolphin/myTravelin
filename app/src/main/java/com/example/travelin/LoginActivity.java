@@ -3,6 +3,7 @@ package com.example.travelin;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Credentials;
 import android.support.annotation.MainThread;
@@ -87,11 +88,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private RealmAsyncTask realmAsyncTask;
     private static SyncConfiguration config;
     private SyncUser user;
+    private View signUpText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -101,6 +104,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 .name("travelin.realm") //
                 .build();
         Realm.setDefaultConfiguration(config);
+
+
+        // Change view to signup
+        signUpText = findViewById(R.id.textView2);
+        signUpText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -120,6 +138,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onClick(View view) {
                 try {
                     attemptLogin();
+                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -213,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // form field with an error.
             focusView.requestFocus();
         } else {
-            showProgress(true);
+            //showProgress(true);
 
             //this is the URL for our main server
             final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
