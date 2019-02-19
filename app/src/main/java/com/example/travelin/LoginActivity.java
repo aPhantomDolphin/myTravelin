@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_log_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -246,7 +246,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //if that value is true, it will create the user if it doesn't exist
             //which is used to create account
             //if it is false, it can only be used to login
-            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
+            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
 
             /**
              * this creates a separate thread that allows the server to login while
@@ -263,28 +263,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     config = user.createConfiguration(url).build();
                     realm = Realm.getInstance(config);
 
-                    realm.beginTransaction();
-                    User user = realm.createObject(User.class, 42);
-                    user.setEmail("whoa");
-                    user.setPassword("lel");
-                    realm.commitTransaction();
+                    RealmQuery<User> query = realm.where(User.class);
+                    query.equalTo("name", "whatevernameyouwant");
+                    RealmResults<User> results = query.findAll();
+                    User user = results.get(0);
+
+                    //realm.beginTransaction();
+                    //User user = realm.createObject(User.class, 42);
+                    //user.setEmail("whoa");
+                    //user.setPassword("lel");
+                    //realm.commitTransaction();
                 }
             });
 
             thread.start();
         }
-        /**
-        I'm not entirely sure what this does but the UserLoginTask cannot be used
-        else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }
-         **/
-
-
-
 
     }
 
