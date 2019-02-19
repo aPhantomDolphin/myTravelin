@@ -217,7 +217,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //if that value is true, it will create the user if it doesn't exist
             //which is used to create account
             //if it is false, it can only be used to login
-            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
+            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
 
             /**
              * this creates a separate thread that allows the server to login while
@@ -255,25 +255,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
          **/
 
-
-        //email = "burns140@purdue.edu";
-        //password = "password";
-        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
-        RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
-            @Override
-            public void onSuccess(SyncUser result) {
-                user = result;
-            }
-
-            @Override
-            public void onError(ObjectServerError error) {
-                System.out.println("failed");
-            }
-        });
-
-        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
-        config = SyncUser.current().createConfiguration(url).build();
     }
 
     /**
