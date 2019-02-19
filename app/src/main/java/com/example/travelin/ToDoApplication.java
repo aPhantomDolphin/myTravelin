@@ -1,6 +1,7 @@
 package com.example.travelin;
 
 import android.app.Application;
+import android.util.Log;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -14,5 +15,7 @@ public class ToDoApplication extends Application {
                 .name("travelin.realm") //
                 .build();
         Realm.setDefaultConfiguration(config);
+
+
     }
 }

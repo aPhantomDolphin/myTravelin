@@ -41,10 +41,17 @@ import io.realm.SyncCredentials;
 import io.realm.SyncUser;
 import io.realm.ObjectServerError;
 
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.mail.*;
 import javax.mail.internet.*;
 //import javax.activation.*;
@@ -105,7 +112,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    try {
+                        attemptLogin();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     return true;
                 }
                 return false;
@@ -116,7 +128,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                System.out.println("Button pressed");
+                try {
+                    attemptLogin();
+                    System.out.println("HERE3");
+
+                    //Tag tag=new Tag("CHICAGO");
+                    //addTagsQuery("ushrivas@purdue.edu",tag);
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+
             }
         });
 
@@ -174,14 +197,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptLogin() throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
+        Map<String,SyncUser> map=SyncUser.all();
+        if(map.size()!=0){
+            for(Map.Entry<String,SyncUser> entry : map.entrySet()){
+                entry.getValue().logOut();
+            }
+        }
+        map=SyncUser.all();
+
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString();
+
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -193,6 +225,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             focusView = mPasswordView;
             cancel = true;
         }
+
+        final String hashpassword=generateHash(password);
 
         // Check for a valid email address.
         if (!isEmailValid(email)) {
@@ -206,36 +240,50 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // form field with an error.
             focusView.requestFocus();
         }
-        /**
-        I'm not entirely sure what this does but the UserLoginTask cannot be used
+
+        //I'm not entirely sure what this does but the UserLoginTask cannot be used
         else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, hashpassword, true);
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    user = SyncUser.logIn(credentials, authURL);
+                    String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+
+                    //this is supposed to create the realm for this user at our specific URL
+                    config = user.createConfiguration(url).build();
+                    realm = Realm.getInstance(config);
+
+                    //RealmQuery<User> query = realm.where(User.class);
+                    //query.equalTo("email", email);
+                    //RealmResults<User> results = query.findAll();
+                    //User user = results.get(0);
+                    System.out.println("REACHED HERE");
+                    System.out.println("USER IS:"+user.toString());
+
+                    realm.beginTransaction();
+                    User user1 = realm.createObject(User.class, 1);
+                    user1.setEmail(email);
+                    user1.setPassword(hashpassword);
+                    realm.commitTransaction();
+                    System.out.println("HERE2");
+                    System.out.println("USER DEETS: "+user1.getEmail());
+
+                    Tag tag=new Tag("CHICAGO");
+                    addTagsQuery(user1.getEmail(),tag);
+
+                }
+            });
+
+            thread.start();
+            //return;
+
         }
-         **/
-
-
-        //email = "burns140@purdue.edu";
-        //password = "password";
-        String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-        SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
-        RealmAsyncTask task = SyncUser.logInAsync(credentials, authURL, new SyncUser.Callback<SyncUser>() {
-            @Override
-            public void onSuccess(SyncUser result) {
-                user = result;
-            }
-
-            @Override
-            public void onError(ObjectServerError error) {
-                System.out.println("failed");
-            }
-        });
-
-        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/~/travelin";
-        config = SyncUser.current().createConfiguration(url).build();
     }
 
     /**
@@ -467,7 +515,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * @return
      */
     public double ratingQuery(String username){
-        int rating;
 
         RealmQuery<User> query = realm.where(User.class);
         query.equalTo("username", username);
@@ -477,6 +524,132 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
+
+    /**
+     * TODO: move to correct class
+     * algo for adding tags for the user with a given username
+     * @param email
+     * @return
+     */
+    public void addTagsQuery(String email,Tag tag){
+
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email", email);
+
+        RealmResults<User> results = query.findAll();
+        User user=results.get(0);
+
+        realm.beginTransaction();
+        user.addInterest(tag);
+        realm.commitTransaction();
+
+        System.out.println("REACHED HERE SUCCESS BISH");
+        System.out.println("USERTAGS: "+user.getInterests().toString());
+
+    }
+
+    public void resetPassManually(String email,String oldPass,String newPass) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email", email);
+
+        RealmResults<User> results = query.findAll();
+        User user=results.get(0);
+
+        if(!isPasswordValid(newPass)){
+            System.out.println("ERRROR: PASSWORD NOT VALID");
+        }
+        else{
+            String hashpassword=generateHash(oldPass);
+            if(user.getPassword().equals(hashpassword)){
+                String hashpasswordNew=generateHash(newPass);
+
+                realm.beginTransaction();
+                user.setPassword(hashpasswordNew);
+                realm.commitTransaction();
+                System.out.println("Password was changed");
+            }
+            else{
+                System.out.println("Old Password entered was incorrect");
+            }
+
+        }
+
+    }
+
+    public RealmList<Tag> getTagsQuery(String email){
+
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email", email);
+
+        RealmResults<User> results = query.findAll();
+        User user=results.get(0);
+
+        return user.getInterests();
+
+    }
+
+    private static String generateHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        int iterations = 1000;
+        char[] chars = password.toCharArray();
+        byte[] salt = getSalt();
+
+        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] hash = skf.generateSecret(spec).getEncoded();
+        return (iterations + ":" + toHex(salt) + ":" + toHex(hash));
+    }
+
+    private static byte[] getSalt() throws NoSuchAlgorithmException
+    {
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        byte[] salt = new byte[16];
+        sr.nextBytes(salt);
+        return salt;
+    }
+
+    private static String toHex(byte[] array) throws NoSuchAlgorithmException
+    {
+        BigInteger bi = new BigInteger(1, array);
+        String hex = bi.toString(16);
+        int paddingLength = (array.length * 2) - hex.length();
+        if(paddingLength > 0)
+        {
+            return String.format("%0"  +paddingLength + "d", 0) + hex;
+        }else{
+            return hex;
+        }
+    }
+
+    private static boolean validate(String originalPassword, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        String[] parts = storedPassword.split(":");
+        int iterations = Integer.parseInt(parts[0]);
+        byte[] salt = fromHex(parts[1]);
+        byte[] hash = fromHex(parts[2]);
+
+        PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(), salt, iterations, hash.length * 8);
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] testHash = skf.generateSecret(spec).getEncoded();
+
+        int diff = hash.length ^ testHash.length;
+        for(int i = 0; i < hash.length && i < testHash.length; i++)
+        {
+            diff |= hash[i] ^ testHash[i];
+        }
+        return diff == 0;
+    }
+
+    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException
+    {
+        byte[] bytes = new byte[hex.length() / 2];
+        for(int i = 0; i<bytes.length ;i++)
+        {
+            bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
+        }
+        return bytes;
+    }
 }
 
 
