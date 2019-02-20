@@ -3,9 +3,12 @@ package com.example.travelin;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Credentials;
-import android.support.annotation.MainThread;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,12 +18,10 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,9 +30,17 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import org.passay.CharacterData;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
+
+import io.realm.ObjectServerError;
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
@@ -41,12 +50,15 @@ import io.realm.RealmResults;
 import io.realm.SyncConfiguration;
 import io.realm.SyncCredentials;
 import io.realm.SyncUser;
-import io.realm.ObjectServerError;
 
+import java.io.FileNotFoundException;
+import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
+import java.security.Provider;
 
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -55,6 +67,7 @@ import javax.mail.internet.*;
 
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static org.passay.AllowedCharacterRule.ERROR_CODE;
 
 /**
  * A login screen that offers login via email/password.
@@ -119,12 +132,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                //attemptLogin();
+                //resetPassword("burns140@purdue.edu");
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 0);
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            Uri targetUri = data.getData();
+            Bitmap bitmap;
+
+            try {
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                ImageView imageView = (ImageView)findViewById(R.id.imageView);
+                imageView.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -236,6 +270,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+            cancel = false;
         } else {
             showProgress(true);
 
@@ -246,27 +281,43 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //if that value is true, it will create the user if it doesn't exist
             //which is used to create account
             //if it is false, it can only be used to login
-            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
+            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
 
             /**
              * this creates a separate thread that allows the server to login while
              * other things go on with the UI
              * Doing this asynchronously straight up didn't work
              */
-            Thread thread = new Thread(new Runnable() {
+            final Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    user = SyncUser.logIn(credentials, authURL);
-                    String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+                    boolean success = true;
+                    try {
+                        user = SyncUser.logIn(credentials, authURL);
+                    } catch (Exception e) {
+                        Context context = getApplicationContext();
+                        CharSequence text = "Invalid username and password combo";
+                        success = false;
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                    if (success) {
+                        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
 
-                    //this is supposed to create the realm for this user at our specific URL
-                    config = user.createConfiguration(url).build();
-                    realm = Realm.getInstance(config);
+                        //this is supposed to create the realm for this user at our specific URL
+                        config = user.createConfiguration(url).build();
+                        realm = Realm.getInstance(config);
 
-                    RealmQuery<User> query = realm.where(User.class);
-                    query.equalTo("name", "whatevernameyouwant");
-                    RealmResults<User> results = query.findAll();
-                    User user = results.get(0);
+                        RealmQuery<User> query = realm.where(User.class);
+                        query.equalTo("email", email);
+                        RealmResults<User> results = query.findAll();
+                        User user = results.get(0);
+                        realm.beginTransaction();
+                        user.setPassword(password);
+                        realm.commitTransaction();
+                    }
+
 
                     //realm.beginTransaction();
                     //User user = realm.createObject(User.class, 42);
@@ -275,7 +326,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     //realm.commitTransaction();
                 }
             });
-
+            showProgress(false);
             thread.start();
         }
 
@@ -319,9 +370,41 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
-    public int generatePass() {
+    public String generatePass() {
         // TODO: write algorithm to generate random password
-        return 0;
+        PasswordGenerator gen = new PasswordGenerator();
+        CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
+        CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
+        lowerCaseRule.setNumberOfCharacters(1);
+
+        CharacterData upperCaseChars = EnglishCharacterData.UpperCase;
+        CharacterRule upperCaseRule = new CharacterRule(upperCaseChars);
+        upperCaseRule.setNumberOfCharacters(1);
+
+        CharacterData digitChars = EnglishCharacterData.Digit;
+        CharacterRule digitRule = new CharacterRule(digitChars);
+        digitRule.setNumberOfCharacters(1);
+
+        CharacterData specialChars = new CharacterData() {
+            @Override
+            public String getErrorCode() {
+                return ERROR_CODE;
+            }
+
+            @Override
+            public String getCharacters() {
+                return "!@#$%^&*_+=~`";
+            }
+        };
+
+        CharacterRule specialCharRule = new CharacterRule(specialChars);
+        specialCharRule.setNumberOfCharacters(1);
+
+        Random rand = new Random();
+        int n = rand.nextInt(27) + 5;
+
+        String password = gen.generatePassword(n, lowerCaseRule, upperCaseRule, digitRule, specialCharRule);
+        return password;
     }
 
     /**
@@ -329,48 +412,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * @param email
      */
     public void resetPassword(String email) {
-        // Recipient's email ID needs to be mentioned.
-        String recipient = email;
+        String url = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+        SyncUser.requestPasswordResetAsync(email, url, new SyncUser.Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
 
-        // Sender's email ID needs to be mentioned
-        String from = "web@gmail.com";
+            }
 
-        // Assuming you are sending email from localhost
-        String host = "localhost";
+            @Override
+            public void onError(ObjectServerError error) {
 
-        // Get system properties
-        Properties properties = System.getProperties();
-
-        // Setup mail server
-        properties.setProperty("mail.smtp.host", host);
-
-        // Get the default Session object.
-        Session session = Session.getDefaultInstance(properties);
-
-        try {
-            // Create a default MimeMessage object.
-            MimeMessage message = new MimeMessage(session);
-
-            // Set From: header field of the header.
-            message.setFrom(new InternetAddress(from));
-
-            // Set To: header field of the header.
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-
-            // Set Subject: header field
-            message.setSubject("Temporary Password");
-
-            // Now set the actual message
-            message.setText("Below is the temporary password for your travelin account. " +
-                    "You may use this password to login and then change your password from your " +
-                    "profile settings.\n" + generatePass());
-
-            // Send message
-            Transport.send(message);
-            System.out.println("Sent message successfully....");
-        } catch (MessagingException mex) {
-            mex.printStackTrace();
-        }
+            }
+        });
     }
 
     /**
