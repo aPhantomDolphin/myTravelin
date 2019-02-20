@@ -6,6 +6,9 @@ import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 //import android.media.Rating;
 import com.example.travelin.MyRating;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +44,7 @@ import io.realm.SyncCredentials;
 import io.realm.SyncUser;
 import io.realm.ObjectServerError;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -547,6 +551,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         System.out.println("USERTAGS: "+user.getInterests().toString());
 
     }
+
+    public void addImg(String email, Bitmap bitmap){
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
+
+        byte[] byteArray=stream.toByteArray();
+
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email", email);
+
+        RealmResults<User> results = query.findAll();
+        User user=results.get(0);
+
+        realm.beginTransaction();
+        user.setImg(byteArray);
+        realm.commitTransaction();
+
+    }
+
+    public Bitmap getImg(String email){
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email", email);
+
+        RealmResults<User> results = query.findAll();
+        User user=results.get(0);
+
+        byte[] byteArray=user.getImg();
+        Bitmap bitmap= BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+
+        return bitmap;
+    }
+
 
     public void resetPassManually(String email,String oldPass,String newPass) throws InvalidKeySpecException, NoSuchAlgorithmException {
 

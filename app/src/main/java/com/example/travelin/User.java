@@ -50,6 +50,8 @@ public class User extends RealmObject {
 
     private double avgRating=0.0;
 
+    private byte[] img;
+
 
     public User(){}
 
@@ -210,5 +212,13 @@ public class User extends RealmObject {
 
     public void setAvgRating(double avgRating) {
         this.avgRating = avgRating;
+    }
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
     }
 }
