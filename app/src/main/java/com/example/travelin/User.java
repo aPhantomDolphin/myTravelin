@@ -142,7 +142,7 @@ public class User extends RealmObject {
         this.profilePictureURL = url;
     }
 
-    public String getProfilePictureURL(String url) {
+    public String getProfilePictureURL() {
         return profilePictureURL;
     }
 

@@ -467,6 +467,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return userRatings.get(0).getReviews();
     }
 
+    // TODO: move to correct class
+    public void changeProfilePictureURL(String username, String imageURL) {
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("username", username);
+        RealmResults<User> userRatings = query.findAll();
+        userRatings.get(0).setProfilePictureURL(imageURL);
+    }
+
+    // TODO: move to correct class
+    public String getProfilePictureURL(String username) {
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("username", username);
+        RealmResults<User> userRatings = query.findAll();
+        return userRatings.get(0).getProfilePictureURL();
+    }
+
+    // TODO: move to correct class
+    public void changeProfileDescription(String username, String desc) {
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("username", username);
+        RealmResults<User> userRatings = query.findAll();
+        userRatings.get(0).setBio(desc);
+    }
+
+    // TODO: move to correct class
+    public String getProfileDescription(String username) {
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("username", username);
+        RealmResults<User> userRatings = query.findAll();
+        return userRatings.get(0).getBio();
+    }
+
     // TODO: change variable names
     // TODO: move to correct class
     // returns the reviews for the user with a given username
