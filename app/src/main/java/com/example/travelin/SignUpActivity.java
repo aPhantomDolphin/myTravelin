@@ -132,8 +132,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void goToHomePage(){
+        Realm.setDefaultConfiguration(SyncUser.current().getDefaultConfiguration());
         Intent intent = new Intent(SignUpActivity.this, ProfileActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private boolean validateEmailPass() {
