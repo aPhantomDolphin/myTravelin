@@ -16,7 +16,7 @@ import io.realm.RealmResults;
 import io.realm.SyncUser;
 
 public class ProfileActivity extends AppCompatActivity {
-    private Realm realm;
+    private Realm realm = Realm.getDefaultInstance();
     private Button logoutButton;
     private TextView nameView;
     private String username;

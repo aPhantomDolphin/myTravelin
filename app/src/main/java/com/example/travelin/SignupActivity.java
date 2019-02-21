@@ -29,7 +29,7 @@ import io.realm.SyncUser;
 import static com.example.travelin.Constants.AUTH_URL;
 import static com.example.travelin.Constants.REALM_URL;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
 
     //UI references
     private AutoCompleteTextView emailText;
@@ -115,25 +115,32 @@ public class SignUpActivity extends AppCompatActivity {
                 user = SyncUser.logIn(credentials, AUTH_URL);
                 //this is supposed to create the realm for this user at our specific URL
                 config = user.createConfiguration(REALM_URL).build();
-                realm = Realm.getInstance(config);
-
-                realm.beginTransaction();
-                User user = realm.createObject(User.class, signUpUsername);
-                user.setEmail(signUpEmail);
-                user.setPassword(hashPass);
-                realm.commitTransaction();
+                Realm.setDefaultConfiguration(config);
 
             }
         });
 
         thread.start();
+        while (true) {
+            if (config != null) {
+                break;
+            }
+        }
+        realm = Realm.getInstance(config);
+        realm.beginTransaction();
+        User user = realm.createObject(User.class, signUpUsername);
+        user.setEmail(signUpEmail);
+        user.setPassword(hashPass);
+        realm.commitTransaction();
         goToHomePage();
 
     }
 
     private void goToHomePage(){
-        Intent intent = new Intent(SignUpActivity.this, ProfileActivity.class);
+        Realm.setDefaultConfiguration(SyncUser.current().getDefaultConfiguration());
+        Intent intent = new Intent(SignupActivity.this, ProfileActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private boolean validateEmailPass() {
@@ -258,9 +265,9 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-        /**
-         * Shows the progress UI and hides the signUp form.
-         */
+    /**
+     * Shows the progress UI and hides the signUp form.
+     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
