@@ -73,6 +73,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="150px"
                     android:layout_marginRight="150px"
+                    android:clickable="true"
+                    android:onClick="onClick"
                     android:text="Forgot Password?"
                     android:textAlignment="center" />
 
@@ -98,7 +100,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:onClick="onClick"
                 android:text="Signup here!"
                 android:textAlignment="center" />
 
