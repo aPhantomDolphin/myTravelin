@@ -11,7 +11,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="600dp">
+        android:layout_height="549dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,17 +35,6 @@
                 android:text="William Shakesphere"
                 android:textColor="#fff"
                 android:textSize="31sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/bio_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="2dp"
-                android:text="I love to travel!"
-                android:textColor="#fff"
-                android:textSize="20sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -90,43 +79,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Email:"
-                            android:textSize="22sp"
+                            android:text="Edit Name:"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/email_profile1"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/email_edit_profile"
+                            android:layout_width="256dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="wshaks@purdue.edu"
+                            android:text="William Shakesphere"
                             android:textColor="@color/endblue"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="Rating:"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/rating_profile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="4.5/5"
-                            android:textColor="@color/endblue"
-                            android:textSize="22sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -141,8 +105,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Interests:"
-                            android:textSize="22sp"
+                            android:text="Edit Bio:"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -150,9 +114,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Hiking, Surfing, Beaches"
+                            android:text="I love to travel!"
                             android:textColor="@color/endblue"
-                            android:textSize="22sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -166,8 +130,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Reviews:"
-                            android:textSize="22sp"
+                            android:text="Edit Gender:"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -175,47 +139,72 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Great person to travel with!"
+                            android:text="Male"
                             android:textColor="@color/endblue"
-                            android:textSize="22sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
 
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Add Interests:"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/intersts_edit_profile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Beaches, Hiking, Snow"
+                            android:textColor="@color/endblue"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
     </RelativeLayout>
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
-    android:paddingTop="20dp">
-
-    <Button
-        android:id="@+id/edit_profile"
-        android:textColor="#fff"
-        android:background="@drawable/buttonstyleithgradient"
-        android:layout_marginTop="35dp"
-        android:layout_marginRight="30dp"
-        android:layout_gravity="center_horizontal"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Profile"/>
-
-    <Button
-        android:id="@+id/add_pictures_profile"
-        android:textColor="#fff"
-        android:background="@drawable/buttonstyleithgradient"
-        android:layout_marginTop="35dp"
         android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add pictures"/>
+        android:paddingTop="20dp">
+
+        <Button
+            android:id="@+id/edit_profile"
+            android:textColor="#fff"
+            android:background="@drawable/buttonstyleithgradient"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Profile"/>
+
+        <Button
+            android:id="@+id/add_pictures_profile"
+            android:textColor="#fff"
+            android:background="@drawable/buttonstyleithgradient"
+            android:layout_marginTop="35dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Picture"/>
 
 
-</LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>
