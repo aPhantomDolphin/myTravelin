@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
 
     private Realm realm = null;
-    private static SyncConfiguration config = null;
+    private SyncConfiguration config = null;
     private SyncUser user;
 
     //extraa test
@@ -288,7 +288,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
 
             //this is the URL for our main server
-            final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+            final String authURL = "https://travelin.us1a.cloud.realm.io";
 
             //credentials stores the username, email, and a createUser variable
             //if that value is true, it will create the user if it doesn't exist
@@ -316,7 +316,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         toast.show();
                     }
                     if (success) {
-                        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+                        String url = "realms://travelin.us1a.cloud.realm.io/travelin";
 
                         //this is supposed to create the realm for this user at our specific URL
                         config = user.createConfiguration(url).build();
@@ -350,7 +350,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //startActivityForResult(intent, 0);
 
             RealmQuery<User> query = realm.where(User.class);
-            query.equalTo("reportCount", "0");
+            query.equalTo("email", "h5@purdue.edu");
             RealmResults<User> results = query.findAll();
 
             for (User u : results) {
