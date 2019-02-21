@@ -250,14 +250,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+            //final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+            final String authURL = "https://travelin.us1a.cloud.realm.io";
             final SyncCredentials credentials = SyncCredentials.usernamePassword(email, hashpassword, true);
 
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     user = SyncUser.logIn(credentials, authURL);
-                    String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+                    //String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+                    String url="realms://travelin.us1a.cloud.realm.io/travelin";
 
                     //this is supposed to create the realm for this user at our specific URL
                     config = user.createConfiguration(url).build();
@@ -685,6 +687,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
         }
         return bytes;
+    }
+
+    private int getPK(){
+
+        RealmQuery<User> query = realm.where(User.class);
+        query.isNotNull("username");
+        RealmResults<User> results = query.findAll();
+
+        int len=results.size();
+        return len+1;
+
     }
 }
 
