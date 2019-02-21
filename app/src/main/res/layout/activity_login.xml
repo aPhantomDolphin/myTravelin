@@ -67,6 +67,15 @@
                     android:maxLines="1"
                     android:singleLine="true" />
 
+                <TextView
+                    android:id="@+id/forgot_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="150px"
+                    android:layout_marginRight="150px"
+                    android:text="Forgot Password?"
+                    android:textAlignment="center" />
+
             </android.support.design.widget.TextInputLayout>
 
             <Button
@@ -88,19 +97,12 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
                 android:text="Signup here!"
-                android:textAlignment="center" />
+                android:textAlignment="center"/>
 
 
         </LinearLayout>
     </ScrollView>
-
-    <TextView
-        android:id="@+id/forget_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Forgot Password?" />
 
     <ImageView
         android:id="@+id/imageView"

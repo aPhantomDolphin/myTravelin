@@ -35,7 +35,8 @@
             android:inputType="textMultiLine"
             android:text="You have successfully logged out! You will be redirected to the Login page in 3..2..1..."
             android:textColor="#229cff"
-            android:textSize="25dp"/>
+            android:textSize="25dp"
+            />
     </ScrollView>
 
 </LinearLayout>
