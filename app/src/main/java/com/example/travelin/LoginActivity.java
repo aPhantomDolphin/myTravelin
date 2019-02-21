@@ -3,12 +3,12 @@ package com.example.travelin;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-//import android.media.Rating;
-import com.example.travelin.MyRating;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,9 +30,17 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import org.passay.CharacterData;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
+
+import io.realm.ObjectServerError;
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
@@ -42,20 +50,16 @@ import io.realm.RealmResults;
 import io.realm.SyncConfiguration;
 import io.realm.SyncCredentials;
 import io.realm.SyncUser;
-import io.realm.ObjectServerError;
 
-import java.io.ByteArrayOutputStream;
-import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
+import java.io.FileNotFoundException;
+import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
+import java.security.Provider;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.mail.*;
 import javax.mail.internet.*;
 //import javax.activation.*;
@@ -63,6 +67,7 @@ import javax.mail.internet.*;
 
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static org.passay.AllowedCharacterRule.ERROR_CODE;
 
 /**
  * A login screen that offers login via email/password.
@@ -116,39 +121,44 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    try {
-                        attemptLogin();
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    attemptLogin();
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_log_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Button pressed");
-                try {
-                    attemptLogin();
-                    System.out.println("HERE3");
-
-                    //Tag tag=new Tag("CHICAGO");
-                    //addTagsQuery("ushrivas@purdue.edu",tag);
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
-
+                //attemptLogin();
+                //resetPassword("burns140@purdue.edu");
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 0);
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            Uri targetUri = data.getData();
+            Bitmap bitmap;
+
+            try {
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                ImageView imageView = (ImageView)findViewById(R.id.imageView);
+                imageView.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -201,24 +211,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    private void attemptLogin() {
 
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
-        Map<String,SyncUser> map=SyncUser.all();
-        if(map.size()!=0){
-            for(Map.Entry<String,SyncUser> entry : map.entrySet()){
+        //this returns a map with all of the currently logged in users
+        Map<String, SyncUser> map  = SyncUser.all();
+
+        /**
+         * this is here for debugging purposes. It logs out any users
+         * that are currently logged in on this device. this functionality
+         * will later be transferred to a logout button
+         */
+        if (map.size() != 0) {
+            for (Map.Entry<String, SyncUser> entry : map.entrySet()) {
                 entry.getValue().logOut();
             }
         }
-        map=SyncUser.all();
+        map = SyncUser.all();
+
+
+
+
 
         // Store values at the time of the login attempt.
         final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
-        String password = mPasswordView.getText().toString();
+//        final String email = "burns140@purdue.edu";
+//        final String password = "passwordTest";
 
         boolean cancel = false;
         View focusView = null;
@@ -230,8 +253,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        final String hashpassword=generateHash(password);
-
         // Check for a valid email address.
         if (!isEmailValid(email)) {
             mEmailView.setError("Login failed: invalid email or password");
@@ -239,55 +260,76 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
+
+
+        /**
+         * there will eventually be an if statement here, but for
+         * debugging purposes, I have left it outside the if
+         */
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        }
-
-        //I'm not entirely sure what this does but the UserLoginTask cannot be used
-        else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            cancel = false;
+        } else {
             showProgress(true);
-            final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, hashpassword, true);
 
-            Thread thread = new Thread(new Runnable() {
+            //this is the URL for our main server
+            final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+
+            //credentials stores the username, email, and a createUser variable
+            //if that value is true, it will create the user if it doesn't exist
+            //which is used to create account
+            //if it is false, it can only be used to login
+            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
+
+            /**
+             * this creates a separate thread that allows the server to login while
+             * other things go on with the UI
+             * Doing this asynchronously straight up didn't work
+             */
+            final Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    user = SyncUser.logIn(credentials, authURL);
-                    String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+                    boolean success = true;
+                    try {
+                        user = SyncUser.logIn(credentials, authURL);
+                    } catch (Exception e) {
+                        Context context = getApplicationContext();
+                        CharSequence text = "Invalid username and password combo";
+                        success = false;
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                    if (success) {
+                        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
 
-                    //this is supposed to create the realm for this user at our specific URL
-                    config = user.createConfiguration(url).build();
-                    realm = Realm.getInstance(config);
+                        //this is supposed to create the realm for this user at our specific URL
+                        config = user.createConfiguration(url).build();
+                        realm = Realm.getInstance(config);
 
-                    //RealmQuery<User> query = realm.where(User.class);
-                    //query.equalTo("email", email);
-                    //RealmResults<User> results = query.findAll();
-                    //User user = results.get(0);
-                    System.out.println("REACHED HERE");
-                    System.out.println("USER IS:"+user.toString());
+                        RealmQuery<User> query = realm.where(User.class);
+                        query.equalTo("email", email);
+                        RealmResults<User> results = query.findAll();
+                        User user = results.get(0);
+                        realm.beginTransaction();
+                        user.setPassword(password);
+                        realm.commitTransaction();
+                    }
 
-                    realm.beginTransaction();
-                    User user1 = realm.createObject(User.class, 1);
-                    user1.setEmail(email);
-                    user1.setPassword(hashpassword);
-                    realm.commitTransaction();
-                    System.out.println("HERE2");
-                    System.out.println("USER DEETS: "+user1.getEmail());
 
-                    Tag tag=new Tag("CHICAGO");
-                    addTagsQuery(user1.getEmail(),tag);
-
+                    //realm.beginTransaction();
+                    //User user = realm.createObject(User.class, 42);
+                    //user.setEmail("whoa");
+                    //user.setPassword("lel");
+                    //realm.commitTransaction();
                 }
             });
-
+            showProgress(false);
             thread.start();
-            //return;
-
         }
+
     }
 
     /**
@@ -328,9 +370,41 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
-    public int generatePass() {
+    public String generatePass() {
         // TODO: write algorithm to generate random password
-        return 0;
+        PasswordGenerator gen = new PasswordGenerator();
+        CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
+        CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
+        lowerCaseRule.setNumberOfCharacters(1);
+
+        CharacterData upperCaseChars = EnglishCharacterData.UpperCase;
+        CharacterRule upperCaseRule = new CharacterRule(upperCaseChars);
+        upperCaseRule.setNumberOfCharacters(1);
+
+        CharacterData digitChars = EnglishCharacterData.Digit;
+        CharacterRule digitRule = new CharacterRule(digitChars);
+        digitRule.setNumberOfCharacters(1);
+
+        CharacterData specialChars = new CharacterData() {
+            @Override
+            public String getErrorCode() {
+                return ERROR_CODE;
+            }
+
+            @Override
+            public String getCharacters() {
+                return "!@#$%^&*_+=~`";
+            }
+        };
+
+        CharacterRule specialCharRule = new CharacterRule(specialChars);
+        specialCharRule.setNumberOfCharacters(1);
+
+        Random rand = new Random();
+        int n = rand.nextInt(27) + 5;
+
+        String password = gen.generatePassword(n, lowerCaseRule, upperCaseRule, digitRule, specialCharRule);
+        return password;
     }
 
     /**
@@ -338,48 +412,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * @param email
      */
     public void resetPassword(String email) {
-        // Recipient's email ID needs to be mentioned.
-        String recipient = email;
+        String url = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
+        SyncUser.requestPasswordResetAsync(email, url, new SyncUser.Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
 
-        // Sender's email ID needs to be mentioned
-        String from = "web@gmail.com";
+            }
 
-        // Assuming you are sending email from localhost
-        String host = "localhost";
+            @Override
+            public void onError(ObjectServerError error) {
 
-        // Get system properties
-        Properties properties = System.getProperties();
-
-        // Setup mail server
-        properties.setProperty("mail.smtp.host", host);
-
-        // Get the default Session object.
-        Session session = Session.getDefaultInstance(properties);
-
-        try {
-            // Create a default MimeMessage object.
-            MimeMessage message = new MimeMessage(session);
-
-            // Set From: header field of the header.
-            message.setFrom(new InternetAddress(from));
-
-            // Set To: header field of the header.
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-
-            // Set Subject: header field
-            message.setSubject("Temporary Password");
-
-            // Now set the actual message
-            message.setText("Below is the temporary password for your travelin account. " +
-                    "You may use this password to login and then change your password from your " +
-                    "profile settings.\n" + generatePass());
-
-            // Send message
-            Transport.send(message);
-            System.out.println("Sent message successfully....");
-        } catch (MessagingException mex) {
-            mex.printStackTrace();
-        }
+            }
+        });
     }
 
     /**
@@ -487,206 +531,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return resultGender;
     }
 
-
-    public RealmResults<User> ratingFilter(double rating) {
-        RealmQuery<User> query = realm.where(User.class);
-        query.between("avgRating",rating,5.0);
-
-        RealmResults<User> resultRatings = query.findAll();
-        return resultRatings;
-    }
-
-
     /**
      * TODO: move to correct class
      * returns the reviews for the user with a given username
      * @param username
      * @return
      */
-    public RealmList<MyRating> reviewQuery(String username) {
+    public RealmList<Post> reviewQuery(String username) {
         RealmQuery<User> query = realm.where(User.class);
         query.equalTo("username", username);
 
         RealmResults<User> userReviews = query.findAll();
-        //return userReviews.get(0).getReviews();
-        return userReviews.get(0).getRatings();
+        return userReviews.get(0).getReviews();
     }
 
-    /**
-     * TODO: move to correct class
-     * returns the ratings for the user with a given username
-     * @param username
-     * @return
-     */
-    public double ratingQuery(String username){
-
-        RealmQuery<User> query = realm.where(User.class);
-        query.equalTo("username", username);
-
-        RealmResults<User> userReviews = query.findAll();
-        return userReviews.get(0).getAvgRating();
-
-    }
-
-
-    /**
-     * TODO: move to correct class
-     * algo for adding tags for the user with a given username
-     * @param email
-     * @return
-     */
-    public void addTagsQuery(String email,Tag tag){
-
-        RealmQuery<User> query = realm.where(User.class);
-        query.equalTo("email", email);
-
-        RealmResults<User> results = query.findAll();
-        User user=results.get(0);
-
-        realm.beginTransaction();
-        user.addInterest(tag);
-        realm.commitTransaction();
-
-        System.out.println("REACHED HERE SUCCESS BISH");
-        System.out.println("USERTAGS: "+user.getInterests().toString());
-
-    }
-
-    public void addImg(String email, Bitmap bitmap){
-        ByteArrayOutputStream stream=new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
-
-        byte[] byteArray=stream.toByteArray();
-
-        RealmQuery<User> query = realm.where(User.class);
-        query.equalTo("email", email);
-
-        RealmResults<User> results = query.findAll();
-        User user=results.get(0);
-
-        realm.beginTransaction();
-        user.setImg(byteArray);
-        realm.commitTransaction();
-
-    }
-
-    public Bitmap getImg(String email){
-        RealmQuery<User> query = realm.where(User.class);
-        query.equalTo("email", email);
-
-        RealmResults<User> results = query.findAll();
-        User user=results.get(0);
-
-        byte[] byteArray=user.getImg();
-        Bitmap bitmap= BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
-
-        return bitmap;
-    }
-
-
-    public void resetPassManually(String email,String oldPass,String newPass) throws InvalidKeySpecException, NoSuchAlgorithmException {
-
-        RealmQuery<User> query = realm.where(User.class);
-        query.equalTo("email", email);
-
-        RealmResults<User> results = query.findAll();
-        User user=results.get(0);
-
-        if(!isPasswordValid(newPass)){
-            System.out.println("ERRROR: PASSWORD NOT VALID");
-        }
-        else{
-            String hashpassword=generateHash(oldPass);
-            if(user.getPassword().equals(hashpassword)){
-                String hashpasswordNew=generateHash(newPass);
-
-                realm.beginTransaction();
-                user.setPassword(hashpasswordNew);
-                realm.commitTransaction();
-                System.out.println("Password was changed");
-            }
-            else{
-                System.out.println("Old Password entered was incorrect");
-            }
-
-        }
-
-    }
-
-    public RealmList<Tag> getTagsQuery(String email){
-
-        RealmQuery<User> query = realm.where(User.class);
-        query.equalTo("email", email);
-
-        RealmResults<User> results = query.findAll();
-        User user=results.get(0);
-
-        return user.getInterests();
-
-    }
-
-    private static String generateHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
-        int iterations = 1000;
-        char[] chars = password.toCharArray();
-        byte[] salt = getSalt();
-
-        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        byte[] hash = skf.generateSecret(spec).getEncoded();
-        return (iterations + ":" + toHex(salt) + ":" + toHex(hash));
-    }
-
-    private static byte[] getSalt() throws NoSuchAlgorithmException
-    {
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[16];
-        sr.nextBytes(salt);
-        return salt;
-    }
-
-    private static String toHex(byte[] array) throws NoSuchAlgorithmException
-    {
-        BigInteger bi = new BigInteger(1, array);
-        String hex = bi.toString(16);
-        int paddingLength = (array.length * 2) - hex.length();
-        if(paddingLength > 0)
-        {
-            return String.format("%0"  +paddingLength + "d", 0) + hex;
-        }else{
-            return hex;
-        }
-    }
-
-    private static boolean validate(String originalPassword, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
-        String[] parts = storedPassword.split(":");
-        int iterations = Integer.parseInt(parts[0]);
-        byte[] salt = fromHex(parts[1]);
-        byte[] hash = fromHex(parts[2]);
-
-        PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(), salt, iterations, hash.length * 8);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        byte[] testHash = skf.generateSecret(spec).getEncoded();
-
-        int diff = hash.length ^ testHash.length;
-        for(int i = 0; i < hash.length && i < testHash.length; i++)
-        {
-            diff |= hash[i] ^ testHash[i];
-        }
-        return diff == 0;
-    }
-
-    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException
-    {
-        byte[] bytes = new byte[hex.length() / 2];
-        for(int i = 0; i<bytes.length ;i++)
-        {
-            bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
-        }
-        return bytes;
-    }
 }
+
+
 
 
 

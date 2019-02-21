@@ -1,6 +1,6 @@
 package com.example.travelin;
 
-//import android.media.Rating;
+import android.media.Rating;
 
 import java.util.List;
 
@@ -8,7 +8,6 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
-import com.example.travelin.MyRating;
 
 public class User extends RealmObject {
     @PrimaryKey
@@ -22,9 +21,7 @@ public class User extends RealmObject {
 
     private String gender;
 
-    private RealmList<MyRating> myRatings;   //for me
-
-    private RealmList<MyRating> reviews;   //I left other people
+    private RealmList<Post> review;
 
     private int reportCount = 0;
 
@@ -48,19 +45,11 @@ public class User extends RealmObject {
 
     private RealmList<Post> posts;
 
-    private double avgRating=0.0;
-
-    private byte[] img;
-
-
     public User(){}
 
-    public User(String email, String password, String username, int age) {
+    public User(String email, String password) {
         this.email = email;
         this.password = password;
-        this.username = username;
-        this.age = age;
-        this.avgRating=0.0;
     }
 
     public String getPassword() {
@@ -83,31 +72,16 @@ public class User extends RealmObject {
         this.email = email;
     }
 
-    public void addRating(MyRating rating1) {
-        this.myRatings.add(rating1);
-        int x=myRatings.size();
-        double sum=0.0;
-        for(int i=0;i<x;i++){
-            MyRating temp = myRatings.get(i);
-            sum += temp.getRating();
-        }
-        this.avgRating=sum/x;
+    public void addReview(Post review) {
+        this.review.add(review);
     }
 
-    public RealmList<MyRating> getRatings() {
-        return myRatings;
+    public RealmList<Post> getReviews() {
+        return review;
     }
 
-    public RealmList<MyRating> getReview() {
-        return reviews;
-    }
-
-    public void addReview(MyRating review1) {
-        this.reviews.add(review1);
-    }
-
-    public void removeReview(MyRating review1) {
-        this.reviews.remove(review1);
+    public void removeReview(Post review) {
+        this.review.remove(review);
     }
 
     public void addReport() {
@@ -166,7 +140,7 @@ public class User extends RealmObject {
         this.profilePictureURL = url;
     }
 
-    public String getProfilePictureURL() {
+    public String getProfilePictureURL(String url) {
         return profilePictureURL;
     }
 
@@ -204,21 +178,5 @@ public class User extends RealmObject {
 
     public RealmList showPosts() {
         return posts;
-    }
-
-    public double getAvgRating() {
-        return avgRating;
-    }
-
-    public void setAvgRating(double avgRating) {
-        this.avgRating = avgRating;
-    }
-
-    public byte[] getImg() {
-        return img;
-    }
-
-    public void setImg(byte[] img) {
-        this.img = img;
     }
 }
