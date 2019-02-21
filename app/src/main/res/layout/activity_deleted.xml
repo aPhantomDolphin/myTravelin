@@ -20,7 +20,7 @@
         app:srcCompat="@drawable/logo" />
 
     <ScrollView
-        android:id="@+id/logout_redirect"
+        android:id="@+id/deleted_redirect"
         android:layout_width="match_parent"
         android:layout_height="261dp">
 
@@ -33,7 +33,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:inputType="textMultiLine"
-            android:text="You have successfully logged out! You will be redirected to the Login page in 3..2..1..."
+            android:text="Your account has been deleted. You will be redirected to the sign-up page in 3..2..1..."
             android:textColor="#229cff"
             android:textSize="25dp"
             android:background="color/transparent"/>
