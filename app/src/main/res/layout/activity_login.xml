@@ -67,17 +67,6 @@
                     android:maxLines="1"
                     android:singleLine="true" />
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="150px"
-                    android:layout_marginRight="150px"
-                    android:clickable="true"
-                    android:onClick="onClick"
-                    android:text="Forgot Password?"
-                    android:textAlignment="center" />
-
             </android.support.design.widget.TextInputLayout>
 
             <Button
@@ -106,6 +95,12 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/forget_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password?" />
 
     <ImageView
         android:id="@+id/imageView"

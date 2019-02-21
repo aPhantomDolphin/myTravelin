@@ -7,18 +7,19 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import java.util.Random;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 
-import io.realm.ObjectServerError;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.SyncConfiguration;
@@ -33,6 +34,7 @@ public class SignUpActivity extends AppCompatActivity {
     //UI references
     private AutoCompleteTextView emailText;
     private EditText passwordText;
+    private EditText usernameText;
     private EditText confirmPasswordText;
     private View loginText;
     private View progressView;
@@ -68,17 +70,18 @@ public class SignUpActivity extends AppCompatActivity {
         //Set up the sign up form
         progressView = findViewById(R.id.signUp_progress);
         signUpFormView = findViewById(R.id.signUp_form);
-        final Button signUpButton = findViewById(R.id.email_log_in_button);
+        final Button signUpButton = findViewById(R.id.email_sign_up_button);
         signUpButton.setEnabled(true);
         emailText = findViewById(R.id.email);
         passwordText = findViewById(R.id.password);
         confirmPasswordText = findViewById(R.id.confirmpassword);
+        usernameText = findViewById(R.id.username);
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try{
-                    if(validate()) {
+                    if(validateEmailPass()) {
                         attemptSignUp();
                     }
                 } catch (Exception e){
@@ -90,10 +93,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     } //End of onCreate
 
-    private void attemptSignUp() {
+    private void attemptSignUp() throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         final String signUpEmail = emailText.getText().toString();
-        final String signUpPass = passwordText.getText().toString();
+        String signUpPass = passwordText.getText().toString();
+        final String hashPass = generateHash(signUpPass);
+        final String signUpUsername = usernameText.getText().toString();
 
         //showProgress(true);
 
@@ -112,57 +117,41 @@ public class SignUpActivity extends AppCompatActivity {
                 config = user.createConfiguration(REALM_URL).build();
                 realm = Realm.getInstance(config);
 
-                //System.out.println("REACHED HERE");
-                //System.out.println("USER IS:"+user.toString());
-
-
                 realm.beginTransaction();
-                int key = (int)(Math.random() * 100) + 2;
-                User user = realm.createObject(User.class, key);
+                User user = realm.createObject(User.class, signUpUsername);
                 user.setEmail(signUpEmail);
-                user.setPassword(signUpPass);
+                user.setPassword(hashPass);
                 realm.commitTransaction();
 
-
-                //System.out.println("HERE2");
-                //System.out.println("USER DEETS: "+user.getEmail());
-
-                /*realm.executeTransactionAsync(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        int key = (int)(Math.random() * 100) + 2;
-                        User user = realm.createObject(User.class,key);
-                        user.setEmail(signUpEmail);
-                        user.setPassword(signUpPass);
-
-                    }}, new Realm.Transaction.OnSuccess(){
-                        @Override
-                        public void onSuccess(){
-                            goToHomePage();
-                        }
-
-                    });*/
-
-                //goToHomePage();
             }
         });
 
         thread.start();
+        goToHomePage();
 
     }
 
     private void goToHomePage(){
-        Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, ProfileActivity.class);
         startActivity(intent);
     }
 
-    private boolean validate() {
+    private boolean validateEmailPass() {
 
         emailText.setError(null);
         passwordText.setError(null);
         confirmPasswordText.setError(null);
+        usernameText.setError(null);
 
         boolean validate = false;
+
+        String validateUsername = usernameText.getText().toString();
+        //username can't be empty
+        if(validateUsername.isEmpty()){
+            usernameText.setError("Username cannot be empty");
+            usernameText.requestFocus();
+            return false;
+        }
 
         String validateEmail = emailText.getText().toString();
         //email must be a purdue email
@@ -199,9 +188,79 @@ public class SignUpActivity extends AppCompatActivity {
         return validate;
     }
 
-    /**
-     * Shows the progress UI and hides the signUp form.
-     */
+
+
+
+
+    private static String generateHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        int iterations = 1000;
+        char[] chars = password.toCharArray();
+        byte[] salt = getSalt();
+
+        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] hash = skf.generateSecret(spec).getEncoded();
+        return (iterations + ":" + toHex(salt) + ":" + toHex(hash));
+    }
+
+    private static byte[] getSalt() throws NoSuchAlgorithmException {
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        byte[] salt = new byte[16];
+        sr.nextBytes(salt);
+        return salt;
+    }
+
+    private static String toHex(byte[] array) throws NoSuchAlgorithmException {
+        BigInteger bi = new BigInteger(1, array);
+        String hex = bi.toString(16);
+        int paddingLength = (array.length * 2) - hex.length();
+        if(paddingLength > 0)
+        {
+            return String.format("%0"  +paddingLength + "d", 0) + hex;
+        }else{
+            return hex;
+        }
+    }
+
+    private static boolean validate(String originalPassword, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        String[] parts = storedPassword.split(":");
+        int iterations = Integer.parseInt(parts[0]);
+        byte[] salt = fromHex(parts[1]);
+        byte[] hash = fromHex(parts[2]);
+
+        PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(), salt, iterations, hash.length * 8);
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] testHash = skf.generateSecret(spec).getEncoded();
+
+        int diff = hash.length ^ testHash.length;
+        for(int i = 0; i < hash.length && i < testHash.length; i++)
+        {
+            diff |= hash[i] ^ testHash[i];
+        }
+        return diff == 0;
+    }
+
+    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException
+    {
+        byte[] bytes = new byte[hex.length() / 2];
+        for(int i = 0; i<bytes.length ;i++)
+        {
+            bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
+        }
+        return bytes;
+    }
+
+    private int getPK() {
+
+        return (int) realm.where(User.class).count() + 1;
+
+    }
+
+        /**
+         * Shows the progress UI and hides the signUp form.
+         */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);

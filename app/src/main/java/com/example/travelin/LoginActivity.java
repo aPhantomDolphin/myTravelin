@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -17,12 +16,10 @@ import android.widget.TextView;
 
 import io.realm.ObjectServerError;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.SyncConfiguration;
 import io.realm.SyncCredentials;
 import io.realm.SyncUser;
 
-import static android.Manifest.permission.READ_CONTACTS;
 import static com.example.travelin.Constants.AUTH_URL;
 
 /**
@@ -37,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     Button buttonLogin;
     private View progressView;
     private View LoginFormView;
+    private TextView forgotButton;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -47,12 +45,11 @@ public class LoginActivity extends AppCompatActivity {
 
         progressView = findViewById(R.id.login_progress);
         LoginFormView = findViewById(R.id.email_login_form);
-
         //showProgress(true);
 
         if( SyncUser.current() != null) {
             showProgress(true);
-            goToHomePage();
+            goToProfilePage();
         }
 
         signUpHereText = findViewById(R.id.textView2);
@@ -67,13 +64,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+
         buttonLogin = findViewById(R.id.email_log_in_button);
         emailText = findViewById(R.id.email);
         passText = findViewById(R.id.password);
+        forgotButton = findViewById(R.id.forget_password);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 final String loginEmail = emailText.getText().toString();
                 final String loginPass = passText.getText().toString();
 
@@ -84,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                         SyncConfiguration configuration = result.getDefaultConfiguration();
                         realm = Realm.getInstance(configuration);
                         Realm.setDefaultConfiguration(configuration);
-                        goToHomePage();
+                        goToProfilePage();
                     }
 
                     @Override
@@ -101,14 +102,20 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void goToHomePage(){
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+    private void goToProfilePage(){
+        Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
         showProgress(false);
         startActivity(intent);
     }
 
     private void goToSignUpPage(){
         Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+        showProgress(false);
+        startActivity(intent);
+    }
+
+    private void goToForgotPassword(){
+        Intent intent = new Intent(LoginActivity.this, ForgotPassword.class);
         showProgress(false);
         startActivity(intent);
     }
@@ -138,6 +145,3 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 }
-
-
-
