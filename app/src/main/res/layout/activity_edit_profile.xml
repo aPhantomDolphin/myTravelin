@@ -8,6 +8,39 @@
     tools:context=".Profile"
     android:background="@color/graylight"
     >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF">
+
+        <Button
+            android:id="@+id/home_button"
+            android:layout_width="63dp"
+            android:layout_height="56dp"
+            android:background="@drawable/homeicon"
+            android:text="" />
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_toRightOf="@id/home_button"
+            android:background="@drawable/searchicon" />
+
+
+        <Button
+            android:id="@+id/Logout_button"
+            android:layout_width="101dp"
+            android:layout_height="46dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/buttonstyleithgradient"
+            android:text="LOGOUT"
+            android:textAlignment="center"
+            android:textColor="#fff"
+            android:textSize="15dp" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,6 +53,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/profilepic"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
