@@ -10,8 +10,6 @@ import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
 public class User extends RealmObject {
-    @PrimaryKey
-    private int id;
 
     private String password;
 
@@ -21,7 +19,9 @@ public class User extends RealmObject {
 
     private String gender;
 
-    private RealmList<Post> review;
+    //private RealmList<Post> review;
+    private RealmList<MyRating> myRatings; //for me
+    private RealmList<MyRating> reviews;   //I left other people
 
     private int reportCount = 0;
 
@@ -31,10 +31,13 @@ public class User extends RealmObject {
 
     private RealmList<User> blocked;
 
+    private boolean deleted = false;
+
     private String name;
 
     private RealmList<DirectMessage> messages;
 
+    @PrimaryKey
     private String username;
 
     private String profilePictureURL;
@@ -45,11 +48,20 @@ public class User extends RealmObject {
 
     private RealmList<Post> posts;
 
+    private double avgRating=0.0;
+
+    private byte[] img;
+
+    private RealmList<byte[]> profileImages;
+
     public User(){}
 
-    public User(String email, String password) {
+    public User(String email, String password, String username, int age) {
         this.email = email;
         this.password = password;
+        this.username = username;
+        this.age = age;
+        this.avgRating=0.0;
     }
 
     public String getPassword() {
@@ -62,6 +74,14 @@ public class User extends RealmObject {
 
     public void setAge(int age) { this.age = age; }
 
+    public void setGender(String gender) { this.gender = gender; }
+
+    public String getGender() { return gender; }
+
+    public void setName(String name) { this.name = name; }
+
+    public String getName() { return name; }
+
     public int getAge() { return age; }
 
     public String getEmail() {
@@ -72,16 +92,16 @@ public class User extends RealmObject {
         this.email = email;
     }
 
-    public void addReview(Post review) {
-        this.review.add(review);
+    public void addReview(MyRating review) {
+        this.reviews.add(review);
     }
 
-    public RealmList<Post> getReviews() {
-        return review;
+    public RealmList<MyRating> getReviews() {
+        return reviews;
     }
 
-    public void removeReview(Post review) {
-        this.review.remove(review);
+    public void removeReview(MyRating review) {
+        this.reviews.remove(review);
     }
 
     public void addReport() {
@@ -178,5 +198,72 @@ public class User extends RealmObject {
 
     public RealmList showPosts() {
         return posts;
+    }
+
+    public void addRating(MyRating rating1) {
+        this.myRatings.add(rating1);
+        int x=myRatings.size();
+        double sum=0.0;
+        for(int i=0;i<x;i++){
+            MyRating temp = myRatings.get(i);
+            sum += temp.getRating();
+        }
+        this.avgRating=sum/x;
+    }
+
+    public RealmList<MyRating> getRatings() {
+        return myRatings;
+    }
+
+    public RealmList<MyRating> getReview() {
+        return reviews;
+    }
+
+    public double getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
+    }
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
+    }
+
+    public RealmList<byte[]> getProfileImages() {
+        return profileImages;
+    }
+
+    public void addProfileImage(byte[] img) {
+        this.profileImages.add(img);
+    }
+
+    public void deleteUser() {
+        deleted = true;
+        setAge(0);
+        setBio("");
+        setProfilePictureURL("");
+        setGender("");
+        setName("");
+        for(EventLocation loc: previousTrips){
+            previousTrips.remove(loc);
+        }
+        for(User user: favorites){
+            favorites.remove(user);
+        }
+        for(Post post: posts){
+            posts.remove(post);
+        }
+        for(DirectMessage dm: messages){
+            messages.remove(dm);
+        }
+        for(Tag tag: interests){
+            interests.remove(tag);
+        }
     }
 }

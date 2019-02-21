@@ -1,180 +1,285 @@
 package com.example.travelin;
 
-import android.os.Bundle;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
+import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 import io.realm.Realm;
-import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
 import io.realm.SyncConfiguration;
 import io.realm.SyncCredentials;
 import io.realm.SyncUser;
 
-public class SignupActivity extends AppCompatActivity {
+import static com.example.travelin.Constants.AUTH_URL;
+import static com.example.travelin.Constants.REALM_URL;
 
+public class SignUpActivity extends AppCompatActivity {
 
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    //UI references
+    private AutoCompleteTextView emailText;
+    private EditText passwordText;
+    private EditText usernameText;
+    private EditText confirmPasswordText;
+    private View loginText;
+    private View progressView;
+    private View signUpFormView;
     private Realm realm = null;
     private static SyncConfiguration config;
     private SyncUser user;
 
-    // TODO: add code to show signup page
-    // TODO: link functions to button presses
-
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
-
-        Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder() //
                 .name("travelin.realm") //
                 .build();
         Realm.setDefaultConfiguration(config);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+        //Go back to login screen by clicking "Login here"
+        loginText = findViewById(R.id.textView2);
+        loginText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
+            public void onClick(View v) {
+                try{
+                    finish();
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
-                return false;
+            }
+        });//End of going back to login screen
+
+        //Set up the sign up form
+        progressView = findViewById(R.id.signUp_progress);
+        signUpFormView = findViewById(R.id.signUp_form);
+        final Button signUpButton = findViewById(R.id.email_sign_up_button);
+        signUpButton.setEnabled(true);
+        emailText = findViewById(R.id.email);
+        passwordText = findViewById(R.id.password);
+        confirmPasswordText = findViewById(R.id.confirmpassword);
+        usernameText = findViewById(R.id.username);
+
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    if(validateEmailPass()) {
+                        attemptSignUp();
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_log_in_button);
-        mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
+
+    } //End of onCreate
+
+    private void attemptSignUp() throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        final String signUpEmail = emailText.getText().toString();
+        String signUpPass = passwordText.getText().toString();
+        final String hashPass = generateHash(signUpPass);
+        final String signUpUsername = usernameText.getText().toString();
+
+        //showProgress(true);
+
+        final SyncCredentials credentials = SyncCredentials.usernamePassword(signUpEmail,signUpPass,true);
+
+        /*
+         * this creates a separate thread that allows the server to login while
+         * other things go on with the UI
+         * Doing this asynchronously straight up didn't work
+         */
+        final Thread thread = new Thread(new Runnable() {
             @Override
-            public void onClick(View view) {
-                attemptLogin();
+            public void run() {
+                user = SyncUser.logIn(credentials, AUTH_URL);
+                //this is supposed to create the realm for this user at our specific URL
+                config = user.createConfiguration(REALM_URL).build();
+                realm = Realm.getInstance(config);
+
+                realm.beginTransaction();
+                User user = realm.createObject(User.class, signUpUsername);
+                user.setEmail(signUpEmail);
+                user.setPassword(hashPass);
+                realm.commitTransaction();
+
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        thread.start();
+        goToHomePage();
+
+    }
+
+    private void goToHomePage(){
+        Intent intent = new Intent(SignUpActivity.this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private boolean validateEmailPass() {
+
+        emailText.setError(null);
+        passwordText.setError(null);
+        confirmPasswordText.setError(null);
+        usernameText.setError(null);
+
+        boolean validate = false;
+
+        String validateUsername = usernameText.getText().toString();
+        //username can't be empty
+        if(validateUsername.isEmpty()){
+            usernameText.setError("Username cannot be empty");
+            usernameText.requestFocus();
+            return false;
+        }
+
+        String validateEmail = emailText.getText().toString();
+        //email must be a purdue email
+        if(!validateEmail.matches(".*@purdue\\.edu")){
+            emailText.setError("SignUp failed: invalid email");
+            emailText.requestFocus();
+            return false;
+        }
+
+        String validatePass = passwordText.getText().toString();
+        String confirmPass = confirmPasswordText.getText().toString();
+
+        if(!confirmPass.equals(validatePass)){
+            confirmPasswordText.setError("SignUp failed: passwords don't match");
+            confirmPasswordText.requestFocus();
+        }
+        else {
+            /*requires a number, special character,
+              upper case letter, lower case letter,
+              must be longer than 4 characters and shorter than 32 characters*/
+            boolean containsNum = validatePass.matches(".*[0-9].*");;
+            boolean correctLength = ((validatePass.length() > 4) && (validatePass.length() < 32));
+            boolean containsSpecial = !(validatePass.matches("[a-zA-Z0-9]*"));
+            boolean containsUpper = validatePass.matches(".*[A-Z].*");
+            boolean containsLower = validatePass.matches(".*[a-z].*");
+
+            validate = containsNum && correctLength && containsSpecial && containsUpper && containsLower;
+
+            if(!validate) {
+                passwordText.setError("SignUp failed: invalid password");
+                passwordText.requestFocus();
+            }
+        }
+        return validate;
     }
 
 
 
 
-    private void attemptLogin() {
 
-        // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+    private static String generateHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        int iterations = 1000;
+        char[] chars = password.toCharArray();
+        byte[] salt = getSalt();
 
-        // Store values at the time of the login attempt.
-        final String email = mEmailView.getText().toString();
-        final String password = mPasswordView.getText().toString();
+        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] hash = skf.generateSecret(spec).getEncoded();
+        return (iterations + ":" + toHex(salt) + ":" + toHex(hash));
+    }
 
-        boolean cancel = false;
-        View focusView = null;
+    private static byte[] getSalt() throws NoSuchAlgorithmException {
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        byte[] salt = new byte[16];
+        sr.nextBytes(salt);
+        return salt;
+    }
 
-        // Check for a valid password, if the user entered one.
-        if (!isPasswordValid(password)) {
-            mPasswordView.setError("Login failed: invalid email or password");
-            focusView = mPasswordView;
-            cancel = true;
+    private static String toHex(byte[] array) throws NoSuchAlgorithmException {
+        BigInteger bi = new BigInteger(1, array);
+        String hex = bi.toString(16);
+        int paddingLength = (array.length * 2) - hex.length();
+        if(paddingLength > 0)
+        {
+            return String.format("%0"  +paddingLength + "d", 0) + hex;
+        }else{
+            return hex;
         }
+    }
 
-        // Check for a valid email address.
-        if (!isEmailValid(email)) {
-            mEmailView.setError("Login failed: invalid email or password");
-            focusView = mEmailView;
-            cancel = true;
+    private static boolean validate(String originalPassword, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        String[] parts = storedPassword.split(":");
+        int iterations = Integer.parseInt(parts[0]);
+        byte[] salt = fromHex(parts[1]);
+        byte[] hash = fromHex(parts[2]);
+
+        PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(), salt, iterations, hash.length * 8);
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] testHash = skf.generateSecret(spec).getEncoded();
+
+        int diff = hash.length ^ testHash.length;
+        for(int i = 0; i < hash.length && i < testHash.length; i++)
+        {
+            diff |= hash[i] ^ testHash[i];
         }
+        return diff == 0;
+    }
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            //showProgress(true);
-
-            //this is the URL for our main server
-            final String authURL = "https://unbranded-metal-bacon.us1a.cloud.realm.io";
-
-            //credentials stores the username, email, and a createUser variable
-            //if that value is true, it will create the user if it doesn't exist
-            //which is used to create account
-            //if it is false, it can only be used to login
-            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
-
-            /**
-             * this creates a separate thread that allows the server to login while
-             * other things go on with the UI
-             * Doing this asynchronously straight up didn't work
-             */
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    user = SyncUser.logIn(credentials, authURL);
-                    String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
-
-                    //this is supposed to create the realm for this user at our specific URL
-                    config = user.createConfiguration(url).build();
-                    realm = Realm.getInstance(config);
-
-                    realm.beginTransaction();
-                    User user = realm.createObject(User.class, 42);
-                    user.setEmail("whoa");
-                    user.setPassword("lel");
-                    realm.commitTransaction();
-                }
-            });
-
-            thread.start();
+    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException
+    {
+        byte[] bytes = new byte[hex.length() / 2];
+        for(int i = 0; i<bytes.length ;i++)
+        {
+            bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
         }
+        return bytes;
+    }
 
+    private int getPK() {
+
+        return (int) realm.where(User.class).count() + 1;
 
     }
 
-
-    private boolean isEmailValid(String email) {
-        return email.matches(".*@purdue\\.edu");
+        /**
+         * Shows the progress UI and hides the signUp form.
+         */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        signUpFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        signUpFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                signUpFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+        progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        progressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
-
-    /**
-     * password requires a number, special character,
-     * upper case letter, lower case letter,
-     * must be longer than 4 characters and shorter than 32 characters
-     */
-    private boolean isPasswordValid(String password) {
-        boolean containsNum;
-        boolean correctLength = false;
-        boolean containsSpecial = true;
-        boolean containsUpper;
-        boolean containsLower;
-
-        containsNum = password.matches(".*[0-9].*");
-        if ((password.length() > 4) && (password.length() < 32)) {
-            correctLength = true;
-        }
-        if (password.matches("[a-zA-Z0-9]*")) {
-            containsSpecial = false;
-        }
-        containsUpper = password.matches(".*[A-Z].*");
-        containsLower = password.matches(".*[a-z].*");
-
-        if ((containsNum == true) && (correctLength == true) && (containsSpecial == true)
-                && (containsUpper == true) && (containsLower == true)) {
-            return true;
-        }
-        return false;
-    }
 }

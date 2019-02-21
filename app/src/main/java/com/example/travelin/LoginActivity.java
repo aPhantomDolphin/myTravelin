@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_log_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -511,8 +511,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         query.equalTo("username", username);
 
         RealmResults<User> userReviews = query.findAll();
-        //return userReviews.get(0).getReviews();
-        return userReviews.get(0).getRatings();
+        return userReviews.get(0).getReviews();
     }
 
     /**
