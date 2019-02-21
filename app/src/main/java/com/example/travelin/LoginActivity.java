@@ -45,12 +45,14 @@ import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
+import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.SyncConfiguration;
 import io.realm.SyncCredentials;
 import io.realm.SyncUser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.security.AccessController;
 import java.util.ArrayList;
@@ -67,6 +69,7 @@ import javax.mail.internet.*;
 
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static java.lang.System.exit;
 import static org.passay.AllowedCharacterRule.ERROR_CODE;
 
 /**
@@ -98,9 +101,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
 
     private Realm realm = null;
-    private RealmAsyncTask realmAsyncTask;
-    private static SyncConfiguration config;
+    private static SyncConfiguration config = null;
     private SyncUser user;
+
+    //extraa test
+    private TextView forget;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,11 +116,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         populateAutoComplete();
 
         Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder() //
-                .name("travelin.realm") //
-                .build();
-        Realm.setDefaultConfiguration(config);
+        //RealmConfiguration config = new RealmConfiguration.Builder() //
+        //        .name("travelin.realm") //
+        //        .build();
+        //Realm.setDefaultConfiguration(config);
 
+//        String username=SyncUser.current().getIdentity();     //Get the username from intent here
+        forget = findViewById(R.id.textView);
+        forget.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this,SignupActivity.class));
+            }
+        });
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -132,10 +145,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //attemptLogin();
+                attemptLogin();
                 //resetPassword("burns140@purdue.edu");
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 0);
+                //Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                //startActivityForResult(intent, 0);
             }
         });
 
@@ -143,7 +156,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    @Override
+/*    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -160,7 +173,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         }
     }
-
+*/
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -281,7 +294,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //if that value is true, it will create the user if it doesn't exist
             //which is used to create account
             //if it is false, it can only be used to login
-            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
+            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
 
             /**
              * this creates a separate thread that allows the server to login while
@@ -307,31 +320,151 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                         //this is supposed to create the realm for this user at our specific URL
                         config = user.createConfiguration(url).build();
-                        realm = Realm.getInstance(config);
+                        //realm = Realm.getInstance(config);
 
-                        RealmQuery<User> query = realm.where(User.class);
+                        /*RealmQuery<User> query = realm.where(User.class);
                         query.equalTo("email", email);
                         RealmResults<User> results = query.findAll();
                         User user = results.get(0);
                         realm.beginTransaction();
                         user.setPassword(password);
-                        realm.commitTransaction();
+                        realm.commitTransaction();*/
+
+                        /*realm.beginTransaction();
+                        User user = realm.createObject(User.class, 42);
+                        user.setEmail(email);
+                        user.setPassword(password);
+                        realm.commitTransaction();*/
                     }
 
-
-                    //realm.beginTransaction();
-                    //User user = realm.createObject(User.class, 42);
-                    //user.setEmail("whoa");
-                    //user.setPassword("lel");
-                    //realm.commitTransaction();
                 }
             });
-            showProgress(false);
             thread.start();
+            while (true) {
+                if (config != null) {
+                    break;
+                }
+            }
+            realm = Realm.getInstance(config);
+            //Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            //startActivityForResult(intent, 0);
+
+            RealmQuery<User> query = realm.where(User.class);
+            query.equalTo("reportCount", "0");
+            RealmResults<User> results = query.findAll();
+
+            for (User u : results) {
+                System.out.println(u.getId());
+            }
+
+            exit(1);
+
+            /*RealmQuery<User> query = realm.where(User.class);
+            query.equalTo("email", email);
+            RealmResults<User> results = query.findAll();
+            User u = results.get(0);
+            */
+
+            //RealmList<byte[]> bimages = u.getImages();
+
+            //for (byte[] i : bimages) {
+            //    Bitmap bitmap= BitmapFactory.decodeByteArray(i,0,i.length);
+            //}
+
+/**            Random rand = new Random(10000);
+            for (int i = 0; i < 10; i++) {
+                realm.beginTransaction();
+                User user1 = realm.createObject(User.class, rand.nextInt());
+                user1.setAge(rand.nextInt());
+                if (i % 2 == 0) {
+                    user1.setGender("male");
+                } else {
+                    user1.setGender("female");
+                }
+                realm.commitTransaction();
+            }
+**/
+/*
+            RealmQuery<User> query = realm.where(User.class);
+            query.equalTo("gender", "female");
+            RealmResults<User> results = query.findAll();
+
+            for (User u : results) {
+                System.out.println("here " + u.getAge());
+            }
+            showProgress(false);
+
+            */
         }
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Uri targetUri = data.getData();
+        Bitmap bitmap = null;
+
+        if (resultCode == RESULT_OK) {
+
+            try {
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                //imageView.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ImageView imageView = (ImageView)findViewById(R.id.imageView);
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,10,stream);
+
+        byte[] byteArray=stream.toByteArray();
+        bitmap.recycle();
+
+        for (int i = 0; i < 10; i++) {
+            realm.beginTransaction();
+            User user1 = realm.createObject(User.class, 334);
+            user1.setEmail("burns140@purdue.edu");
+            user1.setGender("female");
+            realm.commitTransaction();
+        }
+
+
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email", "burns140@purdue.edu");
+
+        RealmResults<User> results = query.findAll();
+        User user=results.get(0);
+
+        byte[] returnArray=user.getImg();
+        Bitmap breturn= BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+
+        imageView.setImageBitmap(breturn);
+
+
+
+
+    }
+
+    public void addImg(String email, Bitmap bitmap){
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,10,stream);
+
+        byte[] byteArray=stream.toByteArray();
+
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email", email);
+
+        RealmResults<User> results = query.findAll();
+        User user=results.get(0);
+
+        realm.beginTransaction();
+        user.setImg(byteArray);
+        realm.commitTransaction();
+
+
+    }
     /**
      * must be purdue email
      */
@@ -543,6 +676,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         RealmResults<User> userReviews = query.findAll();
         return userReviews.get(0).getReviews();
+    }
+
+    public Bitmap getImg(String email){
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email", email);
+
+        RealmResults<User> results = query.findAll();
+        User user=results.get(0);
+
+        byte[] byteArray=user.getImg();
+        Bitmap bitmap= BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+
+        return bitmap;
     }
 
 }

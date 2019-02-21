@@ -1,5 +1,6 @@
 package com.example.travelin;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -9,10 +10,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import io.realm.SyncConfiguration;
 import io.realm.SyncCredentials;
 import io.realm.SyncUser;
@@ -112,28 +116,50 @@ public class SignupActivity extends AppCompatActivity {
             //if that value is true, it will create the user if it doesn't exist
             //which is used to create account
             //if it is false, it can only be used to login
-            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, false);
+            final SyncCredentials credentials = SyncCredentials.usernamePassword(email, password, true);
 
             /**
              * this creates a separate thread that allows the server to login while
              * other things go on with the UI
              * Doing this asynchronously straight up didn't work
              */
-            Thread thread = new Thread(new Runnable() {
+            final Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    user = SyncUser.logIn(credentials, authURL);
-                    String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
+                    boolean success = true;
+                    try {
+                        user = SyncUser.logIn(credentials, authURL);
+                    } catch (Exception e) {
+                        Context context = getApplicationContext();
+                        CharSequence text = "Invalid username and password combo";
+                        success = false;
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                    if (success) {
+                        String url = "realms://unbranded-metal-bacon.us1a.cloud.realm.io/travelin";
 
-                    //this is supposed to create the realm for this user at our specific URL
-                    config = user.createConfiguration(url).build();
-                    realm = Realm.getInstance(config);
+                        //this is supposed to create the realm for this user at our specific URL
+                        config = user.createConfiguration(url).build();
+                        realm = Realm.getInstance(config);
 
-                    realm.beginTransaction();
-                    User user = realm.createObject(User.class, 42);
-                    user.setEmail("whoa");
-                    user.setPassword("lel");
-                    realm.commitTransaction();
+                        /*RealmQuery<User> query = realm.where(User.class);
+                        query.equalTo("email", email);
+                        RealmResults<User> results = query.findAll();
+                        User user = results.get(0);
+                        realm.beginTransaction();
+                        user.setPassword(password);
+                        realm.commitTransaction();*/
+                        realm.beginTransaction();
+                        User user = realm.createObject(User.class, 42);
+                        user.setEmail("whoa");
+                        user.setPassword("lel");
+                        realm.commitTransaction();
+                    }
+
+
+
                 }
             });
 

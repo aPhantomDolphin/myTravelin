@@ -45,11 +45,23 @@ public class User extends RealmObject {
 
     private RealmList<Post> posts;
 
+    private RealmList<byte[]> images;
+
+    private byte[] image;
+
     public User(){}
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getGender() {
+        return gender;
     }
 
     public String getPassword() {
@@ -178,5 +190,21 @@ public class User extends RealmObject {
 
     public RealmList showPosts() {
         return posts;
+    }
+
+    public void setImg(byte[] byteArray) {
+        this.image = byteArray;
+    }
+
+    public byte[] getImg() {
+        return this.image;
+    }
+
+    public RealmList getImages() {
+        return images;
+    }
+
+    public int getId() {
+        return id;
     }
 }
