@@ -110,7 +110,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/interest_profile1"
+                            android:id="@+id/bio_edit_profile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
@@ -135,7 +135,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/reviews_profile"
+                            android:id="@+id/gender_edit_profile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
@@ -183,7 +183,7 @@
         android:paddingTop="20dp">
 
         <Button
-            android:id="@+id/edit_profile"
+            android:id="@+id/save_profile"
             android:textColor="#fff"
             android:background="@drawable/buttonstyleithgradient"
             android:layout_marginTop="35dp"
@@ -194,7 +194,7 @@
             android:text="Save Profile"/>
 
         <Button
-            android:id="@+id/add_pictures_profile"
+            android:id="@+id/profilepic_edit_profile"
             android:textColor="#fff"
             android:background="@drawable/buttonstyleithgradient"
             android:layout_marginTop="35dp"
