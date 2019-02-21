@@ -52,6 +52,8 @@ public class User extends RealmObject {
 
     private byte[] img;
 
+    private RealmList<byte[]> profileImages;
+
 
     public User(){}
 
@@ -220,5 +222,13 @@ public class User extends RealmObject {
 
     public void setImg(byte[] img) {
         this.img = img;
+    }
+
+    public RealmList<byte[]> getProfileImages() {
+        return profileImages;
+    }
+
+    public void addProfileImage(byte[] img) {
+        this.profileImages.add(img);
     }
 }

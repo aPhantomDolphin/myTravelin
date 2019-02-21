@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
+import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
@@ -273,7 +274,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     System.out.println("USER IS:"+user.toString());
 
                     realm.beginTransaction();
-                    User user1 = realm.createObject(User.class, 1);
+                    User user1 = realm.createObject(User.class, getPK());
                     user1.setEmail(email);
                     user1.setPassword(hashpassword);
                     realm.commitTransaction();
@@ -572,6 +573,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
+    public void addProfileImg(String email, Bitmap bitmap){
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
+
+        byte[] byteArray=stream.toByteArray();
+
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email", email);
+
+        RealmResults<User> results = query.findAll();
+        User user=results.get(0);
+
+        realm.beginTransaction();
+        user.addProfileImage(byteArray);
+        realm.commitTransaction();
+    }
+
     public Bitmap getImg(String email){
         RealmQuery<User> query = realm.where(User.class);
         query.equalTo("email", email);
@@ -692,11 +710,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private int getPK(){
 
         RealmQuery<User> query = realm.where(User.class);
-        query.isNotNull("username");
+        query.isNotNull("email");
         RealmResults<User> results = query.findAll();
 
-        int len=results.size();
-        return len+1;
+        String email =results.get(0).getEmail();
+        System.out.println("PK: "+email);
+        return 4;
 
     }
 }
