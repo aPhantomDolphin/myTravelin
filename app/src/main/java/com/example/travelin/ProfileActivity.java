@@ -10,16 +10,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
+import java.util.Map;
+
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmConfiguration;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.SyncUser;
+
+import static com.example.travelin.Constants.REALM_URL;
 
 public class ProfileActivity extends AppCompatActivity {
     private Realm realm;
     private Button logoutButton;
     private TextView nameView;
     private String username;
+    private Button editProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,29 +36,52 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final SyncUser syncUser = SyncUser.current();
-        realm = Realm.getInstance(syncUser.getDefaultConfiguration());
 
+        realm = Realm.getDefaultInstance();
 
-        //username = getIntent().getStringExtra("USERNAME");
+        nameView = findViewById(R.id.name_profile);
+
+        //RealmQuery<User> query = realm.where(User.class);
+        //query.equalTo("email","a@purdue.edu");
+        //User results = query.findFirst();
+        RealmResults<User> results = realm
+                .where(User.class)
+                .contains("username", "a")
+                .findAll();
+
+        try{
+            if(results != null){
+                //User newUser = realm.copyFromRealm(results);
+                User newUser = results.get(0);
+                System.out.println(newUser.getEmail());
+                nameView.setText(newUser.getEmail());
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
 
         logoutButton = findViewById(R.id.Logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                syncUser.logOut();
-                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                SyncUser.current().logOut();
+                Intent intent = new Intent( ProfileActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-                finish();
+                ProfileActivity.this.finish();
             }
         });
 
-        /*RealmQuery<User> query = realm.where(User.class).equalTo("username",username);
-        RealmResults<User> results = query.findAll();
-        String name = results.get(0).getName();
-        nameView.setText(name);*/
-
-        //System.out.println("hii"+username);
+        editProfile = findViewById(R.id.edit_profile);
+        editProfile.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view){
+               Intent intent = new Intent(ProfileActivity.this, EditProfile.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+               startActivity(intent);
+           }
+        });
 
     }
 

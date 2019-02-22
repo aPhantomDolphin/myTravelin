@@ -9,34 +9,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Properties;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import io.realm.ObjectServerError;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.SyncUser;
 
+import static com.example.travelin.Constants.AUTH_URL;
 import static com.example.travelin.Constants.REALM_URL;
 
 public class ForgotPassword extends AppCompatActivity {
 
-    private Realm realm = null;
-    private EditText emailView;
-    private Button forgotButton;
-    private TextView loginView;
+    private Realm realm;
+    private EditText emailText;
+    private Button passwordReset;
+    private TextView backToLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,30 +30,34 @@ public class ForgotPassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resetpassword);
 
-        Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder() //
-                .name("travelin.realm") //
-                .build();
-        Realm.setDefaultConfiguration(config);
+        realm = Realm.getDefaultInstance();
 
-        loginView = findViewById(R.id.username);
-        loginView.setOnClickListener(new View.OnClickListener() {
+        backToLogin = findViewById(R.id.textView2);
+        backToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //finish();
+                try{
+                    ForgotPassword.this.finish();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
-        emailView = findViewById(R.id.email);
-        if(validateEmail(emailView.getText().toString())){
-            forgotButton = findViewById(R.id.password_reset_button);
-            forgotButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    resetPassword(emailView.getText().toString());
+
+        emailText = findViewById(R.id.email);
+        emailText.setError(null);
+        passwordReset = findViewById(R.id.password_reset_button);
+
+        passwordReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(validateEmail(emailText.getText().toString())){
+                    resetPassword(emailText.getText().toString());
                 }
-            });
-        }
+            }
+        });
+
     }
 
     /**
@@ -75,34 +65,43 @@ public class ForgotPassword extends AppCompatActivity {
      *
      * @param email
      */
-    public void resetPassword(String email) {
-        SyncUser.requestPasswordResetAsync(email, REALM_URL, new SyncUser.Callback<Void>(){
+    public void resetPassword(final String email) {
+        SyncUser.requestPasswordResetAsync(email, AUTH_URL, new SyncUser.Callback<Void>(){
             @Override
             public void onSuccess(Void result){
+
+                try{
                     goToLoginPage();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             @Override
             public void onError(ObjectServerError error){
-
+                emailText.setError("Try again");
+                emailText.requestFocus();
+                Log.e("Password Reset Error", error.toString());
             }
         });
     }
 
     private void goToLoginPage(){
         Intent intent = new Intent(ForgotPassword.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        ForgotPassword.this.finish();
     }
 
     private boolean validateEmail(String email) {
 
-        emailView.setError(null);
+        emailText.setError(null);
 
         boolean validate = true;
 
         //email must be a purdue email
         if (!email.matches(".*@purdue\\.edu")) {
-            emailView.setError("SignUp failed: invalid email");
-            emailView.requestFocus();
+            emailText.setError("Password Reset Failed: Invalid Email");
+            emailText.requestFocus();
             validate = false;
         }
 

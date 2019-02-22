@@ -23,14 +23,16 @@
         <activity
             android:name=".SignUpActivity"
             android:label="SignUpActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ProfileActivity"
             android:label="HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".EditProfile"
+            android:label="EditProfile"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:noHistory="true"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
