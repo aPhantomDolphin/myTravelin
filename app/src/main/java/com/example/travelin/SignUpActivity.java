@@ -129,10 +129,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void goToHomePage(){
-        Intent intent = new Intent(SignUpActivity.this, ProfileActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        //SignUpActivity.this.finish();
+        SignUpActivity.this.finish();
     }
 
     private boolean validateEmailPass() {

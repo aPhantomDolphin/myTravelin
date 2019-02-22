@@ -29,13 +29,14 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView nameView;
     private String username;
     private Button editProfile;
+    private Button homeButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         realm = Realm.getDefaultInstance();
 
@@ -44,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
         //RealmQuery<User> query = realm.where(User.class);
         //query.equalTo("email","a@purdue.edu");
         //User results = query.findFirst();
-        RealmResults<User> results = realm
+        /*RealmResults<User> results = realm
                 .where(User.class)
                 .contains("username", "a")
                 .findAll();
@@ -58,7 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         } catch(Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
 
         logoutButton = findViewById(R.id.Logout_button);
@@ -83,9 +84,15 @@ public class ProfileActivity extends AppCompatActivity {
            }
         });
 
+        homeButton = findViewById(R.id.home_button);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
-
-
-
 
 }

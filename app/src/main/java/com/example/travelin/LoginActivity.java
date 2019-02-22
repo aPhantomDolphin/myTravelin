@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if( SyncUser.current() != null) {
             //showProgress(true);
-            goToProfilePage();
+            goToHomePage();
         }
 
         signUpHereText = findViewById(R.id.textView2);
@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                         //realm = Realm.getInstance(configuration);
                         //Realm.setDefaultConfiguration(configuration);
                         SyncSingleton.getInstance().setEmail(loginEmail);
-                        goToProfilePage();
+                        goToHomePage();
                     }
 
                     @Override
@@ -121,8 +121,8 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void goToProfilePage(){
-        Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+    private void goToHomePage(){
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         showProgress(false);
         startActivity(intent);
