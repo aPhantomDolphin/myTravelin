@@ -13,7 +13,7 @@
         android:background="#FFFFFF">
 
 
-        <TextView
+        <ImageView
             android:id="@+id/search_icon"
             android:layout_width="56dp"
             android:layout_height="56dp"
@@ -32,8 +32,8 @@
             android:textColor="#fff"
             android:textSize="15dp" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textView3"
+        <TextView
+            android:id="@+id/user_name"
             android:layout_width="244dp"
             android:layout_height="56dp"
             android:layout_toRightOf="@id/search_icon" />
@@ -73,7 +73,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textView4"
             android:text="Male"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:onClick="onCheckboxClicked"/>
 
         <CheckBox
             android:id="@+id/checkBox_female"
@@ -81,7 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/checkBox_male"
             android:text="Female"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:onClick="onCheckboxClicked"/>
 
         <TextView
             android:id="@+id/textView5"
