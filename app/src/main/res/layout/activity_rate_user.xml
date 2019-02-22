@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".OtherProfileActivity"
+    tools:context=".RateUserActivity"
     android:background="@color/graylight"
     >
 
@@ -34,10 +34,7 @@
             android:layout_width="101dp"
             android:layout_height="46dp"
             android:layout_alignParentRight="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_margin="5dp"
             android:background="@drawable/buttonstyleithgradient"
             android:text="LOGOUT"
             android:textAlignment="center"
@@ -120,30 +117,6 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="Username:"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/other_username_profile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="elizswan"
-                            android:textColor="@color/endblue"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -154,7 +127,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Rating:"
+                            android:text="Current Rating:"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
@@ -169,57 +142,46 @@
                             android:textStyle="bold" />
 
                     </LinearLayout>
-
-
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:padding="10dp"
+                        android:text="Please enter a number between 1 to 5: "
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="Interests:"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/other_interest_profile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="Hiking, Surfing, Beaches"
-                            android:textColor="@color/endblue"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <TextView
+                        android:background="@color/graylight"
+                        android:id="@+id/user_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:padding="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:hint="4.9"
+                        android:textColor="@color/endblue"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="Reviews:"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="Enter a review:"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/other_reviews_profile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="Great person to travel with!"
-                            android:textColor="@color/endblue"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:background="@color/graylight"
+                        android:id="@+id/user_reviews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:hint="..........................."
+                        android:textColor="@color/endblue"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
-                    </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>
@@ -233,7 +195,7 @@
         android:paddingTop="20dp">
 
         <Button
-            android:id="@+id/images_other_profile"
+            android:id="@+id/submit_rating"
             android:textColor="#fff"
             android:background="@drawable/buttonstyleithgradient"
             android:layout_marginTop="35dp"
@@ -241,10 +203,10 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="View Images"/>
+            android:text="Submit"/>
 
         <Button
-            android:id="@+id/rate_and_review_profile"
+            android:id="@+id/backto_profile_other"
             android:textColor="#fff"
             android:background="@drawable/buttonstyleithgradient"
             android:layout_marginTop="35dp"
@@ -252,7 +214,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rate and Review User"/>
+            android:text="Back to profile"/>
 
 
 
