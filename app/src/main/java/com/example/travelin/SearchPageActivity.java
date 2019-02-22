@@ -41,12 +41,12 @@ public class SearchPageActivity extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_search_result);
-            realm = Realm.getDefaultInstance();
-            Bundle extras = getIntent().getExtras();
-            gender = extras.getString("gender");
-            rating = extras.getString("rating");
-
-            filterButton.setOnClickListener(new View.OnClickListener() {
+ //           realm = Realm.getDefaultInstance();
+ //           Bundle extras = getIntent().getExtras();
+//            gender = extras.getString("gender");
+ //           rating = extras.getString("rating");
+            filterButton= findViewById(R.id.filter_button);
+           filterButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(SearchPageActivity.this,SearchFilterActivity.class);
@@ -71,6 +71,14 @@ public class SearchPageActivity extends AppCompatActivity {
             SimpleAdapter simpleAdapter = new SimpleAdapter(getBaseContext(), aList, R.layout.activity_listview, from, to);
             ListView androidListView = (ListView) findViewById(R.id.list_view);
             androidListView.setAdapter(simpleAdapter);
+
+
+        }
+
+        public void otherProfileClicked(View view){
+            Intent intent = new Intent(SearchPageActivity.this,OtherProfileActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
 
 }

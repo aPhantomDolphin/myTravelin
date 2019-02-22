@@ -21,7 +21,7 @@
 
 
         <Button
-            android:id="@+id/back_button"
+            android:id="@+id/filter_button"
             android:layout_width="101dp"
             android:layout_height="46dp"
             android:layout_alignParentRight="true"
@@ -48,7 +48,7 @@
     </RelativeLayout>
 
     <ListView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/list_view">
 
