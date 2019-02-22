@@ -48,11 +48,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        RealmConfiguration config = new RealmConfiguration.Builder() //
-                .name("travelin.realm") //
-                .build();
-        Realm.setDefaultConfiguration(config);
-
+        realm = Realm.getDefaultInstance();
 
         //Go back to login screen by clicking "Login here"
         loginText = findViewById(R.id.textView2);
@@ -60,7 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
-                    finish();
+                    SignUpActivity.this.finish();
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -118,6 +114,7 @@ public class SignUpActivity extends AppCompatActivity {
                 realm = Realm.getInstance(config);
 
                 realm.beginTransaction();
+                //Realm.setDefaultConfiguration(config);
                 User user = realm.createObject(User.class, signUpUsername);
                 user.setEmail(signUpEmail);
                 user.setPassword(hashPass);
@@ -132,10 +129,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void goToHomePage(){
-        Realm.setDefaultConfiguration(SyncUser.current().getDefaultConfiguration());
-        Intent intent = new Intent(SignUpActivity.this, ProfileActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        finish();
+        SignUpActivity.this.finish();
     }
 
     private boolean validateEmailPass() {

@@ -10,5 +10,11 @@ public class TravelinApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Realm.init(this);
+
+        RealmConfiguration config = new RealmConfiguration.Builder() //
+                .name("travelin.realm") //
+                .build();
+
+        Realm.setDefaultConfiguration(config);
     }
 }

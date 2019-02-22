@@ -27,7 +27,7 @@ import static com.example.travelin.Constants.AUTH_URL;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    private Realm realm=null;
+    private Realm realm;
     private TextView signUpHereText;
     private AutoCompleteTextView emailText;
     private EditText passText;
@@ -40,16 +40,16 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Realm.init(this);
-        //realm = Realm.getDefaultInstance();
+        Realm.init(getApplicationContext());
+        realm = Realm.getDefaultInstance();
 
         progressView = findViewById(R.id.login_progress);
         LoginFormView = findViewById(R.id.email_login_form);
         //showProgress(true);
 
         if( SyncUser.current() != null) {
-            showProgress(true);
-            goToProfilePage();
+            //showProgress(true);
+            goToHomePage();
         }
 
         signUpHereText = findViewById(R.id.textView2);
@@ -69,7 +69,19 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin = findViewById(R.id.email_log_in_button);
         emailText = findViewById(R.id.email);
         passText = findViewById(R.id.password);
-        forgotButton = findViewById(R.id.forgot_password);
+
+        forgotButton = findViewById(R.id.forget_password);
+        forgotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    goToForgotPassword();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,15 +89,22 @@ public class LoginActivity extends AppCompatActivity {
 
                 final String loginEmail = emailText.getText().toString();
                 final String loginPass = passText.getText().toString();
-
-                SyncCredentials credentials = SyncCredentials.usernamePassword(loginEmail,loginPass,false);
+                SyncCredentials credentials=null;
+                try{
+                    credentials = SyncCredentials.usernamePassword(loginEmail,loginPass,false);
+                } catch (Exception e){
+                    emailText.setError("Retry Login");
+                    emailText.requestFocus();
+                    Log.e("Login Error", e.toString());
+                }
                 SyncUser.logInAsync(credentials, AUTH_URL, new SyncUser.Callback<SyncUser>() {
                     @Override
                     public void onSuccess(SyncUser result) {
-                        SyncConfiguration configuration = result.getDefaultConfiguration();
-                        realm = Realm.getInstance(configuration);
-                        Realm.setDefaultConfiguration(configuration);
-                        goToProfilePage();
+                        //SyncConfiguration configuration = result.getDefaultConfiguration();
+                        //realm = Realm.getInstance(configuration);
+                        //Realm.setDefaultConfiguration(configuration);
+                        SyncSingleton.getInstance().setEmail(loginEmail);
+                        goToHomePage();
                     }
 
                     @Override
@@ -102,14 +121,16 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void goToProfilePage(){
-        Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+    private void goToHomePage(){
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         showProgress(false);
         startActivity(intent);
+        LoginActivity.this.finish();
     }
 
     private void goToSignUpPage(){
-        Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
         showProgress(false);
         startActivity(intent);
     }
