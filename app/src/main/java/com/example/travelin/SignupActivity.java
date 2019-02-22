@@ -29,7 +29,7 @@ import io.realm.SyncUser;
 import static com.example.travelin.Constants.AUTH_URL;
 import static com.example.travelin.Constants.REALM_URL;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
 
     //UI references
     private AutoCompleteTextView emailText;
@@ -48,11 +48,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        RealmConfiguration config = new RealmConfiguration.Builder() //
-                .name("travelin.realm") //
-                .build();
-        Realm.setDefaultConfiguration(config);
-
+        realm = Realm.getDefaultInstance();
 
         //Go back to login screen by clicking "Login here"
         loginText = findViewById(R.id.textView2);
@@ -60,7 +56,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
-                    finish();
+                    SignUpActivity.this.finish();
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -115,32 +111,28 @@ public class SignupActivity extends AppCompatActivity {
                 user = SyncUser.logIn(credentials, AUTH_URL);
                 //this is supposed to create the realm for this user at our specific URL
                 config = user.createConfiguration(REALM_URL).build();
-                Realm.setDefaultConfiguration(config);
+                realm = Realm.getInstance(config);
+
+                realm.beginTransaction();
+                //Realm.setDefaultConfiguration(config);
+                User user = realm.createObject(User.class, signUpUsername);
+                user.setEmail(signUpEmail);
+                user.setPassword(hashPass);
+                realm.commitTransaction();
 
             }
         });
 
         thread.start();
-        while (true) {
-            if (config != null) {
-                break;
-            }
-        }
-        realm = Realm.getInstance(config);
-        realm.beginTransaction();
-        User user = realm.createObject(User.class, signUpUsername);
-        user.setEmail(signUpEmail);
-        user.setPassword(hashPass);
-        realm.commitTransaction();
         goToHomePage();
 
     }
 
     private void goToHomePage(){
-        Realm.setDefaultConfiguration(SyncUser.current().getDefaultConfiguration());
-        Intent intent = new Intent(SignupActivity.this, ProfileActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        finish();
+        SignUpActivity.this.finish();
     }
 
     private boolean validateEmailPass() {
@@ -265,9 +257,9 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * Shows the progress UI and hides the signUp form.
-     */
+        /**
+         * Shows the progress UI and hides the signUp form.
+         */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);

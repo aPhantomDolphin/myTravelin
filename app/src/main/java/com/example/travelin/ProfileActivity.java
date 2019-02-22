@@ -42,24 +42,20 @@ public class ProfileActivity extends AppCompatActivity {
 
         nameView = findViewById(R.id.name_profile);
 
-        //RealmQuery<User> query = realm.where(User.class);
-        //query.equalTo("email","a@purdue.edu");
-        //User results = query.findFirst();
-        /*RealmResults<User> results = realm
+        RealmQuery<User> query = realm.where(User.class);
+        query.equalTo("email","a@purdue.edu");
+        RealmResults<User> results = realm
                 .where(User.class)
                 .contains("username", "a")
                 .findAll();
 
         try{
-            if(results != null){
-                //User newUser = realm.copyFromRealm(results);
-                User newUser = results.get(0);
-                System.out.println(newUser.getEmail());
-                nameView.setText(newUser.getEmail());
+            if(results != null) {
+                results.get(0).deleteUser();
             }
         } catch(Exception e) {
             e.printStackTrace();
-        }*/
+        }
 
 
         logoutButton = findViewById(R.id.Logout_button);
@@ -74,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        editProfile = findViewById(R.id.edit_profile);
+        /*editProfile = findViewById(R.id.edit_profile);
         editProfile.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view){
@@ -82,7 +78,7 @@ public class ProfileActivity extends AppCompatActivity {
                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                startActivity(intent);
            }
-        });
+        });*/
 
         homeButton = findViewById(R.id.home_button);
         homeButton.setOnClickListener(new View.OnClickListener() {
