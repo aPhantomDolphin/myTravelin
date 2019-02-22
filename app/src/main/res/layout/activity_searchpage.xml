@@ -36,7 +36,10 @@
             android:id="@+id/user_name"
             android:layout_width="244dp"
             android:layout_height="56dp"
-            android:layout_toRightOf="@id/search_icon" />
+            android:hint="Search for users"
+            android:textAlignment="gravity"
+            android:textSize="15dp"
+            android:layout_toRightOf="@id/search_icon"  />
 
     </RelativeLayout>
 
