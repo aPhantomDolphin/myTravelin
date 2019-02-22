@@ -91,14 +91,16 @@
             android:layout_height="34dp"
             android:clickable="true"
             android:text="Signup here!"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/design_default_color_primary" />
 
         <TextView
             android:id="@+id/forget_password"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:text="Forgot Password?"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textColor="@color/design_default_color_primary" />
 
         <ImageView
             android:id="@+id/imageView"

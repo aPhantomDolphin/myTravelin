@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".EditProfile"
+    tools:context=".OtherProfileActivity"
     android:background="@color/graylight"
     >
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +34,10 @@
             android:layout_width="101dp"
             android:layout_height="46dp"
             android:layout_alignParentRight="true"
-            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/buttonstyleithgradient"
             android:text="LOGOUT"
             android:textAlignment="center"
@@ -42,9 +46,10 @@
 
     </RelativeLayout>
 
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="571dp">
+        android:layout_height="557dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,25 +58,34 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/profilepic"
+                android:id="@+id/other_profilepic"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:src="@drawable/profilepic" />
+                android:src="@drawable/otherprofilepic" />
 
-            <Button
-                android:id="@+id/change_password"
+            <TextView
+                android:id="@+id/other_name_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="35dp"
-                android:layout_marginRight="30dp"
-                android:background="@color/startblue"
-                android:text="change password"
-                android:textColor="#fff" />
+                android:layout_marginTop="10dp"
+                android:text="Elizabeth Swan"
+                android:textColor="#fff"
+                android:textSize="31sp"
+                android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/other_bio_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:text="Beaches are my life!"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -115,19 +129,43 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Edit Name:"
-                            android:textSize="20sp"
+                            android:text="Username:"
+                            android:textSize="22sp"
                             android:textStyle="bold" />
 
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/email_edit_profile"
-                            android:layout_width="256dp"
+                        <TextView
+                            android:id="@+id/other_username_profile"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:editable="true"
                             android:padding="10dp"
-                            android:hint="William Shakesphere"
+                            android:text="elizswan"
                             android:textColor="@color/endblue"
-                            android:textSize="20sp"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Rating:"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/other_rating_profile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="4.5/5"
+                            android:textColor="@color/endblue"
+                            android:textSize="22sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -142,19 +180,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Edit Bio:"
-                            android:textSize="20sp"
+                            android:text="Interests:"
+                            android:textSize="22sp"
                             android:textStyle="bold" />
 
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/bio_edit_profile"
+                        <TextView
+                            android:id="@+id/other_interest_profile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:editable="true"
                             android:padding="10dp"
-                            android:hint="I love to travel!"
+                            android:text="Hiking, Surfing, Beaches"
                             android:textColor="@color/endblue"
-                            android:textSize="20sp"
+                            android:textSize="22sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -165,82 +202,21 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView4"
-                            android:layout_width="100dp"
-                            android:layout_height="32dp"
-                            android:layout_marginLeft="20dp"
-                            android:text="Gender"
-                            android:textColor="@color/endblue"
-                            android:textSize="20dp"
-                            android:textStyle="bold" />
-
-                        <RadioGroup
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                        <RadioButton
-                            android:id="@+id/radio_male"
-                            android:layout_width="97dp"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/textView4"
-                            android:onClick="onRadioButtonClick"
-                            android:text="Male"
-                            android:textSize="20dp" />
-
-                        <RadioButton
-                            android:id="@+id/radio_female"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/checkBox_male"
-                            android:onClick="onRadioButtonClick"
-                            android:text="Female"
-                            android:textSize="20dp" />
-
-                        </RadioGroup>
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:padding="10dp"-->
-                            <!--android:text="Edit Gender:"-->
-                            <!--android:textSize="20sp"-->
-                            <!--android:textStyle="bold" />-->
-
-                        <!--<android.support.design.widget.TextInputEditText-->
-                            <!--android:id="@+id/gender_edit_profile"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:editable="true"-->
-                            <!--android:padding="10dp"-->
-                            <!--android:hint="Male"-->
-                            <!--android:textColor="@color/endblue"-->
-                            <!--android:textSize="20sp"-->
-                            <!--android:textStyle="bold" />-->
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Add Interests:"
-                            android:textSize="20sp"
+                            android:text="Reviews:"
+                            android:textSize="22sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/intersts_edit_profile"
+                            android:id="@+id/other_reviews_profile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:editable="true"
                             android:padding="10dp"
-                            android:text="Beaches, Hiking, Snow"
+                            android:text="Great person to travel with!"
                             android:textColor="@color/endblue"
-                            android:textSize="20sp"
+                            android:textSize="22sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -257,36 +233,30 @@
         android:paddingTop="20dp">
 
         <Button
-            android:id="@+id/save_profile"
+            android:id="@+id/images_other_profile"
+            android:textColor="#fff"
+            android:background="@drawable/buttonstyleithgradient"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Images"/>
+
+        <Button
+            android:id="@+id/rate_and_review_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="35dp"
             android:layout_marginRight="30dp"
-            android:background="@color/endblue"
-            android:text="Save Profile"
+            android:background="@color/colorPrimaryDark"
+            android:text="Rate and Review User"
             android:textColor="#fff" />
 
 
-        <Button
-            android:id="@+id/profilepic_edit_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="35dp"
-            android:background="@color/endblue"
-            android:text="Edit Picture"
-            android:textColor="#fff" />
-        <Button
-            android:id="@+id/delete_button"
-            android:layout_width="match_parent"
-            android:layout_height="31dp"
-            android:textSize="10dp"
-            android:text="Delete Account"
-            android:textAlignment="center"/>
 
     </LinearLayout>
-
 
 
 </LinearLayout>

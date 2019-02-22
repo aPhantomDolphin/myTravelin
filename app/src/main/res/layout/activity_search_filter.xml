@@ -14,16 +14,10 @@
 
 
         <Button
-            android:id="@+id/back_button"
-            android:layout_width="101dp"
-            android:layout_height="46dp"
-            android:background="@drawable/buttonstyleithgradient"
-            android:layout_alignParentRight="true"
-            android:layout_margin="5dp"
-            android:text="Back"
-            android:textAlignment="center"
-            android:textColor="#fff"
-            android:textSize="15dp" />
+            android:id="@+id/home_button"
+            android:layout_width="63dp"
+            android:layout_height="56dp"
+            android:background="@drawable/homeicon"/>
 
         <TextView
             android:id="@+id/user_name"
@@ -32,8 +26,7 @@
             android:hint="Search for users"
             android:textAlignment="gravity"
             android:textSize="15dp"
-            android:layout_toRightOf="@id/search_icon"  />
-
+/>
     </RelativeLayout>
 
     <TextView

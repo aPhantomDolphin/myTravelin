@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 
 import io.realm.ObjectServerError;
 import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import io.realm.SyncConfiguration;
 import io.realm.SyncCredentials;
 import io.realm.SyncUser;
@@ -35,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private View progressView;
     private View LoginFormView;
     private TextView forgotButton;
+    SharedPreferences spref;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -49,6 +53,15 @@ public class LoginActivity extends AppCompatActivity {
 
         if( SyncUser.current() != null) {
             //showProgress(true);
+/*
+            RealmQuery query = realm.where(User.class);
+            query.equalTo("identity", SyncUser.current().getIdentity());
+            RealmResults<User> results = query.findAll();
+
+
+            SyncSingleton.getInstance().setEmail(results.get(0).getEmail());
+*/
+
             goToHomePage();
         }
 
@@ -103,7 +116,18 @@ public class LoginActivity extends AppCompatActivity {
                         //SyncConfiguration configuration = result.getDefaultConfiguration();
                         //realm = Realm.getInstance(configuration);
                         //Realm.setDefaultConfiguration(configuration);
+
+                        /*RealmQuery query = realm.where(User.class);
+                        query.equalTo("identity", result.getIdentity());
+                        RealmResults<User> results = query.findAll();
+
+
+                        SyncSingleton.getInstance().setEmail(results.get(0).getEmail());*/
                         SyncSingleton.getInstance().setEmail(loginEmail);
+
+                        //spref = getSharedPreferences("com.example.tavelin",MODE_PRIVATE);
+                        //spref.edit().putString("UserEmail",loginEmail).apply();
+                        //PreferenceUtils.saveEmail(loginEmail,getApplicationContext());
                         goToHomePage();
                     }
 

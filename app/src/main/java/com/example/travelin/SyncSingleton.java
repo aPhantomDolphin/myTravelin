@@ -11,6 +11,7 @@ public class SyncSingleton {
     }
 
     private String email;
+    private String username;
 
     public void setEmail(String email){
         this.email = email;

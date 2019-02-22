@@ -17,15 +17,30 @@ public class SearchFilterActivity extends AppCompatActivity {
     private RatingBar star;
     private Float rating;
     private CheckBox check;
+    private Button home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_filter);
         searchUser = findViewById(R.id.user_name);
-        backButton= findViewById(R.id.back_button);
+        //
+        // backButton= findViewById(R.id.);
         star = findViewById(R.id.ratingBar);
         rating = star.getRating();
+        home = findViewById(R.id.home_button);
+
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SearchFilterActivity.this, HomeActivity.class);
+                try{
+                    startActivity(intent);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
         searchButton = findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -41,7 +56,7 @@ public class SearchFilterActivity extends AppCompatActivity {
                     } catch(Exception e){
                         e.printStackTrace();
                     }
-                    //finish();
+                    finish();
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -59,12 +74,12 @@ public class SearchFilterActivity extends AppCompatActivity {
         // Check which checkbox was clicked
         switch(view.getId()) {
             case R.id.checkBox_male:
-                if (checked)
-                    genderPreferance ="Male";
+                if (!checked)
+                    genderPreferance ="Female";
                 break;
             case R.id.checkBox_female:
-                if (checked)
-                    genderPreferance="Female";
+                if (!checked)
+                    genderPreferance="Male";
                 break;
             default:
                 genderPreferance="Both";

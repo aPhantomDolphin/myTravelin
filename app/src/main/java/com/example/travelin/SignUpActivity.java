@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -20,6 +22,7 @@ import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import io.realm.ObjectServerError;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.SyncConfiguration;
@@ -39,16 +42,17 @@ public class SignUpActivity extends AppCompatActivity {
     private View loginText;
     private View progressView;
     private View signUpFormView;
-    private Realm realm = null;
+    //private Realm realm = null;
     private static SyncConfiguration config;
     private SyncUser user;
+    private SharedPreferences spref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        realm = Realm.getDefaultInstance();
+        //realm = Realm.getDefaultInstance();
 
         //Go back to login screen by clicking "Login here"
         loginText = findViewById(R.id.textView2);
@@ -92,7 +96,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void attemptSignUp() throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         final String signUpEmail = emailText.getText().toString();
-        String signUpPass = passwordText.getText().toString();
+        final String signUpPass = passwordText.getText().toString();
         final String hashPass = generateHash(signUpPass);
         final String signUpUsername = usernameText.getText().toString();
 
@@ -100,32 +104,36 @@ public class SignUpActivity extends AppCompatActivity {
 
         final SyncCredentials credentials = SyncCredentials.usernamePassword(signUpEmail,signUpPass,true);
 
-        /*
-         * this creates a separate thread that allows the server to login while
-         * other things go on with the UI
-         * Doing this asynchronously straight up didn't work
-         */
-        final Thread thread = new Thread(new Runnable() {
+        SyncUser.logInAsync(credentials, AUTH_URL, new SyncUser.Callback<SyncUser>() {
             @Override
-            public void run() {
-                user = SyncUser.logIn(credentials, AUTH_URL);
-                //this is supposed to create the realm for this user at our specific URL
-                config = user.createConfiguration(REALM_URL).build();
-                realm = Realm.getInstance(config);
+            public void onSuccess(SyncUser result) {
+                //SyncConfiguration configuration = result.getDefaultConfiguration();
+                //realm = Realm.getInstance(configuration);
+                //Realm.setDefaultConfiguration(configuration);
+                SyncSingleton.getInstance().setEmail(signUpEmail);
+                //spref = getSharedPreferences("com.example.tavelin",MODE_PRIVATE);
+                //spref.edit().putString("UserEmail",loginEmail).apply();
+                //PreferenceUtils.saveEmail(loginEmail,getApplicationContext());
 
+                Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
-                //Realm.setDefaultConfiguration(config);
-                User user = realm.createObject(User.class, signUpUsername);
-                user.setEmail(signUpEmail);
-                user.setPassword(hashPass);
+                User u = realm.createObject(User.class,signUpUsername);
+                //u.setIdent(result.getIdentity());
+                //u.addRating();
+                u.setEmail(signUpEmail);
+                u.setPassword(signUpPass);
                 realm.commitTransaction();
 
+                goToHomePage();
+            }
+
+            @Override
+            public void onError(ObjectServerError error) {
+                emailText.setError("Retry SignUp");
+                emailText.requestFocus();
+                Log.e("Signup Error", error.toString());
             }
         });
-
-        thread.start();
-        goToHomePage();
-
     }
 
     private void goToHomePage(){
@@ -251,9 +259,9 @@ public class SignUpActivity extends AppCompatActivity {
         return bytes;
     }
 
-    private int getPK() {
+    private void getPK() {
 
-        return (int) realm.where(User.class).count() + 1;
+        //return (int) realm.where(User.class).count() + 1;
 
     }
 
