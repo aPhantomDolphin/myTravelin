@@ -34,6 +34,7 @@ public class EditProfile extends AppCompatActivity {
     private Button setPic;
     byte[] bArray=new byte[0];
     Button deleteAccount;
+    private TextInputEditText interests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -106,12 +107,19 @@ public class EditProfile extends AppCompatActivity {
         saveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Realm realm=Realm.getDefaultInstance();
+                interests=findViewById(R.id.intersts_edit_profile);
+                String t1=interests.getText().toString();
+                Tag tag=new Tag();
+                tag.setTagName(t1);
+
+                realm.beginTransaction();
                 RealmQuery<User> realmQuery = realm.where(User.class);
                 realmQuery.equalTo("email",SyncSingleton.getInstance().getEmail());
                 RealmResults<User> results = realmQuery.findAll();
 
                 User u = results.get(0);
-                realm.beginTransaction();
+                u.addInterest(tag);
                 if(!nameEdit.getText().toString().isEmpty()) u.setName(nameEdit.getText().toString());
                 if(!bioEdit.getText().toString().isEmpty()) u.setBio(bioEdit.getText().toString());
                 if(!genderEdit.isEmpty()) u.setGender(genderEdit);

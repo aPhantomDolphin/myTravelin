@@ -232,13 +232,13 @@
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/intersts_edit_profile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:editable="true"
                             android:padding="10dp"
-                            android:text="Beaches, Hiking, Snow"
+                            android:hint="Beaches, Hiking, Snow"
                             android:textColor="@color/endblue"
                             android:textSize="20sp"
                             android:textStyle="bold" />

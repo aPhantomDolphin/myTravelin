@@ -72,7 +72,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:text="Elizabeth Swan"
-                android:textColor="#fff"
+                android:textColor="@color/startblue"
                 android:textSize="31sp"
                 android:textStyle="bold" />
 
@@ -83,7 +83,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="2dp"
                 android:text="Beaches are my life!"
-                android:textColor="#fff"
+                android:textColor="@color/startblue"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -214,7 +214,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Great person to travel with!"
+                            android:hint="Great person to travel with!"
                             android:textColor="@color/endblue"
                             android:textSize="22sp"
                             android:textStyle="bold" />
@@ -234,14 +234,14 @@
 
         <Button
             android:id="@+id/images_other_profile"
-            android:textColor="#fff"
-            android:background="@drawable/buttonstyleithgradient"
-            android:layout_marginTop="35dp"
-            android:layout_marginRight="30dp"
-            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="View Images"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/endblue"
+            android:text="View Images"
+            android:textColor="#fff" />
 
         <Button
             android:id="@+id/rate_and_review_profile"
