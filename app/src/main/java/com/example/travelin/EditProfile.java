@@ -164,7 +164,7 @@ public class EditProfile extends AppCompatActivity {
                 Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
                 dpView.setImageBitmap(bmp);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
+                bmp.compress(Bitmap.CompressFormat.PNG, 5, stream);
                 bArray = stream.toByteArray();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

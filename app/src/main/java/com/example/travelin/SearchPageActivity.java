@@ -76,6 +76,7 @@ public class SearchPageActivity extends AppCompatActivity {
         else{
             System.out.println("LOOK HERE2:"+gender);
         }
+        System.out.println("RRRRRRAAAAATING: "+rating);
         q.greaterThanOrEqualTo("avgRating",Double.parseDouble(rating));
         final RealmResults<User> res=q.findAll();
         realm.commitTransaction();
