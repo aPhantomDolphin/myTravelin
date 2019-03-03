@@ -29,7 +29,7 @@ public class User extends RealmObject {
 
     private RealmList<Tag> interests;
 
-    private RealmList<User> blocked;
+    private RealmList<User> blocked = new RealmList<>();
 
     private boolean deleted = false;
 

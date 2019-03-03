@@ -23,8 +23,12 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import io.realm.ObjectServerError;
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import io.realm.SyncConfiguration;
 import io.realm.SyncCredentials;
 import io.realm.SyncUser;
@@ -107,6 +111,9 @@ public class SignUpActivity extends AppCompatActivity {
         SyncUser.logInAsync(credentials, AUTH_URL, new SyncUser.Callback<SyncUser>() {
             @Override
             public void onSuccess(SyncUser result) {
+                SyncUser user = result;
+
+
                 //SyncConfiguration configuration = result.getDefaultConfiguration();
                 //realm = Realm.getInstance(configuration);
                 //Realm.setDefaultConfiguration(configuration);

@@ -1,15 +1,22 @@
 package com.example.travelin;
 
+import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -31,8 +38,14 @@ public class OtherProfileActivity extends AppCompatActivity {
     private ImageView dpView;
     private Button viewImages;
     private TextView reviewsProfile;
+    private Button blockButton;
+    private Button closePopupButton;
+    private Button confirmBlockButton;
+    private LinearLayout linearLayout;
+    private PopupWindow popupWindow;
+    private TextView usernameQuery;
     byte[] bArray=new byte[0];
-    //User usert;
+    User usert = new User();
     private String UN;
 
     protected void onCreate( Bundle savedInstanceState) {
@@ -77,6 +90,44 @@ public class OtherProfileActivity extends AppCompatActivity {
             }
         });*/
 
+        blockButton = findViewById(R.id.block_button);
+        blockButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater layoutInflater = (LayoutInflater) OtherProfileActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View customView = layoutInflater.inflate(R.layout.popup, null);
+
+                linearLayout = (LinearLayout) findViewById(R.id.linearlayoutinfo);
+                confirmBlockButton = (Button) customView.findViewById(R.id.confirmBlockButton);
+                closePopupButton = (Button) customView.findViewById(R.id.closePopupBtn);
+                popupWindow = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                popupWindow.showAtLocation(linearLayout, Gravity.CENTER, 0, 0);
+
+                closePopupButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupWindow.dismiss();
+                    }
+                });
+
+                confirmBlockButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        usernameQuery = findViewById(R.id.other_username_profile);
+                        String userQuery = usernameQuery.toString();
+                        //query for user with that name
+                        User neededUser = new User("email", "pass", "fklj", 15);
+                        usert.addBlockedUser(neededUser);
+                        popupWindow.dismiss();
+                        Toast toast = Toast.makeText(getApplicationContext(), "User Blocked Successfully", Toast.LENGTH_LONG);
+                        toast.show();
+
+                    }
+                });
+
+
+            }
+        });
 
         homeButton = findViewById(R.id.home_button);
         homeButton.setOnClickListener(new View.OnClickListener() {

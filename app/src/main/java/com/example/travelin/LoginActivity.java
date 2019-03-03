@@ -113,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                 SyncUser.logInAsync(credentials, AUTH_URL, new SyncUser.Callback<SyncUser>() {
                     @Override
                     public void onSuccess(SyncUser result) {
+
                         //SyncConfiguration configuration = result.getDefaultConfiguration();
                         //realm = Realm.getInstance(configuration);
                         //Realm.setDefaultConfiguration(configuration);

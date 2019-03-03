@@ -95,3 +95,69 @@ public class SearchFilterActivity extends AppCompatActivity {
         }
     }
 }
+
+/** final FirebaseDatabase database = FirebaseDatabase.getInstance();
+ DataBaseReference ref = database.getReference("insert_our_URL_here");
+ List<User> users = new ArrayList<User>;
+ String tag = tagWeWant;
+
+ this will hypothetically work. If we have to deserialize
+ the tag list as well, we may have to do some altering
+ of class structure
+
+ this query deserializes all of the user objects that we have
+	stored in the database and adds them to a list
+
+ref.addValueEventListener(new ValueEventListener() {
+@Override
+public void onDataChange(DataSnapshot dataSnap) {
+        for (DataSnapshot userSnap : dataSnap.getChildren()) {
+        User user = userSnap.getValue(User.class);
+        users.add(user);
+        }
+        }
+
+@Override
+public void onCancelled(FirebaseError fbErr) {
+        //do nothing
+        }
+        });
+
+
+ Go through each user. If they have the
+	tag that we are searching for, recommend them
+
+        List<User> recUsers = new ArrayList<User>;
+for (User u : users) {
+        List<Tag> tagList = u.getTags();
+        for (Tag t : tagList) {
+        if (t.equals(tagWeWant)) {
+        recUsers.add(u);
+        }
+        }
+        }
+
+
+
+         query to return all users of a certain gender
+        Query query = reference.child("User").orderByChild("gender").equalTo(genderString);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+@Override
+public void onDataChange(DataSnapshot dataSnapshot) {
+        if (dataSnapshot.exists()) {
+        // dataSnapshot is the "issue" node with all children with id 0
+        for (DataSnapshot issue : dataSnapshot.getChildren()) {
+        // add to user list
+        }
+        }
+        }
+
+@Override
+public void onCancelled(DatabaseError databaseError) {
+
+        }
+        });
+**/
+
+
+

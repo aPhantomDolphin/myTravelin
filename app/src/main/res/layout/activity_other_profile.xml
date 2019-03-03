@@ -28,21 +28,23 @@
             android:layout_toRightOf="@id/home_button"
             android:background="@drawable/searchicon" />
 
-
         <Button
-            android:id="@+id/Logout_button"
-            android:layout_width="101dp"
+            android:id="@+id/block_button"
+            android:layout_width="150dp"
             android:layout_height="46dp"
             android:layout_alignParentRight="true"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginRight="0dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/buttonstyleithgradient"
-            android:text="LOGOUT"
+            android:layout_marginEnd="5dp"
+            android:text="BLOCK USER"
             android:textAlignment="center"
-            android:textColor="#fff"
-            android:textSize="15dp" />
+            android:textColor="@color/startblue"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
 
     </RelativeLayout>
 
@@ -55,7 +57,9 @@
             android:layout_width="match_parent"
             android:layout_height="350dp"
             android:background="@drawable/gradientbackground"
+            android:id="@+id/linearlayoutinfo"
             android:orientation="vertical">
+
 
             <ImageView
                 android:id="@+id/other_profilepic"
