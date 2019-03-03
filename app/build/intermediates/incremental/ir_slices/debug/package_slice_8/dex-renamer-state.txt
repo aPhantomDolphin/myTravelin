@@ -1,0 +1,4 @@
+#Sun Mar 03 17:10:05 EST 2019
+base.0=C\:\\Users\\steph\\Desktop\\tvelin\\gitisfucked\\Travelin\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\8
+path.0=classes.dex
+renamed.0=classes.dex

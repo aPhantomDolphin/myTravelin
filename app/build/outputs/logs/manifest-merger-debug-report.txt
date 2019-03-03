@@ -1,0 +1,293 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:2:1-62:12
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:2:1-62:12
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:2:1-62:12
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:2:1-62:12
+MERGED from [io.realm:realm-android-library-object-server:5.8.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\realm-android-library-object-server-5.8.0.aar\c5f4fb4753fa2968b6e369dbe54e6b4c\AndroidManifest.xml:2:1-13:12
+MERGED from [com.android.support:design:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\46022588914fc6ee941df9bdf4bdbab5\AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\b8cd76d5528d88448ef50f63b1c9fd4c\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-v4:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-v4-28.0.0.aar\14eb0b311c0a313e659388fc9b533cce\AndroidManifest.xml:17:1-22:12
+MERGED from [io.realm:android-adapters:3.1.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\android-adapters-3.1.0.aar\50f3e00e14aa5b2810f593c2d2eec297\AndroidManifest.xml:2:1-9:12
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\58f2e2bad6ddcb91588f5d7f7abc7c94\AndroidManifest.xml:2:1-11:12
+MERGED from [com.getkeepsafe.relinker:relinker:1.3.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\relinker-1.3.0.aar\b26ce55739cb1e0df657f0b59e6c5c90\AndroidManifest.xml:2:1-7:12
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\32359bab801fec4c119a13439368c509\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\1d6add2fe2653de27cb5f86363141ce2\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\92aed4b98177ce0c2c3555d71987a7a9\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\612172169a79b0ad32474f00d921ff63\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\cb62800cee13d1e15ded85056c65e81b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\cbab6c62308d4620f92809a38c30dcf4\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:transition:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\d2de8a0303dbf88ba2b435e8056f6799\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-media-compat-28.0.0.aar\70be82f4dd2740be90c83b45956023d9\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:loader:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\d3d8fa5412692ebd7e216c3b3b7567a9\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\d8d1391147794385efaabb14c8c6c5ca\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\d7c839afac8bc7a3a0130d0d469392d8\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\8603679dfd504d151226d4f54842ff93\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\6cbe3fe82866aed0b16c201167232f7f\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:customview:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\54cd7ba1756da41eab76f3fbfb5dc199\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\386ac86ccf3ac64d1d1479bfc19a566c\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\e79b3a9d202a224e4b78ba76bb82be21\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\d6f7651d6184fb1165f9509d5f1ee2ad\AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\0b171d2b76e6ebc18ccb9cfef0ce99f2\AndroidManifest.xml:17:1-25:12
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\ed6af58dc531537731126246625b32b8\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\9f9c3adb0dc5b5bf3e16c235267f4d42\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\127bd3ffeffd25f136e01c17ca395558\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\874bcd14767472ee96aecddf7d13df2e\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\4e23cb41af59dbe1f7ce7d75ca7489f0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:print:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\8e22155397462ec90b901ca57838a49f\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\ad48fd4c7e0a054885e8b5c8b3bed843\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\ba1a4936ddc7782b07f950f7425062d8\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\f7c4ce8cd3bc0d708cfc9f26e8570bee\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\45a45192f9fadc9b820ddf41af35e012\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\b8f8ef07d7bd74f09bb968fedd77e402\AndroidManifest.xml:17:1-22:12
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:2:1-62:12
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:2:1-62:12
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:2:1-62:12
+	package
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:4:5-35
+		INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:2:1-62:12
+		INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:3:5-51
+	android:versionCode
+		INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:2:1-62:12
+		INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.VIBRATE
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:6:5-66
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:6:22-63
+uses-permission#android.permission.GET_ACCOUNTS
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:7:5-71
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:7:22-68
+uses-permission#android.permission.READ_PROFILE
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:8:5-71
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:8:22-68
+uses-permission#android.permission.READ_CONTACTS
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:9:5-72
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:9:22-69
+application
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:11:5-60:19
+MERGED from [com.android.support:design:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\46022588914fc6ee941df9bdf4bdbab5\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:design:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\46022588914fc6ee941df9bdf4bdbab5\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\58f2e2bad6ddcb91588f5d7f7abc7c94\AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\58f2e2bad6ddcb91588f5d7f7abc7c94\AndroidManifest.xml:9:5-20
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\d6f7651d6184fb1165f9509d5f1ee2ad\AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\d6f7651d6184fb1165f9509d5f1ee2ad\AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\0b171d2b76e6ebc18ccb9cfef0ce99f2\AndroidManifest.xml:22:5-23:19
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\0b171d2b76e6ebc18ccb9cfef0ce99f2\AndroidManifest.xml:22:5-23:19
+	android:appComponentFactory
+		ADDED from [com.android.support:support-compat:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\d6f7651d6184fb1165f9509d5f1ee2ad\AndroidManifest.xml:22:18-91
+	android:supportsRtl
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:16:9-35
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:14:9-41
+	tools:ignore
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:18:9-48
+	android:roundIcon
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:15:9-54
+	android:icon
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:13:9-43
+	android:allowBackup
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:12:9-35
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:17:9-40
+activity#com.example.travelin.ForgotPassword
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:19:9-22:20
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:20:13-43
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:21:13-56
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:19:19-49
+activity#com.example.travelin.SignUpActivity
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:23:9-26:59
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:25:13-43
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:26:13-56
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:24:13-43
+activity#com.example.travelin.HomeActivity
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:27:9-29:58
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:28:13-41
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:29:13-56
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:27:19-47
+activity#com.example.travelin.ProfileActivity
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:30:9-33:59
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:32:13-44
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:33:13-56
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:31:13-44
+activity#com.example.travelin.RateUserActivity
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:34:9-36:58
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:35:13-45
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:36:13-56
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:34:19-51
+activity#com.example.travelin.OtherProfileActivity
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:37:9-39:58
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:38:13-49
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:39:13-56
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:37:19-55
+activity#com.example.travelin.OtherProfilePicturesActivity
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:40:9-42:58
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:41:13-57
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:42:13-56
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:40:19-63
+activity#com.example.travelin.EditProfile
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:43:9-45:59
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:44:13-40
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:45:13-56
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:43:19-46
+activity#com.example.travelin.SearchFilterActivity
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:46:9-48:59
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:47:13-49
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:48:13-56
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:46:19-55
+activity#com.example.travelin.SearchPageActivity
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:49:9-51:58
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:50:13-47
+	android:theme
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:51:13-56
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:49:19-53
+activity#com.example.travelin.LoginActivity
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:52:9-59:20
+	android:label
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:54:13-45
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:53:13-42
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:55:13-58:29
+action#android.intent.action.MAIN
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:56:17-69
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:56:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:57:17-77
+	android:name
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml:57:27-74
+uses-sdk
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+MERGED from [io.realm:realm-android-library-object-server:5.8.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\realm-android-library-object-server-5.8.0.aar\c5f4fb4753fa2968b6e369dbe54e6b4c\AndroidManifest.xml:6:5-8:41
+MERGED from [io.realm:realm-android-library-object-server:5.8.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\realm-android-library-object-server-5.8.0.aar\c5f4fb4753fa2968b6e369dbe54e6b4c\AndroidManifest.xml:6:5-8:41
+MERGED from [com.android.support:design:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\46022588914fc6ee941df9bdf4bdbab5\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\46022588914fc6ee941df9bdf4bdbab5\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\b8cd76d5528d88448ef50f63b1c9fd4c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\b8cd76d5528d88448ef50f63b1c9fd4c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-v4-28.0.0.aar\14eb0b311c0a313e659388fc9b533cce\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-v4-28.0.0.aar\14eb0b311c0a313e659388fc9b533cce\AndroidManifest.xml:20:5-44
+MERGED from [io.realm:android-adapters:3.1.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\android-adapters-3.1.0.aar\50f3e00e14aa5b2810f593c2d2eec297\AndroidManifest.xml:5:5-7:41
+MERGED from [io.realm:android-adapters:3.1.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\android-adapters-3.1.0.aar\50f3e00e14aa5b2810f593c2d2eec297\AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\58f2e2bad6ddcb91588f5d7f7abc7c94\AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\58f2e2bad6ddcb91588f5d7f7abc7c94\AndroidManifest.xml:5:5-7:41
+MERGED from [com.getkeepsafe.relinker:relinker:1.3.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\relinker-1.3.0.aar\b26ce55739cb1e0df657f0b59e6c5c90\AndroidManifest.xml:5:5-43
+MERGED from [com.getkeepsafe.relinker:relinker:1.3.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\relinker-1.3.0.aar\b26ce55739cb1e0df657f0b59e6c5c90\AndroidManifest.xml:5:5-43
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\32359bab801fec4c119a13439368c509\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\32359bab801fec4c119a13439368c509\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\1d6add2fe2653de27cb5f86363141ce2\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\1d6add2fe2653de27cb5f86363141ce2\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\92aed4b98177ce0c2c3555d71987a7a9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\92aed4b98177ce0c2c3555d71987a7a9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\612172169a79b0ad32474f00d921ff63\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\612172169a79b0ad32474f00d921ff63\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\cb62800cee13d1e15ded85056c65e81b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\cb62800cee13d1e15ded85056c65e81b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\cbab6c62308d4620f92809a38c30dcf4\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\cbab6c62308d4620f92809a38c30dcf4\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\d2de8a0303dbf88ba2b435e8056f6799\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\d2de8a0303dbf88ba2b435e8056f6799\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-media-compat-28.0.0.aar\70be82f4dd2740be90c83b45956023d9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-media-compat-28.0.0.aar\70be82f4dd2740be90c83b45956023d9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\d3d8fa5412692ebd7e216c3b3b7567a9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\d3d8fa5412692ebd7e216c3b3b7567a9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\d8d1391147794385efaabb14c8c6c5ca\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\d8d1391147794385efaabb14c8c6c5ca\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\d7c839afac8bc7a3a0130d0d469392d8\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\d7c839afac8bc7a3a0130d0d469392d8\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\8603679dfd504d151226d4f54842ff93\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\8603679dfd504d151226d4f54842ff93\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\6cbe3fe82866aed0b16c201167232f7f\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\6cbe3fe82866aed0b16c201167232f7f\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\54cd7ba1756da41eab76f3fbfb5dc199\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\54cd7ba1756da41eab76f3fbfb5dc199\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\386ac86ccf3ac64d1d1479bfc19a566c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\386ac86ccf3ac64d1d1479bfc19a566c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\e79b3a9d202a224e4b78ba76bb82be21\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\e79b3a9d202a224e4b78ba76bb82be21\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\d6f7651d6184fb1165f9509d5f1ee2ad\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\d6f7651d6184fb1165f9509d5f1ee2ad\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\0b171d2b76e6ebc18ccb9cfef0ce99f2\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\0b171d2b76e6ebc18ccb9cfef0ce99f2\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\ed6af58dc531537731126246625b32b8\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\ed6af58dc531537731126246625b32b8\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\9f9c3adb0dc5b5bf3e16c235267f4d42\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\9f9c3adb0dc5b5bf3e16c235267f4d42\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\127bd3ffeffd25f136e01c17ca395558\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\127bd3ffeffd25f136e01c17ca395558\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\874bcd14767472ee96aecddf7d13df2e\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\874bcd14767472ee96aecddf7d13df2e\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\4e23cb41af59dbe1f7ce7d75ca7489f0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\4e23cb41af59dbe1f7ce7d75ca7489f0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\8e22155397462ec90b901ca57838a49f\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\8e22155397462ec90b901ca57838a49f\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\ad48fd4c7e0a054885e8b5c8b3bed843\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\ad48fd4c7e0a054885e8b5c8b3bed843\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\ba1a4936ddc7782b07f950f7425062d8\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\ba1a4936ddc7782b07f950f7425062d8\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\f7c4ce8cd3bc0d708cfc9f26e8570bee\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\f7c4ce8cd3bc0d708cfc9f26e8570bee\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\45a45192f9fadc9b820ddf41af35e012\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\45a45192f9fadc9b820ddf41af35e012\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\b8f8ef07d7bd74f09bb968fedd77e402\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\b8f8ef07d7bd74f09bb968fedd77e402\AndroidManifest.xml:20:5-44
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\steph\Desktop\tvelin\gitisfucked\Travelin\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from [io.realm:realm-android-library-object-server:5.8.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\realm-android-library-object-server-5.8.0.aar\c5f4fb4753fa2968b6e369dbe54e6b4c\AndroidManifest.xml:10:5-79
+	android:name
+		ADDED from [io.realm:realm-android-library-object-server:5.8.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\realm-android-library-object-server-5.8.0.aar\c5f4fb4753fa2968b6e369dbe54e6b4c\AndroidManifest.xml:10:22-76
+uses-permission#android.permission.INTERNET
+ADDED from [io.realm:realm-android-library-object-server:5.8.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\realm-android-library-object-server-5.8.0.aar\c5f4fb4753fa2968b6e369dbe54e6b4c\AndroidManifest.xml:11:5-67
+	android:name
+		ADDED from [io.realm:realm-android-library-object-server:5.8.0] C:\Users\steph\.gradle\caches\transforms-1\files-1.1\realm-android-library-object-server-5.8.0.aar\c5f4fb4753fa2968b6e369dbe54e6b4c\AndroidManifest.xml:11:22-64
