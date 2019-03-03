@@ -77,6 +77,8 @@ public class OtherProfileActivity extends AppCompatActivity {
             }
         });*/
 
+        //this line is just here for commit purposes, will be updated with the actual functionality when database change is done
+
 
         homeButton = findViewById(R.id.home_button);
         homeButton.setOnClickListener(new View.OnClickListener() {
