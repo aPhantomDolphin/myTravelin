@@ -2,6 +2,7 @@ package com.example.travelin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -17,15 +18,37 @@ public class SearchFilterActivity extends AppCompatActivity {
     private RatingBar star;
     private Float rating;
     private CheckBox check;
+    private Button home;
+    private TextInputEditText searchedUN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_filter);
         searchUser = findViewById(R.id.user_name);
-        backButton= findViewById(R.id.back_button);
+        //
+        // backButton= findViewById(R.id.);
         star = findViewById(R.id.ratingBar);
-        rating = star.getRating();
+
+
+
+        searchedUN=findViewById(R.id.search_text);
+
+        home = findViewById(R.id.home_button);
+
+
+
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SearchFilterActivity.this, HomeActivity.class);
+                try{
+                    startActivity(intent);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
         searchButton = findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -33,15 +56,17 @@ public class SearchFilterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
+                    rating = star.getRating();
                     Intent intent = new Intent(SearchFilterActivity.this, SearchPageActivity.class);
                     intent.putExtra("gender",genderPreferance);
                     intent.putExtra("rating",String.valueOf(rating));
+                    intent.putExtra("searchUN",searchedUN.getText().toString());
                     try{
                         startActivity(intent);
                     } catch(Exception e){
                         e.printStackTrace();
                     }
-                    //finish();
+                    finish();
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -59,12 +84,12 @@ public class SearchFilterActivity extends AppCompatActivity {
         // Check which checkbox was clicked
         switch(view.getId()) {
             case R.id.checkBox_male:
-                if (checked)
-                    genderPreferance ="Male";
+                if (!checked)
+                    genderPreferance ="Female";
                 break;
             case R.id.checkBox_female:
-                if (checked)
-                    genderPreferance="Female";
+                if (!checked)
+                    genderPreferance="Male";
                 break;
             default:
                 genderPreferance="Both";

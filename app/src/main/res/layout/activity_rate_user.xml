@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Profile"
+    tools:context=".RateUserActivity"
     android:background="@color/graylight"
     >
 
@@ -133,15 +133,16 @@
 
                         <TextView
                             android:id="@+id/other_rating_profile"
-                            android:layout_width="wrap_content"
+                            android:layout_width="104dp"
+
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="4.5/5"
                             android:textColor="@color/endblue"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -150,14 +151,14 @@
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:background="@color/graylight"
+                    <android.support.design.widget.TextInputEditText
                         android:id="@+id/user_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
                         android:layout_marginLeft="10dp"
+                        android:background="@color/graylight"
                         android:hint="4.9"
+                        android:padding="10dp"
                         android:textColor="@color/endblue"
                         android:textSize="22sp"
                         android:textStyle="bold" />
@@ -170,14 +171,14 @@
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:background="@color/graylight"
+                    <android.support.design.widget.TextInputEditText
                         android:id="@+id/user_reviews"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
                         android:layout_marginLeft="10dp"
+                        android:background="@color/graylight"
                         android:hint="..........................."
+                        android:padding="10dp"
                         android:textColor="@color/endblue"
                         android:textSize="22sp"
                         android:textStyle="bold" />
@@ -196,14 +197,14 @@
 
         <Button
             android:id="@+id/submit_rating"
-            android:textColor="#fff"
-            android:background="@drawable/buttonstyleithgradient"
-            android:layout_marginTop="35dp"
-            android:layout_marginRight="30dp"
-            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submit"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/design_default_color_primary"
+            android:text="Submit"
+            android:textColor="#fff" />
 
         <Button
             android:id="@+id/backto_profile_other"

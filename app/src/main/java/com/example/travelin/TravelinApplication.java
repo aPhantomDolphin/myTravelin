@@ -15,6 +15,6 @@ public class TravelinApplication extends Application {
                 .name("travelin.realm") //
                 .build();
 
-        Realm.setDefaultConfiguration(config);
+        //Realm.setDefaultConfiguration(config);
     }
 }

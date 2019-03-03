@@ -42,6 +42,8 @@ public class User extends RealmObject {
 
     private String profilePictureURL;
 
+    //private String ident;
+
     private RealmList<EventLocation> previousTrips;
 
     private RealmList<User> favorites;
@@ -63,6 +65,12 @@ public class User extends RealmObject {
         this.age = age;
         this.avgRating=0.0;
     }
+
+    /*public String getIdent(){return ident;}
+
+    public void setIdent(String ident) {
+        this.ident = ident;
+    }*/
 
     public String getPassword() {
         return password;

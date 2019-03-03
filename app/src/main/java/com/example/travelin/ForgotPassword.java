@@ -19,7 +19,7 @@ import static com.example.travelin.Constants.REALM_URL;
 
 public class ForgotPassword extends AppCompatActivity {
 
-    private Realm realm;
+    //private Realm realm;
     private EditText emailText;
     private Button passwordReset;
     private TextView backToLogin;
@@ -28,21 +28,21 @@ public class ForgotPassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resetpassword);
+        Realm realm = Realm.getDefaultInstance();
 
-        realm = Realm.getDefaultInstance();
-
-        backToLogin = findViewById(R.id.textView2);
-        backToLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    ForgotPassword.this.finish();
-                } catch(Exception e){
-                    e.printStackTrace();
+            setContentView(R.layout.activity_resetpassword);
+            backToLogin = findViewById(R.id.textView2);
+            backToLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try{
+                        ForgotPassword.this.finish();
+                    } catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+
 
 
         emailText = findViewById(R.id.email);

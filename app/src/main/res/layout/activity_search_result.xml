@@ -13,15 +13,8 @@
         android:background="#FFFFFF">
 
 
-        <ImageView
-            android:id="@+id/search_icon"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="@drawable/searchicon" />
-
-
         <Button
-            android:id="@+id/back_button"
+            android:id="@+id/filter_button"
             android:layout_width="101dp"
             android:layout_height="46dp"
             android:layout_alignParentRight="true"
@@ -39,7 +32,6 @@
             android:id="@+id/user_name"
             android:layout_width="244dp"
             android:layout_height="56dp"
-            android:layout_toRightOf="@id/search_icon"
             android:text="RESULTS"
             android:textStyle="bold"
             android:textColor="@color/endblue"
@@ -47,12 +39,12 @@
 
     </RelativeLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-
-    </ScrollView>
+    </ListView>
 
 
 </LinearLayout>
