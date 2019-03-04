@@ -15,11 +15,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    private EditText nameView;
     private EditText emailView;
     private EditText passwordView;
     private Button registerButton;
@@ -32,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        nameView = findViewById(R.id.register_name);
         emailView = findViewById(R.id.register_email);
         passwordView = findViewById(R.id.register_password);
         registerButton = findViewById(R.id.register_button);
@@ -46,8 +50,15 @@ public class RegisterActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("EmailPassword", "createUserWithEmail:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                     startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    DatabaseReference myRef = database.getReference().child("Users");
+
+                                    User user = new User(nameView.getText().toString(),firebaseUser.getEmail());
+
+                                    myRef.child(firebaseUser.getUid()).setValue(user);
+
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("EmailPassword", "createUserWithEmail:failure", task.getException());
