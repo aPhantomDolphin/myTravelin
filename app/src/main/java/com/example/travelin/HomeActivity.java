@@ -35,6 +35,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //placeholder for notifications, ideally the server is pinged every 5-10 seconds and returns a response if new messages are here, and if so, sends how many there are
+
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
