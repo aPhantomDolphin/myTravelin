@@ -17,4 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_white" />
 
+
 </android.support.constraint.ConstraintLayout>
+
