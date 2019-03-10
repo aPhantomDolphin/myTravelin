@@ -50,6 +50,8 @@ public class SearchFilterActivity extends AppCompatActivity {
             }
         });
 
+        //more placeholders for common interest filtering
+
         searchButton = findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
 
