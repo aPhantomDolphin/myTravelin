@@ -6,8 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +29,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText emailView;
     private EditText passwordView;
     private Button registerButton;
+    private TextView gobacktoLogin;
+    private LinearLayout parentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,27 @@ public class RegisterActivity extends AppCompatActivity {
         emailView = findViewById(R.id.register_email);
         passwordView = findViewById(R.id.register_password);
         registerButton = findViewById(R.id.register_button);
+        gobacktoLogin = findViewById(R.id.register_backtologin);
+
+        gobacktoLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              finish();
+            }
+        });
+
+        parentLayout = findViewById(R.id.parent_layout);
+
+        parentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    hideKeyboard(v);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,5 +99,10 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    protected void hideKeyboard(View view) {
+        InputMethodManager in = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

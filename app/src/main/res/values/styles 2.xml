@@ -1,0 +1,33 @@
+<resources>
+
+    <!-- Login page theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/login_background_dark</item>
+        <item name="android:background">@color/login_background</item>
+        <item name="android:src">@drawable/logo_white</item>
+    </style>
+
+    <style name="LoginInTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@color/login_background</item>
+        <item name="android:statusBarColor">@color/login_background_dark</item>
+    </style>
+
+    <style name="RegisterTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@color/register_background</item>
+        <item name="android:statusBarColor">@color/register_background_dark</item>
+    </style>
+
+    <style name="ProfileTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@color/profile_gray</item>
+        <item name="android:statusBarColor">@color/register_background</item>
+    </style>
+
+</resources>

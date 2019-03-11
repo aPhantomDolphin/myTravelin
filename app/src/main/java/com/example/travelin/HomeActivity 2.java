@@ -17,6 +17,7 @@ public class HomeActivity extends AppCompatActivity {
     private TextView textView;
     private Button logoutButton;
     private FirebaseAuth mAuth;
+    private Button profileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -36,6 +37,14 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mAuth.signOut();
                 startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+            }
+        });
+
+        profileButton = findViewById(R.id.profile_button);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this,ProfileActivity.class));
             }
         });
 

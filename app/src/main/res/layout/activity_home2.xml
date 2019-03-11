@@ -19,6 +19,12 @@
             android:id="@+id/logout_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Logout" />
+            android:text="@string/logout" />
+
+        <Button
+            android:id="@+id/profile_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/profile" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

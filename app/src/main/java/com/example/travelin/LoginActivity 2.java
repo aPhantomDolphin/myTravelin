@@ -7,8 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +28,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    private LinearLayout parentLayout;
     private EditText emailView;
     private EditText passwordView;
     private Button loginButton;
     private TextView gotoregisterButton;
+    private TextView forgetPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,28 @@ public class LoginActivity extends AppCompatActivity {
         passwordView = findViewById(R.id.login_password);
         loginButton = findViewById(R.id.login_button);
         gotoregisterButton = findViewById(R.id.go_to_register);
+        forgetPassword = findViewById(R.id.forget_password);
+
+        parentLayout = findViewById(R.id.parent_layout);
+
+        parentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    hideKeyboard(v);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
+            }
+        });
+
 
         gotoregisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +104,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    protected void hideKeyboard(View view) {
+        InputMethodManager in = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 }
