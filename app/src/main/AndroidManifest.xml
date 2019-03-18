@@ -16,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".OtherProfileActivity"
+            android:label="OtherProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity android:name=".ForgotPassword"
             android:label="ForgotPassword"
             android:theme="@style/AppTheme.NoActionBar">

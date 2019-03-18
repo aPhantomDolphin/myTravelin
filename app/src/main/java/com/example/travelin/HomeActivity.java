@@ -51,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this,SearchFilterActivity.class);
+                Intent intent = new Intent(HomeActivity.this,SearchPageActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
