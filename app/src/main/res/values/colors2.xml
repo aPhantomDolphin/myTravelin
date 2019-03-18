@@ -9,7 +9,8 @@
     <color name="register_background">#2e3237</color>
     <color name="register_background_dark">#23272b</color>
     <color name="input_register_background">#3b4148</color>
-    <color name="white">#ffffff</color>
+    <color name="white">#FFFFFF</color>
+    <color name="profile_gray">#5e6266</color>
 
 
 
@@ -20,7 +21,6 @@
     <color name="pink1">#D81B60</color>
     <color name="black1">#222222</color>
     <color name="grey1">#888888</color>
-    <color name="grey2">#5e6266</color>
     <color name="green3">#26ae90</color>
     <color name="white2">#eceef1</color>
     <color name="black2">#333333</color>
