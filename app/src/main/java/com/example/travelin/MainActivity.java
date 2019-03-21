@@ -1,4 +1,4 @@
-package com.example.testrealm;
+package com.example.travelin;
 
 import android.content.Intent;
 import android.os.Bundle;

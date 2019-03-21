@@ -5,55 +5,44 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
-import io.realm.Realm;
-import io.realm.SyncUser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private Realm realm;
-    private Button buttonProfile;
-    private Button buttonSearch;
-    private Button buttonLogout;
+    private TextView textView;
+    private Button logoutButton;
+    private FirebaseAuth mAuth;
+    private Button profileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        realm = Realm.getDefaultInstance();
+        setContentView(R.layout.activity_home2);
 
-        buttonProfile = findViewById(R.id.profile_button);
-        buttonSearch = findViewById(R.id.search_button);
-        buttonLogout = findViewById(R.id.logout_button);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        buttonProfile.setOnClickListener(new View.OnClickListener() {
+        textView = findViewById(R.id.home_text);
+
+        textView.setText(user.getEmail());
+
+        logoutButton = findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                mAuth.signOut();
+                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
             }
         });
 
-        //placeholder for notifications, ideally the server is pinged every 5-10 seconds and returns a response if new messages are here, and if so, sends how many there are
-
-        buttonLogout.setOnClickListener(new View.OnClickListener() {
+        profileButton = findViewById(R.id.profile_button);
+        profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SyncUser.current().logOut();
-                Intent intent = new Intent( HomeActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                HomeActivity.this.finish();
-            }
-        });
-
-        buttonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this,SearchPageActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                startActivity(new Intent(HomeActivity.this,ProfileActivity.class));
             }
         });
 

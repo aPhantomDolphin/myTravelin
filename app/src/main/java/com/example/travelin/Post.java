@@ -1,12 +1,12 @@
 package com.example.travelin;
 
+import java.util.ArrayList;
 import java.util.Date;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.Required;
+//import io.realm.RealmList;
+//import io.realm.RealmObject;
 
-public class Post extends RealmObject {
+public class Post /*extends RealmObject*/ {
 
     //because Realm doesn't work with inheritance, we need a type
     //to make sure that we add the posts to the correct lists
@@ -23,9 +23,9 @@ public class Post extends RealmObject {
 
     private int rateDown = 0;
 
-    private RealmList<Post> replies;
+    private ArrayList<Post> replies;
 
-    private RealmList<String> imageURLs;
+    private ArrayList<String> imageURLs;
 
 
     //constructors
@@ -94,8 +94,4 @@ public class Post extends RealmObject {
     public void deleteImageURL(String url) {
         imageURLs.remove(url);
     }
-
-    public int getupvotes() { return rateUp; }
-
-    public int getdownvotes() { return rateDown; }
 }

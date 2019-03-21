@@ -1,192 +1,115 @@
 package com.example.travelin;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import io.realm.ObjectServerError;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import io.realm.SyncConfiguration;
-import io.realm.SyncCredentials;
-import io.realm.SyncUser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import static com.example.travelin.Constants.AUTH_URL;
 
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
 
-    private Realm realm;
-    private TextView signUpHereText;
-    private AutoCompleteTextView emailText;
-    private EditText passText;
-    Button buttonLogin;
-    private View progressView;
-    private View LoginFormView;
-    private TextView forgotButton;
-    SharedPreferences spref;
+    private FirebaseAuth mAuth;
+
+    private LinearLayout parentLayout;
+    private EditText emailView;
+    private EditText passwordView;
+    private Button loginButton;
+    private TextView gotoregisterButton;
+    private TextView forgetPassword;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        Realm.init(getApplicationContext());
-        realm = Realm.getDefaultInstance();
+        setContentView(R.layout.activity_login2);
 
-        progressView = findViewById(R.id.login_progress);
-        LoginFormView = findViewById(R.id.email_login_form);
-        //showProgress(true);
+        mAuth = FirebaseAuth.getInstance();
 
-        if( SyncUser.current() != null) {
-            //showProgress(true);
-/*
-            RealmQuery query = realm.where(User.class);
-            query.equalTo("identity", SyncUser.current().getIdentity());
-            RealmResults<User> results = query.findAll();
+        emailView = findViewById(R.id.login_email);
+        passwordView = findViewById(R.id.login_password);
+        loginButton = findViewById(R.id.login_button);
+        gotoregisterButton = findViewById(R.id.go_to_register);
+        forgetPassword = findViewById(R.id.forget_password);
 
+        parentLayout = findViewById(R.id.parent_layout);
 
-            SyncSingleton.getInstance().setEmail(results.get(0).getEmail());
-*/
-
-            goToHomePage();
-        }
-
-        signUpHereText = findViewById(R.id.textView2);
-        signUpHereText.setOnClickListener(new View.OnClickListener() {
+        parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    goToSignUpPage();
-                }catch (Exception e){
+                try{
+                    hideKeyboard(v);
+                } catch(Exception e){
                     e.printStackTrace();
                 }
             }
         });
 
-
-
-        buttonLogin = findViewById(R.id.email_log_in_button);
-        emailText = findViewById(R.id.email);
-        passText = findViewById(R.id.password);
-
-        forgotButton = findViewById(R.id.forget_password);
-        forgotButton.setOnClickListener(new View.OnClickListener() {
+        forgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    goToForgotPassword();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
+                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
             }
         });
 
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
+        gotoregisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final String loginEmail = emailText.getText().toString();
-                final String loginPass = passText.getText().toString();
-                SyncCredentials credentials=null;
-                try{
-                    credentials = SyncCredentials.usernamePassword(loginEmail,loginPass,false);
-                } catch (Exception e){
-                    emailText.setError("Retry Login");
-                    emailText.requestFocus();
-                    Log.e("Login Error", e.toString());
-                }
-                SyncUser.logInAsync(credentials, AUTH_URL, new SyncUser.Callback<SyncUser>() {
-                    @Override
-                    public void onSuccess(SyncUser result) {
-                        //SyncConfiguration configuration = result.getDefaultConfiguration();
-                        //realm = Realm.getInstance(configuration);
-                        //Realm.setDefaultConfiguration(configuration);
-
-                        /*RealmQuery query = realm.where(User.class);
-                        query.equalTo("identity", result.getIdentity());
-                        RealmResults<User> results = query.findAll();
-
-
-                        SyncSingleton.getInstance().setEmail(results.get(0).getEmail());*/
-                        SyncSingleton.getInstance().setEmail(loginEmail);
-
-                        //spref = getSharedPreferences("com.example.tavelin",MODE_PRIVATE);
-                        //spref.edit().putString("UserEmail",loginEmail).apply();
-                        //PreferenceUtils.saveEmail(loginEmail,getApplicationContext());
-                        goToHomePage();
-                    }
-
-                    @Override
-                    public void onError(ObjectServerError error) {
-                        emailText.setError("Retry Login");
-                        emailText.requestFocus();
-                        Log.e("Login Error", error.toString());
-                    }
-                });
-
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
 
-
-    }
-
-    private void goToHomePage(){
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        showProgress(false);
-        startActivity(intent);
-        LoginActivity.this.finish();
-    }
-
-    private void goToSignUpPage(){
-        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-        showProgress(false);
-        startActivity(intent);
-    }
-
-    private void goToForgotPassword(){
-        Intent intent = new Intent(LoginActivity.this, ForgotPassword.class);
-        showProgress(false);
-        startActivity(intent);
-    }
-
-    /**
-     * Shows the progress UI and hides the signUp form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        LoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        LoginFormView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onAnimationEnd(Animator animation) {
-                LoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            public void onClick(View v) {
+                mAuth.signInWithEmailAndPassword(emailView.getText().toString(), passwordView.getText().toString())
+                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d("EmailPassword", "signInWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w("EmailPassword", "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                    emailView.setError("Invalid Email or Password");
+                                    emailView.requestFocus();
+                                }
+
+                            }
+                        });
             }
         });
-        progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        progressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
+
+
+    }
+
+    protected void hideKeyboard(View view) {
+        InputMethodManager in = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 }
+

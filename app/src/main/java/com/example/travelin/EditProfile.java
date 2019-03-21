@@ -13,14 +13,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 
-import java.io.ByteArrayInputStream;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
-import io.realm.Realm;
+/*import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-
+*/
 public class EditProfile extends AppCompatActivity {
 
     private Button resetPass;
@@ -36,18 +37,21 @@ public class EditProfile extends AppCompatActivity {
     Button deleteAccount;
     private TextInputEditText interests;
 
+    private FirebaseAuth mauth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        final Realm realm = Realm.getDefaultInstance();
+        //final Realm realm = Realm.getDefaultInstance();
+        mauth = FirebaseAuth.getInstance();
 
         resetPass = findViewById(R.id.change_password);
         resetPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditProfile.this, ForgotPassword.class);
+                Intent intent = new Intent(EditProfile.this, ForgotPasswordActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
@@ -57,13 +61,13 @@ public class EditProfile extends AppCompatActivity {
         deleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Realm realm=Realm.getDefaultInstance();
+                /*Realm realm=Realm.getDefaultInstance();
                 realm.beginTransaction();
                 RealmResults<User> res=realm.where(User.class).equalTo("email",SyncSingleton.getInstance().getEmail()).findAll();
                 res.deleteAllFromRealm();
                 realm.commitTransaction();
-                SyncSingleton.getInstance().setEmail("");
-                Intent intent = new Intent(EditProfile.this,LoginActivity.class);
+                SyncSingleton.getInstance().setEmail("");*/
+                Intent intent = new Intent(EditProfile.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -88,7 +92,7 @@ public class EditProfile extends AppCompatActivity {
         changePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditProfile.this,ForgotPassword.class);
+                Intent intent = new Intent(EditProfile.this,ForgotPasswordActivity.class);
                 startActivity(intent);
             }
         });
@@ -107,16 +111,17 @@ public class EditProfile extends AppCompatActivity {
         saveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Realm realm=Realm.getDefaultInstance();
+                //Realm realm=Realm.getDefaultInstance();
                 interests=findViewById(R.id.intersts_edit_profile);
                 String t1=interests.getText().toString();
                 Tag tag=new Tag();
                 tag.setTagName(t1);
 
-                realm.beginTransaction();
+                /*realm.beginTransaction();
                 RealmQuery<User> realmQuery = realm.where(User.class);
                 realmQuery.equalTo("email",SyncSingleton.getInstance().getEmail());
                 RealmResults<User> results = realmQuery.findAll();
+                */
 
                 User u = results.get(0);
                 u.addInterest(tag);
@@ -132,7 +137,7 @@ public class EditProfile extends AppCompatActivity {
     }
 
     public void goToProfile(){
-        Intent intent = new Intent(EditProfile.this,ProfileActivity.class);
+        Intent intent = new Intent(EditProfile.this, ProfileActivity.class);
         startActivity(intent);
     }
 
@@ -164,7 +169,7 @@ public class EditProfile extends AppCompatActivity {
                 Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
                 dpView.setImageBitmap(bmp);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 5, stream);
+                bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
                 bArray = stream.toByteArray();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

@@ -1,15 +1,18 @@
 package com.example.travelin;
 
+//package com.example.travelin;
+
 import android.media.Rating;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
+//import io.realm.RealmList;
+//import io.realm.RealmObject;
+//import io.realm.annotations.PrimaryKey;
+//import io.realm.annotations.Required;
 
-public class User extends RealmObject {
+public class User /*extends RealmObject*/ {
 
     private String password;
 
@@ -20,45 +23,54 @@ public class User extends RealmObject {
     private String gender;
 
     //private RealmList<Post> review;
-    private RealmList<MyRating> myRatings; //for me
-    private RealmList<MyRating> reviews;   //I left other people
+    //private RealmList<MyRating> myRatings; //for me
+    //private RealmList<MyRating> reviews;   //I left other people
+    private ArrayList<MyRating> myRatings;
+    private ArrayList<MyRating> reviews;
 
     private int reportCount = 0;
 
     private String bio;
 
-    private RealmList<Tag> interests;
+    //private RealmList<Tag> interests;
+    private ArrayList<Tag> interests;
 
-    private RealmList<User> blocked;
+    //private RealmList<User> blocked;
+    private ArrayList<User> blocked;
 
     private boolean deleted = false;
 
     private String name;
 
-    private RealmList<DirectMessage> messages;
+    //private RealmList<DirectMessage> messages;
+    private ArrayList<DirectMessage> messages;
 
-    @PrimaryKey
+    //@PrimaryKey
     private String username;
 
     private String profilePictureURL;
 
     //private String ident;
 
-    private RealmList<EventLocation> previousTrips;
+    //private RealmList<EventLocation> previousTrips;
+    private ArrayList<EventLocation> previousTrips;
 
-    private RealmList<User> favorites;
+    //private RealmList<User> favorites;
+    private ArrayList<User> favorites;
 
-    private RealmList<Post> posts;
+    //private RealmList<Post> posts;
+    private ArrayList<Post> posts;
 
     private double avgRating=0.0;
 
     private byte[] img;
 
-    private RealmList<byte[]> profileImages;
+    //private RealmList<byte[]> profileImages;
+    private ArrayList<byte[]> profileImages;
 
     public User(){}
 
-    public User(String email, String password, String username, int age) {
+    public User(String email, String password/*, String username, int age*/) {
         this.email = email;
         this.password = password;
         this.username = username;
@@ -104,7 +116,7 @@ public class User extends RealmObject {
         this.reviews.add(review);
     }
 
-    public RealmList<MyRating> getReviews() {
+    public ArrayList<MyRating> getReviews() {
         return reviews;
     }
 
@@ -136,7 +148,7 @@ public class User extends RealmObject {
         this.interests.remove(interest);
     }
 
-    public RealmList<Tag> getInterests() {
+    public ArrayList<Tag> getInterests() {
         return this.interests;
     }
 
@@ -148,7 +160,7 @@ public class User extends RealmObject {
         blocked.remove(user);
     }
 
-    public RealmList<User> getBlockedUsers() { return blocked; }
+    public ArrayList<User> getBlockedUsers() { return blocked; }
 
     public void addMessage(DirectMessage message) {
         messages.add(message);
@@ -158,7 +170,7 @@ public class User extends RealmObject {
         messages.remove(message);
     }
 
-    public RealmList<DirectMessage> getMessages() { return messages; }
+    public ArrayList<DirectMessage> getMessages() { return messages; }
 
     public String getUsername() {
         return username;
@@ -172,7 +184,7 @@ public class User extends RealmObject {
         return profilePictureURL;
     }
 
-    public RealmList<EventLocation> getPreviousTrips() {
+    public ArrayList<EventLocation> getPreviousTrips() {
         return previousTrips;
     }
 
@@ -192,7 +204,7 @@ public class User extends RealmObject {
         favorites.remove(user);
     }
 
-    public RealmList getFavorites() {
+    public ArrayList<User> getFavorites() {
         return favorites;
     }
 
@@ -204,7 +216,7 @@ public class User extends RealmObject {
         posts.remove(post);
     }
 
-    public RealmList showPosts() {
+    public ArrayList<Post> showPosts() {
         return posts;
     }
 
@@ -219,11 +231,11 @@ public class User extends RealmObject {
         this.avgRating=sum/x;
     }
 
-    public RealmList<MyRating> getRatings() {
+    public ArrayList<MyRating> getRatings() {
         return myRatings;
     }
 
-    public RealmList<MyRating> getReview() {
+    public ArrayList<MyRating> getReview() {
         return reviews;
     }
 
@@ -243,7 +255,7 @@ public class User extends RealmObject {
         this.img = img;
     }
 
-    public RealmList<byte[]> getProfileImages() {
+    public ArrayList<byte[]> getProfileImages() {
         return profileImages;
     }
 

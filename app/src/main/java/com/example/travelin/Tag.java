@@ -1,16 +1,15 @@
 package com.example.travelin;
 
-import java.util.List;
+//import io.realm.RealmList;
+//import io.realm.RealmObject;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.Required;
+import java.util.ArrayList;
 
-public class Tag extends RealmObject {
+public class Tag /*extends RealmObject*/ {
 
     private String tagName;
 
-    private RealmList<Tag> relatedTags;
+    private ArrayList<Tag> relatedTags;
 
 
     //constructors
@@ -20,7 +19,7 @@ public class Tag extends RealmObject {
         this.tagName = tagName;
     }
 
-    public Tag(String tagName, RealmList<Tag> relatedTags) {
+    public Tag(String tagName, ArrayList<Tag> relatedTags) {
         this.tagName = tagName;
         this.relatedTags = relatedTags;
     }

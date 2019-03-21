@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.SyncUser;
 
 public class RateUserActivity extends AppCompatActivity {
 
@@ -76,7 +75,7 @@ public class RateUserActivity extends AppCompatActivity {
                 user1.addReview(mr);
                 realm.commitTransaction();
 
-                Intent intent =new Intent(RateUserActivity.this,OtherProfileActivity.class);
+                Intent intent =new Intent(RateUserActivity.this, OtherProfileActivity.class);
                 intent.putExtra("username",un);
                 startActivity(intent);
 

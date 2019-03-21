@@ -1,13 +1,12 @@
 package com.example.travelin;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.Required;
+//import io.realm.RealmList;
+//import io.realm.RealmObject;
 
-public class Event extends RealmObject {
+public class Event /*extends RealmObject*/ {
 
     private EventLocation location;
 
@@ -15,9 +14,9 @@ public class Event extends RealmObject {
 
     private String name;
 
-    private RealmList<Tag> tags;
+    private ArrayList<Tag> tags;
 
-    private RealmList<User> rsvp;
+    private ArrayList<User> rsvp;
 
     //constructors
     public Event(){}

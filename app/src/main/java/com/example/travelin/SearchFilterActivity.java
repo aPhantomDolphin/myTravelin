@@ -29,8 +29,7 @@ public class SearchFilterActivity extends AppCompatActivity {
         //
         // backButton= findViewById(R.id.);
         star = findViewById(R.id.ratingBar);
-
-
+        rating = star.getRating();
 
         searchedUN=findViewById(R.id.search_text);
 
@@ -50,15 +49,12 @@ public class SearchFilterActivity extends AppCompatActivity {
             }
         });
 
-        //more placeholders for common interest filtering
-
         searchButton = findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 try{
-                    rating = star.getRating();
                     Intent intent = new Intent(SearchFilterActivity.this, SearchPageActivity.class);
                     intent.putExtra("gender",genderPreferance);
                     intent.putExtra("rating",String.valueOf(rating));

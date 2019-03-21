@@ -1,38 +1,32 @@
 package com.example.travelin;
 
-import android.app.DownloadManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONObject;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.util.Map;
-
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmConfiguration;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import io.realm.SyncUser;
-import io.realm.SyncUserInfo;
-
-import static com.example.travelin.Constants.REALM_URL;
+import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity {
+
     //private Realm realm;
     private Button logoutButton;
     private TextView nameView;
@@ -52,14 +46,28 @@ public class ProfileActivity extends AppCompatActivity {
     User usert;
 
 
+    private FirebaseAuth mAuth;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile);
+    /*}
+
+
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile2);
         //Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+    */
+        //Realm realm = Realm.getDefaultInstance();
 
-        Realm realm = Realm.getDefaultInstance();
+        mAuth = FirebaseAuth.getInstance();
+
 
         nameView = findViewById(R.id.name_profile);
 
@@ -67,7 +75,8 @@ public class ProfileActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SyncUser.current().logOut();
+                //SyncUser.current().logOut();
+                mAuth.signOut();
                 Intent intent = new Intent( ProfileActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -77,13 +86,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         editProfile = findViewById(R.id.edit_profile);
         editProfile.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view){
-               Intent intent = new Intent(ProfileActivity.this, EditProfile.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-               startActivity(intent);
-               ProfileActivity.this.finish();
-           }
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(ProfileActivity.this, EditProfile.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                ProfileActivity.this.finish();
+            }
         });
 
         homeButton = findViewById(R.id.home_button);
@@ -132,13 +141,62 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        System.out.println(SyncSingleton.getInstance().getEmail());
-        RealmQuery<User> realmQuery = realm.where(User.class);
+        //System.out.println(SyncSingleton.getInstance().getEmail());
+        //RealmQuery<User> realmQuery = realm.where(User.class);
 
-        realmQuery.equalTo("email",SyncSingleton.getInstance().getEmail());
-        RealmResults<User> results = realmQuery.findAll();
+        //realmQuery.equalTo("email",SyncSingleton.getInstance().getEmail());
+        //RealmResults<User> results = realmQuery.findAll();
 
-        User u = results.get(0);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference().child("Users");
+
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //ArrayList<User> userlist = new ArrayList<>();
+                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+                    User user = postSnapshot.getValue(User.class);
+                    //userlist.add(user);
+                    if(firebaseUser.getUid().equals(postSnapshot.getKey())){
+
+                        //usert = user;
+                        nameView.setText(user.getUsername());
+                        bioView.setText(user.getBio());
+                        emailView.setText(user.getEmail());
+                        ratingView.setText(String.valueOf(user.getAvgRating()));
+                        /*if (user.getImg() != null) {
+                            byte[] bArray2 = user.getImg();
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bArray2, 0, bArray2.length);
+                            dpView.setImageBitmap(bmp);
+                        }*/
+                        String in="";
+                        for(int i=0;i<user.getInterests().size();i++){
+                            in+=user.getInterests().get(i).getTagName();
+                            in+=",";
+                        }
+                        String re="";
+                        for(int i=0;i<user.getReviews().size();i++){
+                            re+=user.getReviews().get(i).getBody();
+                            re+=",";
+                        }
+                        interests.setText(in);
+                        reviews.setText(re);
+
+                        break;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        /*User u = results.get(0);
         usert = u;
         nameView.setText(u.getUsername());
         bioView.setText(u.getBio());
@@ -161,13 +219,14 @@ public class ProfileActivity extends AppCompatActivity {
         }
         interests.setText(in);
         reviews.setText(re);
+       */
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Realm realm=Realm.getDefaultInstance();
+        //Realm realm=Realm.getDefaultInstance();
 
 
         if (resultCode == RESULT_OK) {
@@ -178,13 +237,14 @@ public class ProfileActivity extends AppCompatActivity {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
                 bArray = stream.toByteArray();
-                realm.beginTransaction();
+                //realm.beginTransaction();
                 usert.addProfileImage(bArray);
-                realm.commitTransaction();
+                //realm.commitTransaction();
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
+
 }
