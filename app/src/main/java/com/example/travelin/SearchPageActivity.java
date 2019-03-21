@@ -9,17 +9,22 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
+
 
 public class SearchPageActivity extends AppCompatActivity {
-
-    private Realm realm;
+    private FirebaseDatabase firedata;
     private Button filterButton;
     private String gender;
     private String rating;
@@ -44,6 +49,9 @@ public class SearchPageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        firedata = FirebaseDatabase.getInstance();
+
         setContentView(R.layout.activity_search_result);
         //realm = Realm.getDefaultInstance();
         Bundle extras = getIntent().getExtras();
@@ -61,9 +69,8 @@ public class SearchPageActivity extends AppCompatActivity {
         });
 
         List<HashMap<String, String>> aList = new ArrayList<HashMap<String, String>>();
-        Realm realm=Realm.getDefaultInstance();
-        realm.beginTransaction();
-        RealmQuery q=realm.where(User.class);
+        DatabaseReference users = firedata.getReference("insert firebase data path here");
+
         q.notEqualTo("email",SyncSingleton.getInstance().getEmail());
         if(!searchUN.isEmpty()){
             q.equalTo("username",searchUN);
