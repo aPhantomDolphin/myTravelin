@@ -4,17 +4,26 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class OtherProfileActivity extends AppCompatActivity {
 
     private Button rateUser;
-    private Button logoutButton;
+    private Button blockButton;
     private TextView nameView;
     private String username;
     private Button homeButton;
@@ -26,26 +35,79 @@ public class OtherProfileActivity extends AppCompatActivity {
     private ImageView dpView;
     private Button viewImages;
     private TextView reviewsProfile;
+
+    private TextView interest;
+
     byte[] bArray=new byte[0];
     //User usert;
-    private String UN;
+    private String mail;
 
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_profile);
-        UN=getIntent().getExtras().getString("username");
-
+        mail=getIntent().getExtras().getString("mail");
+        bioView=findViewById(R.id.other_bio_profile);
+        nameView = findViewById(R.id.other_name_profile);
+        emailView = findViewById(R.id.other_email);
+        reviewsProfile=findViewById(R.id.other_reviews_profile);
         rateUser = findViewById(R.id.rate_and_review_profile);
+
+        interest=findViewById(R.id.other_interest_profile);
+
         rateUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(OtherProfileActivity.this,RateUserActivity.class);
-                intent.putExtra("username",UN);
+                System.out.println("OPAAAAAAAAAAAAAAA:"+mail);
+                intent.putExtra("mail",mail);
                 startActivity(intent);
             }
         });
 
-        Realm realm = Realm.getDefaultInstance();
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference ref = db.getReference();
+        DatabaseReference userRef = ref.child("Users");
+
+        //userRef.addValueEventListener(new ValueEventListener() {
+          userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<User> userList = new ArrayList<>();
+                User u = null;
+                userList.clear();
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    User user = (User) postSnapshot.getValue(User.class);
+                    System.out.println("EMAILLLLLLL "+user.getEmail());
+                    if (user.getEmail().equals(mail)) {
+                        //u = user;
+                        System.out.println("THIS NOOB "+user.getName());
+                        nameView.setText(user.getName());
+                        bioView.setText(user.getBio());
+                        emailView.setText(user.getEmail());
+                        ratingView.setText(String.valueOf(user.getAvg()));
+                        interest.setText(String.valueOf(user.getInterestsNew()));
+                        String rev="";
+                        /*for(int i=0;i<u.getReviews().size();i++){
+                            rev+=u.getReviews().get(i).getBody();
+                            rev+=",";
+                        }
+                        reviewsProfile.setText(rev);*/
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        /*Realm realm = Realm.getDefaultInstance();
 
         nameView = findViewById(R.id.other_username_profile);
         reviewsProfile=findViewById(R.id.other_reviews_profile);
@@ -55,10 +117,10 @@ public class OtherProfileActivity extends AppCompatActivity {
         for(int i=0;i<thisone.getReviews().size();i++){
             rev+=thisone.getReviews().get(i).getBody();
             rev+=",";
-        }
+        }*/
 
         //rev+=thisone.getReviews().get(thisone.getReviews().size()-1).getBody();
-        reviewsProfile.setText(rev);
+        //reviewsProfile.setText(rev);
 
         /*logoutButton = findViewById(R.id.Logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +134,52 @@ public class OtherProfileActivity extends AppCompatActivity {
             }
         });*/
 
+        blockButton = findViewById(R.id.block_button);
+        blockButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseDatabase db = FirebaseDatabase.getInstance();
+                DatabaseReference ref = db.getReference();
+                DatabaseReference userRef = ref.child("users");
+                userRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        ArrayList<User> userList = new ArrayList<>();
+                        User u = null;
+                        userList.clear();
+                        DataSnapshot needed = null;
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            User user = postSnapshot.getValue(User.class);
+                            userList.add(user);
+                            System.out.println(postSnapshot.getKey());
+                            if (user.getEmail().equals(mail)) {
+                                u = user;
+                                needed = postSnapshot;
+                                break;
+                            }
+                        }
+                        DatabaseReference updateData = FirebaseDatabase.getInstance().getReference("users")
+                                .child(needed.getKey());
+
+                        User thisUser = null;
+                        for (User use : userList) {
+                            if (use.getEmail().equals(mail)) {
+                                thisUser = use;
+                            }
+                        }
+
+                        u.addBlockedUser(thisUser);
+
+                        updateData.child("blocked").setValue(u.getBlockedUsers());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
 
         homeButton = findViewById(R.id.home_button);
         homeButton.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +211,7 @@ public class OtherProfileActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.other_profilepic);
         bioView = findViewById(R.id.other_bio_profile);
-        emailView = findViewById(R.id.other_name_profile);
+        //emailView = findViewById(R.id.other_name_profile);
         ratingView = findViewById(R.id.other_rating_profile);
         dpView = findViewById(R.id.other_profilepic);
 
@@ -112,12 +220,13 @@ public class OtherProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(OtherProfileActivity.this,OtherProfilePicturesActivity.class);
-                intent.putExtra("username",UN);
+                intent.putExtra("mail",mail);
                 startActivity(intent);
 
-        }   });
+            }   });
 
-        System.out.println(SyncSingleton.getInstance().getEmail());
+
+        /*System.out.println(SyncSingleton.getInstance().getEmail());
         realm.beginTransaction();
         RealmQuery<User> realmQuery = realm.where(User.class);
         System.out.println("USERNAME FOUND: "+getIntent().getExtras().getString("username"));
@@ -137,7 +246,7 @@ public class OtherProfileActivity extends AppCompatActivity {
             byte[] bArray2 = u.getImg();
             Bitmap bmp = BitmapFactory.decodeByteArray(bArray2, 0, bArray2.length);
             dpView.setImageBitmap(bmp);
-        }
+        }*/
 
 
 

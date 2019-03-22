@@ -37,7 +37,8 @@
                 android:layout_width="117dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="100dp"
-                android:hint="search here" />
+                android:hint="search here"
+                android:textColor="@color/black1" />
         </android.support.design.widget.TextInputLayout>
     </RelativeLayout>
 

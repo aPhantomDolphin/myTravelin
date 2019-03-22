@@ -13,6 +13,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,10 +25,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -44,6 +54,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView reviews;
     byte[] bArray=new byte[0];
     User usert;
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+
 
 
     private FirebaseAuth mAuth;
@@ -88,7 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                Intent intent = new Intent(ProfileActivity.this, EditProfile.class);
+                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 ProfileActivity.this.finish();
@@ -149,6 +161,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference().child("Users");
+        User u = null;
 
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
@@ -157,33 +170,46 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //ArrayList<User> userlist = new ArrayList<>();
                 for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
-                    User user = postSnapshot.getValue(User.class);
+                    User user = (User) postSnapshot.getValue(User.class);
                     //userlist.add(user);
                     if(firebaseUser.getUid().equals(postSnapshot.getKey())){
-
-                        //usert = user;
-                        nameView.setText(user.getUsername());
+                        nameView.setText(user.getName());
                         bioView.setText(user.getBio());
                         emailView.setText(user.getEmail());
                         ratingView.setText(String.valueOf(user.getAvgRating()));
+
+                        /*String tags="";
+                        ArrayList<Tag> arr=user.getInterests();
+                        for(int i=0;i<arr.size();i++){
+                            tags+=""+arr.get(i).getTagName();
+                        }*/
+                        //interests.setText(tags);
+
                         /*if (user.getImg() != null) {
                             byte[] bArray2 = user.getImg();
                             Bitmap bmp = BitmapFactory.decodeByteArray(bArray2, 0, bArray2.length);
                             dpView.setImageBitmap(bmp);
                         }*/
-                        String in="";
-                        for(int i=0;i<user.getInterests().size();i++){
-                            in+=user.getInterests().get(i).getTagName();
-                            in+=",";
+                        try {
+                            /*String in = "";
+                            for (int i = 0; i < user.getInterests().size(); i++) {
+                                in += user.getInterests().get(i).getTagName();
+                                in += ",";
+                            }
+                            String re = "";
+                            for (int i = 0; i < user.getReviews().size(); i++) {
+                                re += user.getReviews().get(i).getBody();
+                                re += ",";
+                            }*/
+                            interests.setText(user.getInterestsNew());
+                            //reviews.setText(re);
                         }
-                        String re="";
-                        for(int i=0;i<user.getReviews().size();i++){
-                            re+=user.getReviews().get(i).getBody();
-                            re+=",";
+                        catch(Exception e){
+                            e.printStackTrace();
+                            interests.setText("NoInterests");
+                            System.out.println("REACHED NO INTERESTS");
+                            reviews.setText("0.0");
                         }
-                        interests.setText(in);
-                        reviews.setText(re);
-
                         break;
                     }
                 }
@@ -227,23 +253,99 @@ public class ProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         //Realm realm=Realm.getDefaultInstance();
+        final Uri targetUri = data.getData();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference().child("Users");
+        User u = null;
+
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+        myRef.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+
+                    final User user = (User) postSnapshot.getValue(User.class);
+                    //userlist.add(user);
+                    if(firebaseUser.getUid().equals(postSnapshot.getKey())){
+                        //////////////////////////////////////////////////////////////////////
+
+                        try {
+                            Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                            //dpView.setImageBitmap(bmp);
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
+                            bArray = stream.toByteArray();
+                            //realm.beginTransaction();
+                            //usert.addProfileImage(bArray);
+                            //realm.commitTransaction();
+
+                            String path = "herearemyphotos/" + UUID.randomUUID() + ".png";
+                            final StorageReference storageReference = storage.getReference(path);
+                            StorageMetadata meta = new StorageMetadata.Builder()
+                                    .setCustomMetadata("yeet", "damn").build();
+                            UploadTask uploadTask = storageReference.putBytes(bArray, meta);
+
+                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+
+                                    return storageReference.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    Uri downloadUri = null;
+                                    if (task.isSuccessful()) {
+                                        downloadUri = task.getResult();
+                                        user.setProfURL(downloadUri.toString());
+                                    } else {
+
+                                    }
+
+                                    StorageReference fuckthis = storage.getReferenceFromUrl(downloadUri.toString());
+                                    final long OM = 5000*500000000;
+                                    fuckthis.getBytes(OM).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @Override
+                                        public void onSuccess(byte[] bytes) {
+                                            imageView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                    });
+                                }
+                            });
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        //////////////////////////////////////////////////////////////////////
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
 
 
         if (resultCode == RESULT_OK) {
-            Uri targetUri = data.getData();
-            try {
-                Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                //dpView.setImageBitmap(bmp);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
-                bArray = stream.toByteArray();
-                //realm.beginTransaction();
-                usert.addProfileImage(bArray);
-                //realm.commitTransaction();
+            //Uri targetUri = data.getData();
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
         }
     }
 

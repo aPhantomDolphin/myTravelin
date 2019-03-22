@@ -46,7 +46,6 @@
         android:layout_height="350dp"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="0dp"
-        android:background="@drawable/gradientbackground"
         android:orientation="vertical">
     </LinearLayout>
 

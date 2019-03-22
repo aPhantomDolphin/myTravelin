@@ -5,48 +5,82 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private TextView textView;
-    private Button logoutButton;
+
     private FirebaseAuth mAuth;
-    private Button profileButton;
+
+    private Button button1;
+    private Button button2;
+    private Button button3;
+    private Button button4;
+    private Button button5;
+    private Button button6;
+    private Button button7;
+    private Button button8;
+    private Button button9;
+    private Button button10;
+
+    private Button buttonProfile;
+    private Button buttonSearch;
+    private Button buttonLogout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home2);
+        setContentView(R.layout.activity_home);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        textView = findViewById(R.id.home_text);
+        /*button1 = findViewById(R.id.info1);
+        button2 = findViewById(R.id.info2);
+        button3 = findViewById(R.id.info3);
+        button4 = findViewById(R.id.info4);
+        button5 = findViewById(R.id.info5);
+        button6 = findViewById(R.id.info6);
+        button7 = findViewById(R.id.info7);
+        button8 = findViewById(R.id.info8);
+        button9 = findViewById(R.id.info9);
+        button10 = findViewById(R.id.info10);*/
 
-        textView.setText(user.getEmail());
+        buttonProfile = findViewById(R.id.profile_button);
+        buttonSearch = findViewById(R.id.search_button);
+        buttonLogout = findViewById(R.id.logout_button);
 
-        logoutButton = findViewById(R.id.logout_button);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
+        buttonProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
-                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 
-        profileButton = findViewById(R.id.profile_button);
-        profileButton.setOnClickListener(new View.OnClickListener() {
+        buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this,ProfileActivity.class));
+                //SyncUser.current().logOut();
+                Intent intent = new Intent( HomeActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                HomeActivity.this.finish();
             }
         });
 
-
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this,SearchFilterActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
     }
 
 }

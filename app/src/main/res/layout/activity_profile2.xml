@@ -26,9 +26,10 @@
                 app:civ_border_width="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.473"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.33" />
 
             <Button
                 android:id="@+id/button"
@@ -44,6 +45,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:text="@string/name"
+                tools:layout_editor_absoluteX="176dp"
+                tools:layout_editor_absoluteY="291dp" />
         </android.support.constraint.ConstraintLayout>
 
     </RelativeLayout>

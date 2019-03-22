@@ -91,7 +91,19 @@ public class RegisterActivity extends AppCompatActivity {
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                     DatabaseReference myRef = database.getReference().child("Users");
 
-                                    User user = new User(nameView.getText().toString(),firebaseUser.getEmail());
+                                    User user = new User(firebaseUser.getEmail(),nameView.getText().toString());
+
+                                    /*user.setGender("-");
+                                    MyRating mr1=new MyRating();
+                                    mr1.setRating(0.0);
+                                    user.addRating(mr1);
+                                    user.addReview(mr1);
+                                    user.addReport();
+                                    user.setBio("-");
+                                    //Tag t=new Tag();
+                                    //t.setTagName("-");
+                                    //user.addInterest(t);
+                                    user.addInterestsNew("new");*/
 
                                     myRef.child(firebaseUser.getUid()).setValue(user);
 

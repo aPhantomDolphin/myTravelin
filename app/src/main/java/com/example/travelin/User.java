@@ -22,9 +22,6 @@ public class User /*extends RealmObject*/ {
 
     private String gender;
 
-    //private RealmList<Post> review;
-    //private RealmList<MyRating> myRatings; //for me
-    //private RealmList<MyRating> reviews;   //I left other people
     private ArrayList<MyRating> myRatings;
     private ArrayList<MyRating> reviews;
 
@@ -34,6 +31,8 @@ public class User /*extends RealmObject*/ {
 
     //private RealmList<Tag> interests;
     private ArrayList<Tag> interests;
+
+    private String interestsNew;
 
     //private RealmList<User> blocked;
     private ArrayList<User> blocked;
@@ -68,14 +67,54 @@ public class User /*extends RealmObject*/ {
     //private RealmList<byte[]> profileImages;
     private ArrayList<byte[]> profileImages;
 
+
+
+    private double avg;
+    private int numR;
+    private String profURL;
+
+
+
+
+
+
+
+
     public User(){}
 
-    public User(String email, String password/*, String username, int age*/) {
+    public User(String email, /*String password,*/ String name /*,int age*/) {
         this.email = email;
-        this.password = password;
-        this.username = username;
+        this.name = name;
         this.age = age;
         this.avgRating=0.0;
+        /////////////////////////////////////////////////////////////////////////////////
+        this.gender="";
+        this.myRatings=new ArrayList<MyRating>();
+        this.reviews=new ArrayList<MyRating>();
+        /*MyRating r=new MyRating();
+        r.setRating(3.3);
+        reviews.add(r);*/
+        this.reportCount = 0;
+        this.bio="";
+        this.interests=new ArrayList<Tag>();
+        /*Tag tag =new Tag();
+        tag.setTagName("ADDTAGS");
+        interests.add(tag);*/
+        this.blocked=new ArrayList<>();
+        this.deleted = false;
+        this.messages=new ArrayList<>();
+        this.username="";
+        this.profilePictureURL="";
+        this.previousTrips=new ArrayList<>();
+        this.favorites=new ArrayList<>();
+        this.posts=new ArrayList<>();
+        //private byte[] img;
+        this.profileImages=new ArrayList<>();
+
+        this.interestsNew="";
+        this.numR=0;
+        /////////////////////////////////////////////////////////////////////////////////
+
     }
 
     /*public String getIdent(){return ident;}
@@ -83,6 +122,14 @@ public class User /*extends RealmObject*/ {
     public void setIdent(String ident) {
         this.ident = ident;
     }*/
+
+    public void setProfURL(String profURL) {
+        this.profURL = profURL;
+    }
+
+    public String getProfURL() {
+        return profURL;
+    }
 
     public String getPassword() {
         return password;
@@ -151,6 +198,14 @@ public class User /*extends RealmObject*/ {
     public ArrayList<Tag> getInterests() {
         return this.interests;
     }
+    /*public void addInterest(String interest) {
+        this.interests=interest;
+    }
+
+    public String getInterests() {
+        return this.interests;
+    }*/
+
 
     public void addBlockedUser(User user) {
         blocked.add(user);
@@ -285,5 +340,39 @@ public class User /*extends RealmObject*/ {
         for(Tag tag: interests){
             interests.remove(tag);
         }
+    }
+
+    public String getInterestsNew() {
+        return interestsNew;
+    }
+
+    public void addInterestsNew(String intr) {
+        if(this.interestsNew.equals("")){
+            this.interestsNew+=(intr);
+        }
+        else {
+            this.interestsNew += ("," + intr);
+        }
+    }
+
+
+    public double getAvg() {
+        return avg;
+    }
+
+    public void setAvg(double avg) {
+        double temp=getAvg();
+        temp=temp*getNumR();
+        temp=temp+avg;
+        setNumR(getNumR()+1);
+        this.avg=temp/getNumR();
+    }
+
+    public int getNumR() {
+        return numR;
+    }
+
+    public void setNumR(int numR) {
+        this.numR = numR;
     }
 }
