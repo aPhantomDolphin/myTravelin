@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "599828951480",
+    "firebase_url": "https://travelin-65f94.firebaseio.com",
+    "project_id": "travelin-65f94",
+    "storage_bucket": "travelin-65f94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599828951480:android:a8e5905e2850e153",
+        "android_client_info": {
+          "package_name": "com.example.travelin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599828951480-b8kc2gk5dscu7m0ifoqk5d7v0n8883ca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.travelin",
+            "certificate_hash": "48db0b71a90ff021bae689c691ba75fb2aa12cd9"
+          }
+        },
+        {
+          "client_id": "599828951480-10dk0t17q9k5uq398k5p9b66643e6i1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASeC_9AyWToH1c3y1w1139z34KAd7RE1c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599828951480-10dk0t17q9k5uq398k5p9b66643e6i1q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

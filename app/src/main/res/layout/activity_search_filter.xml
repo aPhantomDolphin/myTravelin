@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF">
+
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="244dp"
+                android:layout_height="56dp"
+                android:hint="Search for users"
+                android:textAlignment="gravity"
+                android:textSize="15dp" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/search_text"
+                    android:layout_width="117dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:hint="search here"
+                    android:textColor="@color/white" />
+            </android.support.design.widget.TextInputLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="228dp"
+            android:layout_height="31dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="FILTER BASED ON:"
+            android:textColor="@color/endblue"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="243dp">
+
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="88dp"
+                android:layout_height="31dp"
+                android:layout_marginLeft="20dp"
+                android:text="GENDER"
+                android:textColor="@color/endblue"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkBox_male"
+                android:layout_width="183dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView4"
+                android:checked="true"
+                android:onClick="onCheckboxClicked"
+                android:text="Male"
+                android:textSize="20dp" />
+
+            <CheckBox
+                android:id="@+id/checkBox_female"
+                android:layout_width="183dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkBox_male"
+                android:checked="true"
+                android:onClick="onCheckboxClicked"
+                android:text="Female"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="88dp"
+                android:layout_height="31dp"
+                android:layout_below="@id/checkBox_female"
+                android:layout_marginLeft="20dp"
+                android:text="Rating"
+                android:textColor="@color/endblue"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="236dp"
+                android:layout_height="54dp"
+                android:layout_below="@id/textView5"
+                android:min="0"
+                android:numStars="5"
+                android:stepSize="1" />
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="20dp">
+
+            <Button
+                android:id="@+id/search_button"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginRight="30dp"
+                android:background="@color/endblue"
+                android:text="Search"
+                android:textColor="#fff"
+                android:textSize="20dp" />
+            <Button
+                android:id="@+id/search_similar_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginRight="30dp"
+                android:background="@color/endblue"
+                android:text="People with similar interests"
+                android:textColor="#fff"
+                android:textSize="20dp" />
+
+
+        </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/main_nav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        app:itemBackground="@color/login_background"
+        app:itemIconTint="@color/colorWhiteTrans"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/nav_items">
+
+    </android.support.design.widget.BottomNavigationView>
+
+
+</RelativeLayout>

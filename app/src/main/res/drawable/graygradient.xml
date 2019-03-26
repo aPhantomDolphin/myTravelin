@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="@color/input_register_background"
+        android:endColor="@color/register_background_dark"
+        android:angle="90"
+        />
+
+</shape>
+
