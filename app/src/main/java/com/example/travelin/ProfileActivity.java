@@ -163,13 +163,14 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //ArrayList<User> userlist = new ArrayList<>();
                 for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
-                    User user = (User) postSnapshot.getValue(User.class);
+                    //User user = (User) postSnapshot.getValue(User.class);
                     //userlist.add(user);
                     if(firebaseUser.getUid().equals(postSnapshot.getKey())){
+                        final User user = (User) postSnapshot.getValue(User.class);
                         nameView.setText(user.getName());
                         bioView.setText(user.getBio());
                         emailView.setText(user.getEmail());
-                        ratingView.setText(String.valueOf(user.getAvgRating()));
+                        ratingView.setText(String.valueOf(user.getAvg()));
 
                         StorageReference fuckthis = storage.getReferenceFromUrl(user.getProfURL());
                         final long OM = 5000 * 50000000;

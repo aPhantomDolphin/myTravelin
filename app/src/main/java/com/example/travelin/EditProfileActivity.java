@@ -16,7 +16,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -27,10 +30,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -46,6 +54,8 @@ public class EditProfileActivity extends AppCompatActivity {
     byte[] bArray=new byte[0];
     Button deleteAccount;
     private TextInputEditText interests;
+    private Uri sickUri = null;
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private FirebaseAuth mauth;
     private BottomNavigationView mMainNav;
@@ -215,15 +225,16 @@ public class EditProfileActivity extends AppCompatActivity {
                   userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        DatabaseReference userRef = ref.child("Users");
+                        //DatabaseReference userRef = ref.child("Users");
                         ArrayList<User> userList = new ArrayList<>();
                         User u = null;
                         DataSnapshot needed = null;
-                        userList.clear();
+                        //userList.clear();
                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                            User user = postSnapshot.getValue(User.class);
+                            //User user = postSnapshot.getValue(User.class);
                             //System.out.println("NOOB "+user.getInterests().size());
                             if(mauth.getCurrentUser().getUid().equals(postSnapshot.getKey())){
+                                final User user = postSnapshot.getValue(User.class);
                                 //System.out.println("HERENOW"+user.getName());
                                 userList.add(user);
                                 try {
@@ -239,7 +250,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                     System.out.println("NO TAG FOUND SORRY");
                                 }
 
-                                DatabaseReference updateData = FirebaseDatabase.getInstance().getReference("Users")
+                                final DatabaseReference updateData = FirebaseDatabase.getInstance().getReference("Users")
                                         .child(mauth.getCurrentUser().getUid());
 
                                 if(!nameEdit.getText().toString().isEmpty()) updateData.child("name").setValue(nameEdit.getText().toString());
@@ -251,12 +262,63 @@ public class EditProfileActivity extends AppCompatActivity {
                                     break;
                                 }
 
+                                try {
+                                    Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(sickUri));
+                                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                    bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
+                                    bArray = stream.toByteArray();
+
+                                    String path = "profilePhotos/" + UUID.randomUUID() + ".png";
+                                    final StorageReference storageReference = storage.getReference(path);
+                                    StorageMetadata meta = new StorageMetadata.Builder()
+                                            .setCustomMetadata("profile", "user").build();
+                                    UploadTask uploadTask = storageReference.putBytes(bArray, meta);
+
+                                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                        @Override
+                                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                            if (!task.isSuccessful()) {
+                                                throw task.getException();
+                                            }
+
+                                            return storageReference.getDownloadUrl();
+                                        }
+                                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            Uri downloadUri = null;
+                                            if (task.isSuccessful()) {
+                                                downloadUri = task.getResult();
+                                                user.setProfURL(downloadUri.toString());
+                                                updateData.child("profURL").setValue(downloadUri.toString());
+                                            } else {
+
+                                            }
+
+                                            StorageReference profPicReference = storage.getReferenceFromUrl(downloadUri.toString());
+                                            final long OM = 5000 * 500000000;
+                                            profPicReference.getBytes(OM).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                @Override
+                                                public void onSuccess(byte[] bytes) {
+                                                    dpView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
                         }
 
 
                         goToProfile();
-                        // TODO: figure out storage for images
                     }
 
                     @Override
@@ -299,6 +361,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
+            sickUri = targetUri;
             try {
                 Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
                 dpView.setImageBitmap(bmp);
