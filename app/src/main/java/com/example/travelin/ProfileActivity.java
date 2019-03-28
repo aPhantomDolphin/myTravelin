@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -56,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView interests;
     private TextView reviews;
     byte[] bArray=new byte[0];
-    User usert;
+    private String currentRoomInvite = "";
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private BottomNavigationView mMainNav;
 
@@ -171,6 +172,39 @@ public class ProfileActivity extends AppCompatActivity {
                         bioView.setText(user.getBio());
                         emailView.setText(user.getEmail());
                         ratingView.setText(String.valueOf(user.getAvg()));
+
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                User u = null;
+                                DatabaseReference updateData = null;
+                                boolean declined = false;
+                                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                    if (mAuth.getCurrentUser().getUid().equals(snap.getKey())) {
+                                        u = snap.getValue(User.class);
+                                        updateData = FirebaseDatabase.getInstance().getReference("Users")
+                                                .child(snap.getKey());
+                                        if (!u.getRoomInvites().equals("")) {
+                                            String[] rooms = u.getRoomInvites().split("\\|");
+                                            for (int i = 0; i < rooms.length; i++) {
+                                                // TODO : NOTIFY THEM WHICH ROOM THEY ARE INVITED TO
+                                                // TODO : CREATE BUTTON TO ACCEPT OR DECLINE INVITE
+                                                if (!declined) {
+                                                    u.addRoom(rooms[i]);
+                                                }
+                                            }
+                                            u.clearInvites();
+                                            updateData.child("rooms").setValue(u.getRooms());
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
 
                         StorageReference fuckthis = storage.getReferenceFromUrl(user.getProfURL());
                         final long OM = 5000 * 50000000;

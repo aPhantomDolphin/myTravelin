@@ -44,6 +44,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -84,6 +90,10 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
     private Uri outputFileUri;
     static final int CAMERA_REQUEST_CODE = 2666;
     User u = new User();
+    private Button addUserButton;
+    private String messageUserEmail = "";
+    private FirebaseAuth mAuth;
+    private String newRoomName = "";
 
 
     @Override
@@ -100,6 +110,65 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
         messageAdapter = new MessageAdapter(this);
         messagesView = (ListView) findViewById(R.id.messages_view);
         messagesView.setAdapter(messageAdapter);
+
+        addUserButton = findViewById(R.id.adduser_button);
+        addUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO : CREATE BOX TO LET THEM SEARCH BY NAME
+                FirebaseDatabase db = FirebaseDatabase.getInstance();
+                DatabaseReference ref = db.getReference();
+                DatabaseReference userRef = ref.child("Users");
+
+                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String myEmail = "";
+                        User me = null;
+                        User them = null;
+                        DatabaseReference updateData = null;
+                        for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                            if (mAuth.getCurrentUser().getUid().equals(snap.getKey())) {
+                                myEmail = snap.getValue(User.class).getEmail();
+                                me = snap.getValue(User.class);
+                            }
+                            if (snap.getValue(User.class).getEmail().equals(messageUserEmail)) {
+                                them = snap.getValue(User.class);
+                                updateData= FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(snap.getKey());
+                            }
+                        }
+
+                        String blocked = them.getBlock();
+                        String[] blockedUsers = blocked.split(",");
+                        boolean isBlocked = false;
+
+                        for (int i = 0; i < blockedUsers.length; i++) {
+                            if (myEmail.equals(blockedUsers[i])) {
+                                isBlocked = true;
+                                break;
+                                // TODO : SOME WAY FOR THEM TO ACTUALLY ENTER ROOMNAME
+                            }
+                        }
+                        if (!isBlocked) {
+                            // TODO : TAKE TO SCREEN TO INPUT NEW ROOMNAME OR CHOOSE EXISTING
+                            them.addInvite(roomName);
+                            updateData.child("roomInvites").setValue(them.getRoomInvites());
+                            // TODO : CONFIRM INVITE HAS BEEN SENT
+                        } else {
+                            // TODO : NOTIFY THAT CANNOT INVITE BECAUSE BLOCKED
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
 
         sendImage = findViewById(R.id.sendimage_button);
         sendImage.setOnClickListener(new View.OnClickListener() {
