@@ -95,6 +95,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
         createNotificationChannel();
 
         editText = (EditText) findViewById(R.id.editText);
+        roomName = getIntent().getExtras().getString("room");
 
         messageAdapter = new MessageAdapter(this);
         messagesView = (ListView) findViewById(R.id.messages_view);

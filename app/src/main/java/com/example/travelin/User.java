@@ -76,6 +76,7 @@ public class User /*extends RealmObject*/ {
     private String rev;
     private String rat;
     private String block;
+    private String rooms = "";
 
 
 
@@ -131,6 +132,18 @@ public class User /*extends RealmObject*/ {
             pics = pics+pic;
         } else {
             pics = pics + "|" + pic;
+        }
+    }
+
+    public String getRooms() {
+        return rooms;
+    }
+
+    public void addRoom(String room) {
+        if (rooms.equals("")) {
+            rooms = rooms + room;
+        } else {
+            rooms = rooms + "|" + room;
         }
     }
 
