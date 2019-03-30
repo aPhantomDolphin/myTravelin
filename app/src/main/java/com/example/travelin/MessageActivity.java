@@ -45,6 +45,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -68,7 +69,7 @@ import java.util.UUID;
 public class MessageActivity extends AppCompatActivity implements RoomListener {
 
     // replace this with a real channelID from Scaledrone dashboard
-    private String channelID = "SvLIfI23JVDW8Jre";
+    private String channelID = "JEu2atnDPEjxjd0D";
     private String roomName = "observable-room";
     private EditText editText;
     private Scaledrone scaledrone;
@@ -149,7 +150,64 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
             @Override
             public void onOpen() {
                 System.out.println("Scaledrone connection open");
-                scaledrone.subscribe(roomName, MessageActivity.this);
+                Room room = scaledrone.subscribe(roomName, MessageActivity.this, new SubscribeOptions(100));
+
+                room.listenToHistoryEvents(new HistoryRoomListener() {
+                    @Override
+                    public void onHistoryMessage(Room room, com.scaledrone.lib.Message receivedMessage) {
+                        if (receivedMessage.getID() != null) {
+                            System.out.println("Received historical message with ID: " + receivedMessage.getID());
+                        } else {
+                            System.out.println("Received historical message with null ID.");
+                        }
+                        if (receivedMessage.getData() != null) {
+                            System.out.println("Message text: " + receivedMessage.getData().asText());
+                        } else {
+                            System.out.println("Received null message.");
+                        }
+                        final MemberData data = new MemberData("test", "black");
+                        final boolean belongsToCurrentUser = receivedMessage.getClientID().equals(scaledrone.getClientID());
+                            if (receivedMessage.getData().asText().charAt(receivedMessage.getData().asText().length() - 1) == '|') {
+                                String str = receivedMessage.getData().asText().substring(0, receivedMessage.getData().asText().length() - 1);
+                                StorageReference fuckthis = storage.getReferenceFromUrl(str);
+                                final long OM = 5000 * 500000000;
+                                fuckthis.getBytes(OM).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    @Override
+                                    public void onSuccess(byte[] bytes) {
+                                        final Message message1 = new Message(BitmapFactory.decodeByteArray(bytes, 0, bytes.length), data, belongsToCurrentUser);
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                messageAdapter.add(message1);
+                                                messagesView.setSelection(messagesView.getCount() - 1);
+                                                try {
+                                                    Thread.sleep(100);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        e.printStackTrace();
+                                        System.out.println("fuckthisnoise");
+                                    }
+                                });
+                            } else {
+                                final Message message = new Message(receivedMessage.getData().asText(), data, belongsToCurrentUser);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        messageAdapter.add(message);
+                                        messagesView.setSelection(messagesView.getCount() - 1);
+                                    }
+                                });
+                            }
+
+                    }
+                });
             }
 
             @Override
@@ -273,7 +331,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
 
     @Override
     public void onOpen(Room room) {
-        System.out.println("Conneted to room");
+        System.out.println("Connected to room");
     }
 
     @Override
