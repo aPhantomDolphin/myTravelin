@@ -31,8 +31,14 @@
             android:name=".ProfileActivity"
             android:label="ProfileActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".RateUserActivity"
+            android:label="RateUserActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".OtherProfileActivity"
             android:label="OtherProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".OtherProfilePicturesActivity"
+            android:label="OtherProfilePicturesActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".EditProfile"
             android:label="EditProfile"

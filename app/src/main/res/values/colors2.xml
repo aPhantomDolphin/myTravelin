@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="login_background">#1A4489</color>
+    <color name="login_background">#1a4489</color>
     <color name="login_input_background">#2464cc</color>
     <color name="login_button">#26ae90</color>
     <color name="input_login_hint">#DCDCDC</color>
@@ -9,18 +9,9 @@
     <color name="register_background">#2e3237</color>
     <color name="register_background_dark">#23272b</color>
     <color name="input_register_background">#3b4148</color>
-    <color name="input_register_background2">#31363C</color>
     <color name="white">#FFFFFF</color>
     <color name="profile_gray">#5e6266</color>
-    <color name="colorAccent">#D81B60</color>
-    <color name="graylight">#FAFAFA</color>
-    <color name="startblue">#09C6DF</color>
-    <color name="endblue">#0BCCE6</color>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorWhiteTrans">#80FFFFFF</color>
-    <color name="purpleGradient1">#070016</color>
-    <color name="purpleGradient2">#0F002C</color>
+
 
 
     <!--Not Used them yet-->

@@ -46,6 +46,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView ratingView;
     private ImageView dpView;
     private Button addImages;
+    private TextView interests;
+    private TextView reviews;
     byte[] bArray=new byte[0];
     User usert;
 
@@ -118,6 +120,9 @@ public class ProfileActivity extends AppCompatActivity {
         ratingView = findViewById(R.id.rating_profile);
         dpView = findViewById(R.id.profilepic);
 
+        interests=findViewById(R.id.interest_profile1);
+        reviews=findViewById(R.id.reviews_profile);
+
         addImages = findViewById(R.id.add_pictures_profile);
         addImages.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,12 +149,26 @@ public class ProfileActivity extends AppCompatActivity {
             Bitmap bmp = BitmapFactory.decodeByteArray(bArray2, 0, bArray2.length);
             dpView.setImageBitmap(bmp);
         }
-
+        String in="";
+        for(int i=0;i<u.getInterests().size();i++){
+            in+=u.getInterests().get(i).getTagName();
+            in+=",";
+        }
+        String re="";
+        for(int i=0;i<u.getReviews().size();i++){
+            re+=u.getReviews().get(i).getBody();
+            re+=",";
+        }
+        interests.setText(in);
+        reviews.setText(re);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        Realm realm=Realm.getDefaultInstance();
+
 
         if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
@@ -159,7 +178,10 @@ public class ProfileActivity extends AppCompatActivity {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
                 bArray = stream.toByteArray();
+                realm.beginTransaction();
                 usert.addProfileImage(bArray);
+                realm.commitTransaction();
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

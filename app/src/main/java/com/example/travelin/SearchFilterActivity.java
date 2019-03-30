@@ -2,6 +2,7 @@ package com.example.travelin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ public class SearchFilterActivity extends AppCompatActivity {
     private Float rating;
     private CheckBox check;
     private Button home;
+    private TextInputEditText searchedUN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +29,14 @@ public class SearchFilterActivity extends AppCompatActivity {
         //
         // backButton= findViewById(R.id.);
         star = findViewById(R.id.ratingBar);
-        rating = star.getRating();
+
+
+
+        searchedUN=findViewById(R.id.search_text);
+
         home = findViewById(R.id.home_button);
+
+
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,9 +56,11 @@ public class SearchFilterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
+                    rating = star.getRating();
                     Intent intent = new Intent(SearchFilterActivity.this, SearchPageActivity.class);
                     intent.putExtra("gender",genderPreferance);
                     intent.putExtra("rating",String.valueOf(rating));
+                    intent.putExtra("searchUN",searchedUN.getText().toString());
                     try{
                         startActivity(intent);
                     } catch(Exception e){
