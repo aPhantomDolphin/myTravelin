@@ -281,6 +281,9 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
         }
     }
 
+
+
+
     public void sendMessage(View view) {
         if (image == true) {
             image = false;
