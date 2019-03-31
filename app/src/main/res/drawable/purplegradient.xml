@@ -2,10 +2,9 @@
 <shape android:shape="rectangle"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
-        android:startColor="@color/input_register_background2"
-        android:endColor="@color/register_background_dark"
+        android:startColor="@color/purpleGradient2"
+        android:endColor="@color/purpleGradient1"
         android:angle="90"
         />
 
 </shape>
-
