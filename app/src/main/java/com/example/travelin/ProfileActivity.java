@@ -135,11 +135,12 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // TODO : CREATE UNBLOCK BUTTON
+        // TODO : CREATE UNBLOCK BUTTON IN UI
         unblock_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ProfileActivity.this, UnblockActivity.class);
+                startActivity(intent);
             }
         });
 

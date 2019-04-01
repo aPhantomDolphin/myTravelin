@@ -93,7 +93,9 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
     private Button addUserButton;
     private String messageUserEmail = "";
     private FirebaseAuth mAuth;
-    private String newRoomName = "";
+    //private String newRoomName = "";
+    //private String curRoom;
+    //private String name;
 
 
     @Override
@@ -102,10 +104,13 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitivity_message);
 
+        final String roomName = getIntent().getExtras().getString("room");
+        final String name = getIntent().getExtras().getString("name");
+
         createNotificationChannel();
 
         editText = (EditText) findViewById(R.id.editText);
-        roomName = getIntent().getExtras().getString("room");
+        //roomName = getIntent().getExtras().getString("room");
 
         messageAdapter = new MessageAdapter(this);
         messagesView = (ListView) findViewById(R.id.messages_view);
@@ -212,7 +217,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
             }
         });
 
-        MemberData data = new MemberData(getRandomName(), getRandomColor());
+        MemberData data = new MemberData(name, getRandomColor());
 
         scaledrone = new Scaledrone(channelID, data);
         scaledrone.connect(new Listener() {
@@ -343,7 +348,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
 
     @Override
     public void onOpen(Room room) {
-        System.out.println("Conneted to room");
+        System.out.println("Connected to room");
     }
 
     @Override

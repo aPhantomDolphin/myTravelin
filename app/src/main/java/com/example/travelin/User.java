@@ -295,6 +295,8 @@ public class User /*extends RealmObject*/ {
         }
     }
 
+    public void clearBlock() {block = ""; return;}
+
     public String getRoomInvites() {
         return roomInvites;
     }

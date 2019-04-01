@@ -49,10 +49,10 @@ public class MessageHome extends AppCompatActivity {
         usesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User u = new User();
+                //User u = new User();
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
                     if (mAuth.getCurrentUser().getUid().equals(snap.getKey())) {
-                        u = snap.getValue(User.class);
+                        final User u = snap.getValue(User.class);
                         String roomString = u.getRooms();
                         final String[] rooms = roomString.split("\\|");
                         for (int i = 0; i < rooms.length; i++) {
@@ -61,10 +61,10 @@ public class MessageHome extends AppCompatActivity {
                             hm.put("room_name", rooms[i]);
                             aList.add(hm);
 
-                            // TODO: POPULATE LISTVIEW WITH ROOM NAMES
+
                         }
 
-
+                        // TODO: POPULATE LISTVIEW WITH ROOM NAMES
                         /**
                          * Stephen's attempt at populating a listview of roomnames using a crude
                          * implementation of the searchpageactivity listview.
@@ -81,7 +81,7 @@ public class MessageHome extends AppCompatActivity {
                                 String roomNeeded = rooms[position];
                                 System.out.println("ROOM "+roomNeeded);
                                 Intent intent = new Intent(MessageHome.this, MessageActivity.class);
-
+                                intent.putExtra("name", u.getName());
                                 intent.putExtra("room",roomNeeded);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
