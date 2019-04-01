@@ -60,6 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
     private String currentRoomInvite = "";
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private BottomNavigationView mMainNav;
+    private Button unblock_button;
 
 
 
@@ -134,6 +135,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        // TODO : CREATE UNBLOCK BUTTON
+        unblock_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         imageView = findViewById(R.id.profilepic);
         bioView = findViewById(R.id.bio_profile);
