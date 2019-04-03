@@ -29,42 +29,32 @@ public class User /*extends RealmObject*/ {
 
     private String bio;
 
-    //private RealmList<Tag> interests;
     private ArrayList<Tag> interests;
 
     private String interestsNew;
 
-    //private RealmList<User> blocked;
     private ArrayList<User> blocked;
 
     private boolean deleted = false;
 
     private String name;
 
-    //private RealmList<DirectMessage> messages;
     private ArrayList<DirectMessage> messages;
 
     //@PrimaryKey
     private String username;
 
-    private String profilePictureURL;
 
-    //private String ident;
-
-    //private RealmList<EventLocation> previousTrips;
     private ArrayList<EventLocation> previousTrips;
 
-    //private RealmList<User> favorites;
     private ArrayList<User> favorites;
 
-    //private RealmList<Post> posts;
     private ArrayList<Post> posts;
 
     private double avgRating=0.0;
 
     private byte[] img;
 
-    //private RealmList<byte[]> profileImages;
     private ArrayList<byte[]> profileImages;
 
 
@@ -76,6 +66,8 @@ public class User /*extends RealmObject*/ {
     private String rev;
     private String rat;
     private String block;
+    private String rooms = "";
+    private String roomInvites = "";
 
 
 
@@ -90,25 +82,17 @@ public class User /*extends RealmObject*/ {
         this.gender="";
         this.myRatings=new ArrayList<MyRating>();
         this.reviews=new ArrayList<MyRating>();
-        /*MyRating r=new MyRating();
-        r.setRating(3.3);
-        reviews.add(r);*/
         this.reportCount = 0;
         this.bio="";
         this.interests=new ArrayList<Tag>();
-        /*Tag tag =new Tag();
-        tag.setTagName("ADDTAGS");
-        interests.add(tag);*/
         this.blocked=new ArrayList<>();
         this.deleted = false;
         this.messages=new ArrayList<>();
         this.username="";
         this.profURL="https://firebasestorage.googleapis.com/v0/b/travelin-65f94.appspot.com/o/New%2Fprofilepic.png?alt=media&token=4a4f0885-395b-4c32-9094-190bd35a8dab";
-        this.profilePictureURL="";
         this.previousTrips=new ArrayList<>();
         this.favorites=new ArrayList<>();
         this.posts=new ArrayList<>();
-        //private byte[] img;
         this.profileImages=new ArrayList<>();
 
         this.interestsNew="";
@@ -120,17 +104,25 @@ public class User /*extends RealmObject*/ {
 
     }
 
-    /*public String getIdent(){return ident;}
 
-    public void setIdent(String ident) {
-        this.ident = ident;
-    }*/
 
     public void addPics(String pic) {
         if (pics.equals("")) {
             pics = pics+pic;
         } else {
             pics = pics + "|" + pic;
+        }
+    }
+
+    public String getRooms() {
+        return rooms;
+    }
+
+    public void addRoom(String room) {
+        if (rooms.equals("")) {
+            rooms = rooms + room;
+        } else {
+            rooms = rooms + "|" + room;
         }
     }
 
@@ -144,14 +136,6 @@ public class User /*extends RealmObject*/ {
         return profURL;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setAge(int age) { this.age = age; }
 
     public void setGender(String gender) { this.gender = gender; }
@@ -162,27 +146,11 @@ public class User /*extends RealmObject*/ {
 
     public String getName() { return name; }
 
-    public int getAge() { return age; }
-
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
-    public void addReview(MyRating review) {
-        this.reviews.add(review);
-    }
-
-    public ArrayList<MyRating> getReviews() {
-        return reviews;
-    }
-
-    public void removeReview(MyRating review) {
-        this.reviews.remove(review);
-    }
 
     public void addReport() {
         this.reportCount++;
@@ -200,142 +168,23 @@ public class User /*extends RealmObject*/ {
         return bio;
     }
 
-    public void addInterest(Tag interest) {
-        this.interests.add(interest);
-    }
 
-    public void removeInterest(Tag interest) {
-        this.interests.remove(interest);
-    }
-
-    public ArrayList<Tag> getInterests() {
-        return this.interests;
-    }
-    /*public void addInterest(String interest) {
-        this.interests=interest;
-    }
-
-    public String getInterests() {
-        return this.interests;
-    }*/
-
-
-    public void addBlockedUser(User user) {
-        blocked.add(user);
-    }
-
-    public void removeBlockedUser(User user) {
-        blocked.remove(user);
-    }
-
-    public ArrayList<User> getBlockedUsers() { return blocked; }
-
-    public void addMessage(DirectMessage message) {
-        messages.add(message);
-    }
-
-    public void deleteMessage(DirectMessage message) {
-        messages.remove(message);
-    }
-
-    public ArrayList<DirectMessage> getMessages() { return messages; }
 
     public String getUsername() {
         return username;
     }
 
-    public void setProfilePictureURL(String url) {
+    /*public void setProfilePictureURL(String url) {
         this.profilePictureURL = url;
-    }
+    }*/
 
-    public String getProfilePictureURL(String url) {
-        return profilePictureURL;
-    }
 
-    public ArrayList<EventLocation> getPreviousTrips() {
-        return previousTrips;
-    }
-
-    public void addTrip(EventLocation trip) {
-        previousTrips.add(trip);
-    }
-
-    public void removeTrip(EventLocation trip) {
-        previousTrips.remove(trip);
-    }
-
-    public void addFavorite(User user) {
-        favorites.add(user);
-    }
-
-    public void removeFavorite(User user) {
-        favorites.remove(user);
-    }
-
-    public ArrayList<User> getFavorites() {
-        return favorites;
-    }
-
-    public void addPost(Post post) {
-        posts.add(post);
-    }
-
-    public void deletePost(Post post) {
-        posts.remove(post);
-    }
-
-    public ArrayList<Post> showPosts() {
-        return posts;
-    }
-
-    public void addRating(MyRating rating1) {
-        this.myRatings.add(rating1);
-        int x=myRatings.size();
-        double sum=0.0;
-        for(int i=0;i<x;i++){
-            MyRating temp = myRatings.get(i);
-            sum += temp.getRating();
-        }
-        this.avgRating=sum/x;
-    }
-
-    public ArrayList<MyRating> getRatings() {
-        return myRatings;
-    }
-
-    public ArrayList<MyRating> getReview() {
-        return reviews;
-    }
-
-    public double getAvgRating() {
-        return avgRating;
-    }
-
-    public void setAvgRating(double avgRating) {
-        this.avgRating = avgRating;
-    }
-
-    public byte[] getImg() {
-        return img;
-    }
-
-    public void setImg(byte[] img) {
-        this.img = img;
-    }
-
-    public ArrayList<byte[]> getProfileImages() {
-        return profileImages;
-    }
-
-    public void addProfileImage(byte[] img) {
-        this.profileImages.add(img);
-    }
 
     public void deleteUser() {
         deleted = true;
         setAge(0);
         setBio("");
-        setProfilePictureURL("");
+        //setProfilePictureURL("");
         setGender("");
         setName("");
         for(EventLocation loc: previousTrips){
@@ -446,4 +295,184 @@ public class User /*extends RealmObject*/ {
         }
     }
 
+    public void clearBlock() {block = ""; return;}
+
+    public String getRoomInvites() {
+        return roomInvites;
+    }
+
+    public void addInvite(String room) {
+        if (roomInvites.equals("")) {
+            roomInvites = roomInvites = room;
+        } else {
+            roomInvites = roomInvites + "|" + room;
+        }
+    }
+
+    public void clearInvites() {
+        roomInvites = "";
+    }
+
+
+
+
+    /*
+
+        public String getIdent(){return ident;}
+
+    public void setIdent(String ident) {
+        this.ident = ident;
+    }
+
+    public int getAge() { return age; }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void addReview(MyRating review) {
+        this.reviews.add(review);
+    }
+
+    public ArrayList<MyRating> getReviews() {
+        return reviews;
+    }
+
+    public void removeReview(MyRating review) {
+        this.reviews.remove(review);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+        public String getProfilePictureURL(String url) {
+        return profilePictureURL;
+    }
+
+    public ArrayList<EventLocation> getPreviousTrips() {
+        return previousTrips;
+    }
+
+    public void addTrip(EventLocation trip) {
+        previousTrips.add(trip);
+    }
+
+    public void removeTrip(EventLocation trip) {
+        previousTrips.remove(trip);
+    }
+
+    public void addFavorite(User user) {
+        favorites.add(user);
+    }
+
+    public void removeFavorite(User user) {
+        favorites.remove(user);
+    }
+
+    public ArrayList<User> getFavorites() {
+        return favorites;
+    }
+
+    public void addPost(Post post) {
+        posts.add(post);
+    }
+
+    public void deletePost(Post post) {
+        posts.remove(post);
+    }
+
+    public ArrayList<Post> showPosts() {
+        return posts;
+    }
+
+    public void addRating(MyRating rating1) {
+        this.myRatings.add(rating1);
+        int x=myRatings.size();
+        double sum=0.0;
+        for(int i=0;i<x;i++){
+            MyRating temp = myRatings.get(i);
+            sum += temp.getRating();
+        }
+        this.avgRating=sum/x;
+    }
+
+    public ArrayList<MyRating> getRatings() {
+        return myRatings;
+    }
+
+    public ArrayList<MyRating> getReview() {
+        return reviews;
+    }
+
+    public double getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
+    }
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
+    }
+
+    public ArrayList<byte[]> getProfileImages() {
+        return profileImages;
+    }
+
+    public void addProfileImage(byte[] img) {
+        this.profileImages.add(img);
+    }
+
+        public void addInterest(Tag interest) {
+        this.interests.add(interest);
+    }
+
+    public void removeInterest(Tag interest) {
+        this.interests.remove(interest);
+    }
+
+    public ArrayList<Tag> getInterests() {
+        return this.interests;
+    }
+
+    public void addInterest(String interest) {
+        this.interests=interest;
+    }
+
+    public String getInterests() {
+        return this.interests;
+    }
+
+
+    public void addBlockedUser(User user) {
+        blocked.add(user);
+    }
+
+    public void removeBlockedUser(User user) {
+        blocked.remove(user);
+    }
+
+    public ArrayList<User> getBlockedUsers() { return blocked; }
+
+    public void addMessage(DirectMessage message) {
+        messages.add(message);
+    }
+
+    public void deleteMessage(DirectMessage message) {
+        messages.remove(message);
+    }
+
+    public ArrayList<DirectMessage> getMessages() { return messages; }
+
+     */
 }

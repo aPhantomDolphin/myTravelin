@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -56,9 +57,10 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView interests;
     private TextView reviews;
     byte[] bArray=new byte[0];
-    User usert;
+    private String currentRoomInvite = "";
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private BottomNavigationView mMainNav;
+    private Button unblock_button;
 
 
 
@@ -133,6 +135,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        // TODO : CREATE UNBLOCK BUTTON IN UI
+        unblock_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, UnblockActivity.class);
+                startActivity(intent);
+            }
+        });
 
         imageView = findViewById(R.id.profilepic);
         bioView = findViewById(R.id.bio_profile);
@@ -163,13 +173,47 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //ArrayList<User> userlist = new ArrayList<>();
                 for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
-                    User user = (User) postSnapshot.getValue(User.class);
+                    //User user = (User) postSnapshot.getValue(User.class);
                     //userlist.add(user);
                     if(firebaseUser.getUid().equals(postSnapshot.getKey())){
+                        final User user = (User) postSnapshot.getValue(User.class);
                         nameView.setText(user.getName());
                         bioView.setText(user.getBio());
                         emailView.setText(user.getEmail());
-                        ratingView.setText(String.valueOf(user.getAvgRating()));
+                        ratingView.setText(String.valueOf(user.getAvg()));
+
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                User u = null;
+                                DatabaseReference updateData = null;
+                                boolean declined = false;
+                                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                    if (mAuth.getCurrentUser().getUid().equals(snap.getKey())) {
+                                        u = snap.getValue(User.class);
+                                        updateData = FirebaseDatabase.getInstance().getReference("Users")
+                                                .child(snap.getKey());
+                                        if (!u.getRoomInvites().equals("")) {
+                                            String[] rooms = u.getRoomInvites().split("\\|");
+                                            for (int i = 0; i < rooms.length; i++) {
+                                                // TODO : NOTIFY THEM WHICH ROOM THEY ARE INVITED TO
+                                                // TODO : CREATE BUTTON TO ACCEPT OR DECLINE INVITE
+                                                if (!declined) {
+                                                    u.addRoom(rooms[i]);
+                                                }
+                                            }
+                                            u.clearInvites();
+                                            updateData.child("rooms").setValue(u.getRooms());
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
 
                         StorageReference fuckthis = storage.getReferenceFromUrl(user.getProfURL());
                         final long OM = 5000 * 50000000;
