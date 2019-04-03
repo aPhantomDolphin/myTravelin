@@ -4,26 +4,26 @@
     <item
         android:id="@+id/navigation_home"
         android:enabled="true"
-        android:icon="@drawable/baseline_home_white_24dp"
+        android:icon="@drawable/baselinehomewhite24dp"
         android:title="@string/home"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/navigation_forum"
         android:enabled="true"
-        android:icon="@drawable/baseline_forum"
+        android:icon="@drawable/baselineforum"
         android:title="@string/forum"
         android:iconTint="@color/white"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/navigation_search"
         android:enabled="true"
-        android:icon="@drawable/baseline_search_white_24dp"
+        android:icon="@drawable/baselinesearchwhite24dp"
         android:title="@string/search"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/navigation_profile"
         android:enabled="true"
-        android:icon="@drawable/baseline_account_circle_white_24dp"
+        android:icon="@drawable/baselineaccountcirclewhite24dp"
         android:title="@string/nav_profile"
         app:showAsAction="ifRoom" />
 </menu>

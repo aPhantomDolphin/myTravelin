@@ -29,19 +29,17 @@ public class User /*extends RealmObject*/ {
 
     private String bio;
 
-    //private RealmList<Tag> interests;
     private ArrayList<Tag> interests;
 
     private String interestsNew;
 
-    //private RealmList<User> blocked;
+
     private ArrayList<User> blocked;
 
     private boolean deleted = false;
 
     private String name;
 
-    //private RealmList<DirectMessage> messages;
     private ArrayList<DirectMessage> messages;
 
     //@PrimaryKey
@@ -49,22 +47,18 @@ public class User /*extends RealmObject*/ {
 
     private String profilePictureURL;
 
-    //private String ident;
-
-    //private RealmList<EventLocation> previousTrips;
     private ArrayList<EventLocation> previousTrips;
 
-    //private RealmList<User> favorites;
     private ArrayList<User> favorites;
 
-    //private RealmList<Post> posts;
+
     private ArrayList<Post> posts;
 
     private double avgRating=0.0;
 
     private byte[] img;
 
-    //private RealmList<byte[]> profileImages;
+
     private ArrayList<byte[]> profileImages;
 
 
@@ -76,6 +70,9 @@ public class User /*extends RealmObject*/ {
     private String rev;
     private String rat;
     private String block;
+    private String upvoted;
+    private String postIDs;
+
 
 
 
@@ -116,15 +113,12 @@ public class User /*extends RealmObject*/ {
         this.rev="";
         this.rat="";
         this.block="";
+        this.upvoted="";
+        this.postIDs="";
         /////////////////////////////////////////////////////////////////////////////////
 
     }
 
-    /*public String getIdent(){return ident;}
-
-    public void setIdent(String ident) {
-        this.ident = ident;
-    }*/
 
     public void addPics(String pic) {
         if (pics.equals("")) {
@@ -446,4 +440,39 @@ public class User /*extends RealmObject*/ {
         }
     }
 
+    public String getUpvoted() {
+        return upvoted;
+    }
+
+    public void addUpvoted(String upvote) {
+        try{
+            if(this.upvoted.equals("") || this.upvoted==null){
+                this.upvoted="@"+upvote;
+            }
+            else{
+                this.upvoted += "@"+upvote;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public String getPostIDs() {
+        return postIDs;
+    }
+
+    public void addPostIDs(String postID) {
+        try{
+            if(this.postIDs.equals("") || this.postIDs==null){
+                this.postIDs=postID;
+            }
+            else{
+                this.postIDs += "@"+postID;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 }

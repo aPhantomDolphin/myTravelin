@@ -1,84 +1,109 @@
 package com.example.travelin;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 
-public class Post implements Serializable {
-    private User user;
-    private String postText;
-    private String postImageUrl;
-    private String postId;
-    private long numLikes;
-    private long numComments;
-    private long timeCreated;
+public class Post{
 
-    public Post() {
+    private String authorEmail;
+
+    private String username;
+
+    private Date datePosted;
+
+    private String body;
+
+    private int rateUp;
+
+    private int rateDown;
+
+    private String replies;
+
+    private String imageURLs;
+
+    private String postID;
+
+    //constructors
+    public Post(){}
+
+    public Post(String authorEmail,/*Date datePosted,*/ String body, String postId) {
+        this.authorEmail = authorEmail;
+       // this.datePosted = datePosted;
+        this.body = body;
+        this.postID = postId;
+        rateUp=0;
+        rateDown=0;
     }
 
-    public Post(User user, String postText, String postImageUrl, String postId, long numLikes, long numComments, long timeCreated) {
-
-        this.user = user;
-        this.postText = postText;
-        this.postImageUrl = postImageUrl;
-        this.postId = postId;
-        this.numLikes = numLikes;
-        this.numComments = numComments;
-        this.timeCreated = timeCreated;
+    public void setBody(String body) {
+        this.body = body;
     }
 
-    public User getUser() {
-
-        return user;
+    public String getBody() {
+        return body;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void upvote() {
+        this.rateUp++;
     }
 
-    public String getPostText() {
-        return postText;
+    public void downvote() {
+        this.rateDown++;
     }
 
-    public void setPostText(String postText) {
-        this.postText = postText;
+    public String getPostID() {
+        return postID;
     }
 
-    public String getPostImageUrl() {
-        return postImageUrl;
+    public void setPostID(String postID) {
+        this.postID = postID;
     }
 
-    public void setPostImageUrl(String postImageUrl) {
-        this.postImageUrl = postImageUrl;
+    public int getRateUp() {
+        return rateUp;
     }
 
-    public String getPostId() {
-        return postId;
+    public int getRateDown() {
+        return rateDown;
     }
 
-    public void setPostId(String postId) {
-        this.postId = postId;
+    public String getAuthorEmail() {
+        return authorEmail;
     }
 
-    public long getNumLikes() {
-        return numLikes;
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
     }
 
-    public void setNumLikes(long numLikes) {
-        this.numLikes = numLikes;
+    public Date getDatePosted() {
+        return datePosted;
     }
 
-    public long getNumComments() {
-        return numComments;
+    public void setDatePosted(Date datePosted) {
+        this.datePosted = datePosted;
     }
 
-    public void setNumComments(long numComments) {
-        this.numComments = numComments;
+    public String getReplies() {
+        return replies;
     }
 
-    public long getTimeCreated() {
-        return timeCreated;
+    public void setReplies(String replies) {
+        this.replies = replies;
     }
 
-    public void setTimeCreated(long timeCreated) {
-        this.timeCreated = timeCreated;
+    public String getImageURLs() {
+        return imageURLs;
+    }
+
+    public void setImageURLs(String imageURLs) {
+        this.imageURLs = imageURLs;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
