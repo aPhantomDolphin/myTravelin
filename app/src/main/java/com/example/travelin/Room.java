@@ -4,6 +4,7 @@ public class Room {
     private String roomname = "";
     private String users = "";
     private String messagesSentBy = "";
+    private String messagesenderhistory = "";
 
     public void addUser(String user) {
         if (users.equals("")) {
@@ -42,6 +43,18 @@ public class Room {
 
     public String getMessageSenders() {
         return messagesSentBy;
+    }
+
+    public void addMessageSenderHistory(String user) {
+        if (messagesenderhistory.equals("")) {
+            messagesenderhistory = messagesenderhistory + user;
+        } else {
+            messagesenderhistory = messagesenderhistory + "|" + user;
+        }
+    }
+
+    public String getMessageSenderHistory() {
+        return messagesenderhistory;
     }
 
     public String getRoomname() {

@@ -230,7 +230,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                 room.listenToHistoryEvents(new HistoryRoomListener() {
                     @Override
                     public void onHistoryMessage(Room room, com.scaledrone.lib.Message receivedMessage) {
-                        if (receivedMessage.getID() != null) {
+                        /*if (receivedMessage.getID() != null) {
                             System.out.println("Received historical message with ID: " + receivedMessage.getID());
                         } else {
                             System.out.println("Received historical message with null ID.");
@@ -239,7 +239,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                             System.out.println("Message text: " + receivedMessage.getData().asText());
                         } else {
                             System.out.println("Received null message.");
-                        }
+                        }*/
                         final MemberData data = new MemberData("test", "black");
                         final boolean belongsToCurrentUser = receivedMessage.getClientID().equals(scaledrone.getClientID());
                             if (receivedMessage.getData().asText().charAt(receivedMessage.getData().asText().length() - 1) == '|') {

@@ -23,7 +23,7 @@ public class Post /*extends RealmObject*/ {
 
     private int rateDown = 0;
 
-    private ArrayList<Post> replies;
+    private String replies = "";
 
     private ArrayList<String> imageURLs;
 
@@ -79,12 +79,18 @@ public class Post /*extends RealmObject*/ {
         this.rateDown++;
     }
 
-    public void addReply(Post reply) {
-        this.replies.add(reply);
+    public void addReply(String reply) {
+        if (replies.equals("")) {
+            replies = replies + reply;
+        } else {
+            replies = replies + "|" + reply;
+        }
     }
 
-    public void deleteReply(Post reply) {
-        replies.remove(reply);
+    public void deleteReply(String reply) {
+        if (replies.contains(reply)) {
+            replies.replace(reply,"");
+        }
     }
 
     public void addImageURL(String url) {
