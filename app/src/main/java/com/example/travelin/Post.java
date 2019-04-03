@@ -3,64 +3,36 @@ package com.example.travelin;
 import java.util.ArrayList;
 import java.util.Date;
 
-//import io.realm.RealmList;
-//import io.realm.RealmObject;
+public class Post{
 
-public class Post /*extends RealmObject*/ {
+    private String authorEmail;
 
-    //because Realm doesn't work with inheritance, we need a type
-    //to make sure that we add the posts to the correct lists
-
-    private String type;
-
-    private User author;
+    private String username;
 
     private Date datePosted;
 
     private String body;
 
-    private int rateUp = 0;
+    private int rateUp;
 
-    private int rateDown = 0;
+    private int rateDown;
 
-    private String replies = "";
+    private String replies;
 
-    private ArrayList<String> imageURLs;
+    private String imageURLs;
 
+    private String postID;
 
     //constructors
     public Post(){}
 
-    public Post(String type, User author, Date datePosted, String body) {
-        this.type = type;
-        this.author = author;
-        this.datePosted = datePosted;
+    public Post(String authorEmail,/*Date datePosted,*/ String body, String postId) {
+        this.authorEmail = authorEmail;
+       // this.datePosted = datePosted;
         this.body = body;
-    }
-
-    //getters and setters
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setDatePosted(Date datePosted) {
-        this.datePosted = datePosted;
-    }
-
-    public Date getDatePosted() {
-        return datePosted;
+        this.postID = postId;
+        rateUp=0;
+        rateDown=0;
     }
 
     public void setBody(String body) {
@@ -79,25 +51,59 @@ public class Post /*extends RealmObject*/ {
         this.rateDown++;
     }
 
-    public void addReply(String reply) {
-        if (replies.equals("")) {
-            replies = replies + reply;
-        } else {
-            replies = replies + "|" + reply;
-        }
+    public String getPostID() {
+        return postID;
     }
 
-    public void deleteReply(String reply) {
-        if (replies.contains(reply)) {
-            replies.replace(reply,"");
-        }
+    public void setPostID(String postID) {
+        this.postID = postID;
     }
 
-    public void addImageURL(String url) {
-        imageURLs.add(url);
+    public int getRateUp() {
+        return rateUp;
     }
 
-    public void deleteImageURL(String url) {
-        imageURLs.remove(url);
+    public int getRateDown() {
+        return rateDown;
+    }
+
+    public String getAuthorEmail() {
+        return authorEmail;
+    }
+
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
+    }
+
+    public Date getDatePosted() {
+        return datePosted;
+    }
+
+    public void setDatePosted(Date datePosted) {
+        this.datePosted = datePosted;
+    }
+
+    public String getReplies() {
+        return replies;
+    }
+
+    public void setReplies(String replies) {
+        this.replies = replies;
+    }
+
+    public String getImageURLs() {
+        return imageURLs;
+    }
+
+    public void setImageURLs(String imageURLs) {
+        this.imageURLs = imageURLs;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

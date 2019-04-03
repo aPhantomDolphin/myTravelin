@@ -5,18 +5,18 @@
 
     <item
         android:id="@+id/nav_home"
-        android:icon="@drawable/baseline_home_white_24dp"
+        android:icon="@drawable/baselinehomewhite24dp"
         android:title=""/>
     <item
         android:id="@+id/nav_profile"
-        android:icon="@drawable/baseline_account_circle_white_24dp"
+        android:icon="@drawable/baselineaccountcirclewhite24dp"
         android:title=""/>
     <item
         android:id="@+id/nav_search"
-        android:icon="@drawable/baseline_search_white_24dp"
+        android:icon="@drawable/baselinesearchwhite24dp"
         android:title=""/>
     <item
         android:id="@+id/nav_back"
-        android:icon="@drawable/baseline_arrow_back_white_24dp"
+        android:icon="@drawable/baselinearrowbackwhite24dp"
         android:title=""/>
 </menu>
