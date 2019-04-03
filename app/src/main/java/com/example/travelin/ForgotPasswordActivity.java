@@ -23,7 +23,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private EditText emailView;
-    private TextView gobacktoLogin;
+    private TextView goBack;
     private Button forgetButton;
     private TextView confirmText;
     private LinearLayout parentLayout;
@@ -38,10 +38,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         parentLayout = findViewById(R.id.parent_layout);
         emailView = findViewById(R.id.forget_email);
-        gobacktoLogin = findViewById(R.id.forget_backtologin);
+        goBack = findViewById(R.id.forget_back);
         confirmText = findViewById(R.id.confirm_text);
 
-        gobacktoLogin.setOnClickListener(new View.OnClickListener() {
+        goBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -76,7 +76,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                             }
                             emailView.setVisibility(View.GONE);
                             forgetButton.setVisibility(View.GONE);
-                            gobacktoLogin.setVisibility(View.GONE);
+                            goBack.setVisibility(View.GONE);
                             confirmText.setText(getString(R.string.reset_email_text));
                             new CountDownTimer(1500,1000) {
                                 @Override
@@ -86,7 +86,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFinish() {
-                                    startActivity(new Intent(ForgotPasswordActivity.this,LoginActivity.class));
+                                    Intent intent = new Intent(ForgotPasswordActivity.this,LoginActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
                                 }
                             }.start();
                         }

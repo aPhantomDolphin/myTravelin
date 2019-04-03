@@ -38,7 +38,9 @@
                     android:background="@color/colorPrimaryDark"
                     android:hint="search here"
                     android:textColor="@color/white" />
+
             </android.support.design.widget.TextInputLayout>
+
         </RelativeLayout>
 
         <TextView

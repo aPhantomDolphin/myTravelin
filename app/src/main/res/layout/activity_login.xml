@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/login_background"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/login_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/login_form"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="80dp"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginBottom="25dp"
+            android:contentDescription="@string/travelin_logo"
+            app:srcCompat="@drawable/logo_white" />
+
+        <AutoCompleteTextView
+            android:id="@+id/login_email"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@color/login_input_background"
+            android:hint="@string/prompt_email"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textColorHint="@color/input_login_hint" />
+
+        <EditText
+            android:id="@+id/login_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:background="@color/login_input_background"
+            android:hint="@string/prompt_password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textColorHint="@color/input_login_hint" />
+
+        <!-- Link to Forget Password-->
+
+        <TextView
+            android:id="@+id/forget_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="70dp"
+            android:layout_marginEnd="70dp"
+            android:background="@null"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/forgot_password"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/input_login_hint"
+            android:textSize="15sp" />
+
+        <!-- Login Button -->
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@color/login_button"
+            android:padding="17dp"
+            android:text="@string/login"
+            android:textColor="@color/white" />
+
+        <!-- Link to Register Screen -->
+
+        <TextView
+            android:id="@+id/go_to_register"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginEnd="70dp"
+            android:background="@null"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/register_account"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/input_login_hint"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

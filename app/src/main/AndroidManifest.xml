@@ -31,6 +31,9 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+        <activity android:name=".ForumMainActivity"
+            android:label="ForumMainActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar"/>
         <activity
             android:name="com.example.travelin.RegisterActivity"
             android:label="RegisterActivity"
@@ -39,7 +42,8 @@
             android:theme="@style/RegisterTheme">
         </activity>
         <activity android:name="com.example.travelin.HomeActivity"
-            android:label="HomeActivity">
+            android:label="HomeActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar">
         </activity>
         <activity android:name="com.example.travelin.ForgotPasswordActivity"
             android:label="ForgetPasswordActivity"
@@ -48,7 +52,12 @@
         <activity android:name="com.example.travelin.ProfileActivity"
             android:label="ProfileActivity"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/ProfileTheme">
+            android:theme="@style/Theme.Design.NoActionBar">
+        </activity>
+        <activity android:name=".ConfirmDeleteActivity"
+            android:label="ConfirmDeleteActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Design.NoActionBar">
         </activity>
         <activity android:name="com.example.travelin.MessageActivity"
             android:label="MessageActivity"
