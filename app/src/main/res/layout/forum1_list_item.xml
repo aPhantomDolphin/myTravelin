@@ -66,7 +66,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/blog_desc"
                 app:srcCompat="@drawable/down_filled" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <!--<de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/blog_user_image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -75,20 +75,21 @@
                 android:background="@color/graylight"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/profilepic"/>
+                android:src="@drawable/profilepic"/>-->
 
             <TextView
                 android:id="@+id/blog_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
                 android:text="Username"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/blog_date"
-                app:layout_constraintStart_toEndOf="@+id/blog_user_image"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+            <!--app:layout_constraintStart_toEndOf="@+id/blog_user_image"-->
 
             <TextView
                 android:id="@+id/blog_date"
@@ -103,7 +104,9 @@
                 android:id="@+id/blog_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="20dp"
                 android:layout_marginTop="20dp"
+                android:background="@color/grey1"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

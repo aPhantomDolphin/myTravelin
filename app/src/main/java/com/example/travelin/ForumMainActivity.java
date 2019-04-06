@@ -2,163 +2,98 @@ package com.example.travelin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ForumMainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
-    private ForumHomeFragment forumHomeFragment;
-    private Button createPost;
-
-    User auth=new User();
-    Post post = new Post();
-    DatabaseReference updateData1;
-
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forum1_content_main);
-        createPost = findViewById(R.id.fab);
+
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        forumHomeFragment = new ForumHomeFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_container, forumHomeFragment);
-        fragmentTransaction.commit();
+        databaseReference = firebaseDatabase.getReference().child("Posts");
 
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        DatabaseReference myRef1 = firebaseDatabase.getReference().child("Posts");
+        final List<HashMap<String, String>> stringList = new ArrayList<>();
+        final ArrayList<Post> postList= new ArrayList<Post>();
 
-        post = new Post (firebaseUser.getEmail(),"YOOHOOO","hellod3");
-
-        myRef1.child("hello").setValue(post);
-
-
-        createPost.setOnClickListener(new View.OnClickListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                // need postID for this
-                final String postID = post.getPostID();//getIntent().getExtras().getString("postID");
-
-                mAuth = FirebaseAuth.getInstance();
-
-                FirebaseDatabase db = FirebaseDatabase.getInstance();
-                DatabaseReference ref = db.getReference();
-                DatabaseReference userRef = ref.child("Users");
-
-                final FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        int flag=0;
-                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                            if (firebaseUser.getUid().equals(postSnapshot.getKey())) {
-                                auth = (User) postSnapshot.getValue(User.class);
-                                flag=1;
-                            }
-
-                            if(flag==1) {
-                                updateData1 = FirebaseDatabase.getInstance().getReference("Users")
-                                        .child(postSnapshot.getKey());
-                                break;
-                            }
-                        }
-
-
-
-                        FirebaseDatabase db1 = FirebaseDatabase.getInstance();
-                        DatabaseReference ref1 = db1.getReference();
-                        DatabaseReference postRef = ref1.child("Posts");
-                        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot1) {
-                                //User auth=auth1;
-                                for (DataSnapshot postSnapshot : dataSnapshot1.getChildren()) {
-                                    Post post = (Post) postSnapshot.getValue(Post.class);
-                                    if (post.getPostID().equals(postID)) {
-
-
-
-                                        DatabaseReference updateData2 = FirebaseDatabase.getInstance().getReference("Posts")
-                                                .child(postSnapshot.getKey());
-                                        try {
-                                            String master = auth.getUpvoted();
-                                            String[] arrT = master.split("@");
-                                            int flag = 0;
-                                            String res = "";
-                                            for (String a : arrT) {
-                                                int toadd = 0;
-                                                String temp = a;
-
-                                                if (postID.equals(temp)) {
-                                                    //I have already upvoted this person
-                                                    //Remove from auth.upvoted, decrease upvotes of post
-                                                    flag = 1;
-                                                    toadd = 1;
-                                                    post.downvote();
-                                                }
-
-                                                if (!temp.equals("") && toadd == 0) {
-                                                    res += "@" + temp;
-                                                }
-                                            }
-
-                                            if (flag == 1) {
-                                                updateData1.child("upvoted").setValue(res);
-                                                updateData2.child("upvotes").setValue(post.getRateUp());
-                                                updateData2.child("downvotes").setValue(post.getRateDown());
-                                            } else {
-                                                //I have not upvoted this post
-                                                auth.addUpvoted(postID);
-                                                post.upvote();
-                                                updateData1.child("upvoted").setValue(auth.getUpvoted());
-                                                updateData2.child("upvotes").setValue(post.getRateUp());
-                                                updateData2.child("downvotes").setValue(post.getRateDown());
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
+                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+                    Post post= postSnapshot.getValue(Post.class);
+                    if(!mAuth.getCurrentUser().getUid().equals(postSnapshot.getKey())) {
+                        postList.add(post);
                     }
+                }
 
+
+                for (int i = 0; i < postList.size(); i++) {
+                    HashMap<String, String> hm = new HashMap<String, String>();
+
+                    hm.put("blog_user_name", postList.get(i).getUsername());
+                    hm.put("blog_date", postList.get(i).getDatePosted().toString());
+                    hm.put("blog_title", postList.get(i).getPostTitle());
+                    hm.put("blog_image", postList.get(i).getImageURLs());
+                    hm.put("blog_dec", postList.get(i).getBody());
+                    hm.put("blog_like_count", postList.get(i).getScore());
+                    stringList.add(hm);
+                }
+
+                String[] from = {"blog_user_name", "blog_date", "blog_title", "blog_image", "blog_desc", "blog_like_count"};
+                int[] to = {R.id.blog_user_name, R.id.blog_date, R.id.blog_title, R.id.blog_image, R.id.blog_desc, R.id.blog_like_count};
+
+                SimpleAdapter simpleAdapter = new SimpleAdapter(/*getBaseContext()*/ForumMainActivity.this, stringList, R.layout.activity_listview, from, to);
+
+                ListView androidListView = (ListView) findViewById(R.id.listView);
+
+                androidListView.setAdapter(simpleAdapter);
+
+                androidListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
 
                     }
                 });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
+
+
+
+
     }
 
     @Override
@@ -167,6 +102,9 @@ public class ForumMainActivity extends AppCompatActivity {
 
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         String currentID = firebaseUser.getUid();
+
+
+
 
     }
 
