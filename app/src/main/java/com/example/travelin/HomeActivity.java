@@ -5,24 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home2);
+        setContentView(R.layout.activity_home);
         messageButton = findViewById(R.id.fab);
 
         messageButton.setOnClickListener(new View.OnClickListener() {
@@ -81,9 +74,10 @@ public class HomeActivity extends AppCompatActivity {
                         Intent intent;
                         switch (menuItem.getItemId()) {
 
-                            case R.id.nav_profile:
+                            case R.id.navigation_profile:
                                 intent = new Intent(HomeActivity.this, ProfileActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 try{
                                     System.out.println("CLICKED PROFILE");
                                     startActivity(intent);
@@ -94,9 +88,16 @@ public class HomeActivity extends AppCompatActivity {
                                 return true;
 
 
-                            case R.id.nav_search:
+                            case R.id.navigation_search:
                                 intent = new Intent(HomeActivity.this, SearchFilterActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                return true;
+
+                            case R.id.navigation_forum:
+                                intent = new Intent(HomeActivity.this, ForumMainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 return true;
 
@@ -134,7 +135,7 @@ public class HomeActivity extends AppCompatActivity {
                         String name = city[position];
                         Intent intent = new Intent(HomeActivity.this, CityPageActivity.class);
                         intent.putExtra("city",name);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     }
                 });
@@ -144,7 +145,7 @@ public class HomeActivity extends AppCompatActivity {
     public void cityClicked(View view){
         System.out.println("REACHED HERE INSTEAD");
         Intent intent = new Intent(HomeActivity.this, CityPageActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

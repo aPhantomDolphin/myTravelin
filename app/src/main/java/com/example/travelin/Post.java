@@ -1,97 +1,84 @@
 package com.example.travelin;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.io.Serializable;
 
-//import io.realm.RealmList;
-//import io.realm.RealmObject;
+public class Post implements Serializable {
+    private User user;
+    private String postText;
+    private String postImageUrl;
+    private String postId;
+    private long numLikes;
+    private long numComments;
+    private long timeCreated;
 
-public class Post /*extends RealmObject*/ {
-
-    //because Realm doesn't work with inheritance, we need a type
-    //to make sure that we add the posts to the correct lists
-
-    private String type;
-
-    private User author;
-
-    private Date datePosted;
-
-    private String body;
-
-    private int rateUp = 0;
-
-    private int rateDown = 0;
-
-    private ArrayList<Post> replies;
-
-    private ArrayList<String> imageURLs;
-
-
-    //constructors
-    public Post(){}
-
-    public Post(String type, User author, Date datePosted, String body) {
-        this.type = type;
-        this.author = author;
-        this.datePosted = datePosted;
-        this.body = body;
+    public Post() {
     }
 
-    //getters and setters
-    public void setType(String type) {
-        this.type = type;
+    public Post(User user, String postText, String postImageUrl, String postId, long numLikes, long numComments, long timeCreated) {
+
+        this.user = user;
+        this.postText = postText;
+        this.postImageUrl = postImageUrl;
+        this.postId = postId;
+        this.numLikes = numLikes;
+        this.numComments = numComments;
+        this.timeCreated = timeCreated;
     }
 
-    public String getType() {
-        return type;
+    public User getUser() {
+
+        return user;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public User getAuthor() {
-        return author;
+    public String getPostText() {
+        return postText;
     }
 
-    public void setDatePosted(Date datePosted) {
-        this.datePosted = datePosted;
+    public void setPostText(String postText) {
+        this.postText = postText;
     }
 
-    public Date getDatePosted() {
-        return datePosted;
+    public String getPostImageUrl() {
+        return postImageUrl;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setPostImageUrl(String postImageUrl) {
+        this.postImageUrl = postImageUrl;
     }
 
-    public String getBody() {
-        return body;
+    public String getPostId() {
+        return postId;
     }
 
-    public void upvote() {
-        this.rateUp++;
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
-    public void downvote() {
-        this.rateDown++;
+    public long getNumLikes() {
+        return numLikes;
     }
 
-    public void addReply(Post reply) {
-        this.replies.add(reply);
+    public void setNumLikes(long numLikes) {
+        this.numLikes = numLikes;
     }
 
-    public void deleteReply(Post reply) {
-        replies.remove(reply);
+    public long getNumComments() {
+        return numComments;
     }
 
-    public void addImageURL(String url) {
-        imageURLs.add(url);
+    public void setNumComments(long numComments) {
+        this.numComments = numComments;
     }
 
-    public void deleteImageURL(String url) {
-        imageURLs.remove(url);
+    public long getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(long timeCreated) {
+        this.timeCreated = timeCreated;
     }
 }

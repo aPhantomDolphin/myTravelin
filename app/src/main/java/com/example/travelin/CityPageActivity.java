@@ -28,11 +28,11 @@ public class CityPageActivity extends AppCompatActivity {
     private String cityName;
     private TextView cityNameView;
     private TextView infoView;
-    private TextView tag1;
-    private TextView tag2;
     private ImageButton findflight;
     private ImageButton findHotels;
     private String ha;
+    private TextView tag1;
+    private TextView tag2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,21 +100,21 @@ public class CityPageActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.nav_home:
                         intent = new Intent(CityPageActivity.this, HomeActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         return true;
 
 
                     case R.id.nav_profile:
                         intent = new Intent(CityPageActivity.this, ProfileActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         return true;
 
 
                     case R.id.nav_search:
                         intent = new Intent(CityPageActivity.this, SearchFilterActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         return true;
 
@@ -138,7 +138,7 @@ public class CityPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent( CityPageActivity.this, FlightSearchActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         });
@@ -148,7 +148,7 @@ public class CityPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent( CityPageActivity.this, HotelActivity.class);
                 intent.putExtra("city",ha);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         });
