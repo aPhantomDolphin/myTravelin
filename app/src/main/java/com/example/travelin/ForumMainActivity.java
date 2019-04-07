@@ -59,10 +59,10 @@ public class ForumMainActivity extends AppCompatActivity {
 
                     hm.put("blog_user_name", postList.get(i).getUsername());
                     hm.put("blog_date", postList.get(i).getDatePosted().toString());
-                    hm.put("blog_title", postList.get(i).getPostTitle());
+                    hm.put("blog_title", postList.get(i).getTitle());
                     hm.put("blog_image", postList.get(i).getImageURLs());
                     hm.put("blog_dec", postList.get(i).getBody());
-                    hm.put("blog_like_count", postList.get(i).getScore());
+                    hm.put("blog_like_count", Integer.toString(postList.get(i).getRateUp() - postList.get(i).getRateDown()));
                     stringList.add(hm);
                 }
 

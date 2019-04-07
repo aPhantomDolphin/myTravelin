@@ -9,9 +9,15 @@ public class Post{
 
     private String username;
 
+    private String type;
+
+    private User author;
+
     private Date datePosted;
 
     private String body;
+
+    private String title;
 
     private int rateUp;
 
@@ -26,9 +32,10 @@ public class Post{
     //constructors
     public Post(){}
 
-    public Post(String authorEmail,/*Date datePosted,*/ String body, String postId) {
+    public Post(String title, String authorEmail, Date datePosted, String body, String postId) {
+        this.title = title;
         this.authorEmail = authorEmail;
-       // this.datePosted = datePosted;
+        this.datePosted = datePosted;
         this.body = body;
         this.postID = postId;
         rateUp=0;
@@ -42,6 +49,10 @@ public class Post{
     public String getBody() {
         return body;
     }
+
+    public void setTitle(String title) { this.title = title; }
+
+    public String getTitle() { return title; }
 
     public void upvote() {
         this.rateUp++;
@@ -97,6 +108,12 @@ public class Post{
 
     public void setImageURLs(String imageURLs) {
         this.imageURLs = imageURLs;
+    }
+
+    public void deleteReply(String reply) {
+        if (replies.contains(reply)) {
+            replies.replace(reply,"");
+        }
     }
 
     public String getUsername() {
