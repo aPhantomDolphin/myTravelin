@@ -33,8 +33,8 @@ public class ViewUsersInRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_in_room);
-        final ArrayList<String> res= new ArrayList<String>();
-        final List<HashMap<String, String>> aList = new ArrayList<HashMap<String, String>>();
+        final ArrayList<String> allUsers = new ArrayList<String>();
+        final List<HashMap<String, String>> roomUsersList = new ArrayList<HashMap<String, String>>();
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -54,7 +54,7 @@ public class ViewUsersInRoomActivity extends AppCompatActivity {
                         String[] inRoom = room.getUsers().split("\\|");
                         for (int i = 0; i < inRoom.length; i++) {
                             // TODO: POPULATE VIEW WITH ALL USERS
-                            res.add(inRoom[i]);
+                            allUsers.add(inRoom[i]);
                         }
                     }
                 }
@@ -69,23 +69,25 @@ public class ViewUsersInRoomActivity extends AppCompatActivity {
         // TODO : SET VARIABLE FOR USER THEY CLICKED ON
         // TODO : SET EXTRA, GO TO OTHER PROFILE IF CLICKED
 
-        for (String str : res) {
+        for (int i = 0; i < allUsers.size(); i++) {
             HashMap<String, String> hm = new HashMap<>();
 
-            hm.put("listview_title", str);
-            aList.add(hm);
+            hm.put("user_email", allUsers.get(i));
+
+            roomUsersList.add(hm);
         }
 
-        String[] from = {"listview_title"};
-        int[] to = {R.id.listview_item_title};
+        String[] from = {"user_email"};
+        // TODO : UI NEEDS CREATION
+        int[] to = {R.id.user_email};
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(/*getBaseContext()*/ViewUsersInRoomActivity.this, aList, R.layout.activity_listview, from, to);
+        SimpleAdapter simpleAdapter = new SimpleAdapter(/*getBaseContext()*/ViewUsersInRoomActivity.this, roomUsersList, R.layout.view_users_in_room_list, from, to);
         ListView androidListView = (ListView) findViewById(R.id.list_view);
         androidListView.setAdapter(simpleAdapter);
         androidListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String mail=res.get(position);
+                String mail = allUsers.get(position);
                 System.out.println("SEARCH USERS: "+mail);
                 Intent intent = new Intent(ViewUsersInRoomActivity.this, OtherProfileActivity.class);
 

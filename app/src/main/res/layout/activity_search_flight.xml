@@ -78,7 +78,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <EditText
-            android:id="@+id/date"
+            android:id="@+id/flight_date"
             android:layout_width="350dp"
             android:layout_height="70dp"
             android:layout_gravity="center_horizontal"

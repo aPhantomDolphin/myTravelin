@@ -164,6 +164,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference().child("Users");
+        final DatabaseReference roomRef = database.getReference().child("Rooms");
         User u = null;
 
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -194,12 +195,34 @@ public class ProfileActivity extends AppCompatActivity {
                                         updateData = FirebaseDatabase.getInstance().getReference("Users")
                                                 .child(snap.getKey());
                                         if (!u.getRoomInvites().equals("")) {
-                                            String[] rooms = u.getRoomInvites().split("\\|");
+                                            final String[] rooms = u.getRoomInvites().split("\\|");
                                             for (int i = 0; i < rooms.length; i++) {
                                                 // TODO : NOTIFY THEM WHICH ROOM THEY ARE INVITED TO
                                                 // TODO : CREATE BUTTON TO ACCEPT OR DECLINE INVITE
                                                 if (!declined) {
                                                     u.addRoom(rooms[i]);
+                                                    final int roomi = i;
+                                                    final User roomUser = u;
+                                                    roomRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            Room r = null;
+                                                            DatabaseReference updateRoom = null;
+                                                            for (DataSnapshot roomSnap : dataSnapshot.getChildren()) {
+                                                                r = roomSnap.getValue(Room.class);
+                                                                if (rooms[roomi].equals(r.getRoomname())) {
+                                                                    r.addUser(roomUser.getUsername());
+                                                                    break;
+                                                                }
+                                                            }
+                                                            updateRoom.child("users").setValue(r.getUsers());
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    });
                                                 }
                                             }
                                             u.clearInvites();
