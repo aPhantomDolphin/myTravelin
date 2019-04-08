@@ -26,11 +26,11 @@ public class Post{
     //constructors
     public Post(){}
 
-    public Post(String authorEmail,/*Date datePosted,*/ String body, String postId) {
+    public Post(String authorEmail,/*Date datePosted,*/ String body,String postID) {
         this.authorEmail = authorEmail;
        // this.datePosted = datePosted;
+        this.postID=postID;
         this.body = body;
-        this.postID = postId;
         rateUp=0;
         rateDown=0;
     }

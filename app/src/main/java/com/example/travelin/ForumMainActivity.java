@@ -30,7 +30,7 @@ public class ForumMainActivity extends AppCompatActivity {
     private Button createPost;
 
     User auth=new User();
-    Post post = new Post();
+    Post post1 = new Post();
     DatabaseReference updateData1;
 
 
@@ -50,9 +50,10 @@ public class ForumMainActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         DatabaseReference myRef1 = firebaseDatabase.getReference().child("Posts");
 
-        post = new Post (firebaseUser.getEmail(),"YOOHOOO","hellod3");
-
-        myRef1.child("hello").setValue(post);
+        String blah = myRef1.push().getKey();
+        post1 = new Post (firebaseUser.getEmail(),"YOOHOOO",blah);
+        //post.setPostID(blah);
+        myRef1.child(blah).setValue(post1);
 
 
         createPost.setOnClickListener(new View.OnClickListener() {
@@ -60,13 +61,16 @@ public class ForumMainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // need postID for this
-                final String postID = post.getPostID();//getIntent().getExtras().getString("postID");
+                final String postID = post1.getPostID();//getIntent().getExtras().getString("postID");
 
                 mAuth = FirebaseAuth.getInstance();
 
                 FirebaseDatabase db = FirebaseDatabase.getInstance();
                 DatabaseReference ref = db.getReference();
                 DatabaseReference userRef = ref.child("Users");
+
+                System.out.println("HELLOWORLD"+post1.getPostID());
+                System.out.println("HELLOWORLD1"+postID);
 
                 final FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -86,8 +90,6 @@ public class ForumMainActivity extends AppCompatActivity {
                             }
                         }
 
-
-
                         FirebaseDatabase db1 = FirebaseDatabase.getInstance();
                         DatabaseReference ref1 = db1.getReference();
                         DatabaseReference postRef = ref1.child("Posts");
@@ -98,9 +100,6 @@ public class ForumMainActivity extends AppCompatActivity {
                                 for (DataSnapshot postSnapshot : dataSnapshot1.getChildren()) {
                                     Post post = (Post) postSnapshot.getValue(Post.class);
                                     if (post.getPostID().equals(postID)) {
-
-
-
                                         DatabaseReference updateData2 = FirebaseDatabase.getInstance().getReference("Posts")
                                                 .child(postSnapshot.getKey());
                                         try {
