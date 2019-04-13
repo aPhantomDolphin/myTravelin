@@ -71,6 +71,7 @@ public class User /*extends RealmObject*/ {
     private String rat;
     private String block;
     private String upvoted;
+    private String downvoted;
     private String postIDs;
 
 
@@ -114,6 +115,7 @@ public class User /*extends RealmObject*/ {
         this.rat="";
         this.block="";
         this.upvoted="";
+        this.downvoted="";
         this.postIDs="";
         /////////////////////////////////////////////////////////////////////////////////
 
@@ -475,4 +477,24 @@ public class User /*extends RealmObject*/ {
             e.printStackTrace();
         }
     }
+
+
+    public String getDownvoted() {
+        return downvoted;
+    }
+
+    public void addDownvoted(String downvote) {
+        try{
+            if(this.downvoted.equals("") || this.downvoted==null){
+                this.downvoted="@"+downvote;
+            }
+            else{
+                this.downvoted += "@"+downvote;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
