@@ -5,16 +5,21 @@ import android.net.http.SslCertificate;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,6 +50,9 @@ public class ForumMainActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("Posts");
 
+        final List<HashMap<String,String>> stringRemoved = new ArrayList<>();
+
+
         final List<HashMap<String, String>> stringList = new ArrayList<>();
         final ArrayList<Post> postList= new ArrayList<Post>();
 
@@ -56,7 +64,6 @@ public class ForumMainActivity extends AppCompatActivity {
                     final Post post= postSnapshot.getValue(Post.class);
                     postList.add(post);
                 }
-
 
                 for (int i = 0; i < postList.size(); i++) {
                     HashMap<String, String> hm = new HashMap<String, String>();
@@ -76,18 +83,26 @@ public class ForumMainActivity extends AppCompatActivity {
 
                 SimpleAdapter simpleAdapter = new SimpleAdapter(/*getBaseContext()*/ForumMainActivity.this, stringList, R.layout.forum1_list_item, from, to);
 
-                ListView androidListView = findViewById(R.id.listView);
+                final ListView androidListView = findViewById(R.id.listView);
 
                 androidListView.setAdapter(simpleAdapter);
+
+
+                /*ImageView imageView = findViewById(R.id.more);
+                registerForContextMenu(imageView);*/
 
                 androidListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                        Post newPost = (Post) parent.getItemAtPosition(position);
+                        final Post newPost = (Post) parent.getItemAtPosition(position);
+                        /*final ConstraintLayout cl = view.findViewById(R.id.blogConstraint);
+                        final ConstraintLayout up = view.findViewById(R.id.blogConstraintUp);*/
+
                         view.findViewById(R.id.blog_user_name).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+
                                 String mail=postList.get(position).getAuthorEmail();
                                 Intent intent = new Intent(ForumMainActivity.this, OtherProfileActivity.class);
 
@@ -106,6 +121,24 @@ public class ForumMainActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         });
+                        /*view.findViewById(R.id.hidebutton).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                System.out.println("HOLAAAAAAAAA");
+
+                                cl.setVisibility(View.GONE);
+                                up.setVisibility(View.VISIBLE);
+
+                            }
+                        });
+                        view.findViewById(R.id.unhidebutton).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                cl.setVisibility(View.VISIBLE);
+                                up.setVisibility(View.GONE);
+                            }
+                        });*/
                     }
                 });
 
@@ -130,6 +163,16 @@ public class ForumMainActivity extends AppCompatActivity {
 
 
     }
+
+    /*
+    @Override
+    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo menuInfo){
+
+        super.onCreateContextMenu(contextMenu, view, menuInfo);
+
+        getMenuInflater().inflate(R.menu.options_post, contextMenu);
+
+    }*/
 
     @Override
     protected void onStart(){
