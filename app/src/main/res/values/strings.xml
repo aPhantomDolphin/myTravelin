@@ -75,4 +75,6 @@
     <string name="date">Date</string>
     <string name="search_flights">Search Flights</string>
     <string name="more">more</string>
+    <string name="add_comment">Comment</string>
+    <string name="add_title">Title</string>
 </resources>

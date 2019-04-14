@@ -34,6 +34,9 @@
         <activity android:name=".ForumMainActivity"
             android:label="ForumMainActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar"/>
+        <activity android:name=".ForumCommentActivity"
+            android:label="ForumCommentActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar"/>
         <activity
             android:name="com.example.travelin.RegisterActivity"
             android:label="RegisterActivity"
@@ -61,6 +64,10 @@
         </activity>
         <activity android:name="com.example.travelin.MessageActivity"
             android:label="MessageActivity"
+            android:theme="@style/MessageTheme">
+        </activity>
+        <activity android:name="com.example.travelin.MessageHome"
+            android:label="MessageHome"
             android:theme="@style/MessageTheme">
         </activity>
         <activity android:name="com.example.travelin.SearchFilterActivity"
@@ -120,6 +127,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".NotificationListener"/>
     </application>
 
 </manifest>
