@@ -61,10 +61,8 @@ public class ForumMainActivity extends AppCompatActivity {
         upvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // change this to the position post id!!////////
                 final String postID = post1.getPostID();
-
                 mAuth = FirebaseAuth.getInstance();
 
                 FirebaseDatabase db = FirebaseDatabase.getInstance();
@@ -103,93 +101,70 @@ public class ForumMainActivity extends AppCompatActivity {
                                                 .child(postSnapshot.getKey());
                                         int gFlag=0;
                                         try {
-                                            String master = auth.getUpvoted();
-                                            String[] arrT = master.split("@");
-                                            int flag = 0;
-                                            String res = "";
-                                            for (String a : arrT) {
-                                                int toadd = 0;
+                                            String master1 = auth.getUpvoted();
+                                            String master2 = auth.getDownvoted();
+                                            String[] arrT1 = master1.split("@");
+                                            String[] arrT2 = master2.split("@");
+                                            int flag1 = 0;
+                                            int flag2 = 0;
+                                            String res1 = "";
+                                            String res2 = "";
+                                            for (String a : arrT1) {
+                                                int toadd1 = 0;
                                                 String temp = a;
-
                                                 if (postID.equals(temp)) {
                                                     //I have already upvoted this person
                                                     //Remove from auth.upvoted, decrease upvotes of post
-                                                    flag = 1;
-                                                    toadd = 1;
-                                                    //post.downvote();
+                                                    flag1 = 1;
+                                                    toadd1 = 1;
                                                 }
 
-                                                if (!temp.equals("") && toadd == 0) {
-                                                    res += "@" + temp;
+                                                if (!temp.equals("") && toadd1 == 0) {
+                                                    res1 += "@" + temp;
                                                 }
                                             }
 
-                                            if (flag == 1) {
-                                                updateData1.child("upvoted").setValue(res);
-                                                updateData2.child("upvotes").setValue(post.getRateUp());
-                                                updateData2.child("downvotes").setValue(post.getRateDown());
-                                            } else {
-                                                //I have not upvoted this post
-                                                /*auth.addUpvoted(postID);
+                                            for (String a : arrT2) {
+                                                int toadd2 = 0;
+                                                String temp = a;
+                                                if (postID.equals(temp)) {
+                                                    //I have already upvoted this person
+                                                    //Remove from auth.upvoted, decrease upvotes of post
+                                                    flag2 = 1;
+                                                    toadd2 = 1;
+                                                }
+
+                                                if (!temp.equals("") && toadd2 == 0) {
+                                                    res2 += "@" + temp;
+                                                }
+                                            }
+
+                                            if(flag1==1 && flag2==0){
+                                                updateData1.child("upvoted").setValue(res1);
+                                                post.undoUpvote();
+                                                updateData2.child("rateUp").setValue(post.getRateUp());
+                                            }
+                                            else if(flag1==0 && flag2==0){
+                                                auth.addUpvoted(postID);
+                                                updateData1.child("upvoted").setValue(auth.getUpvoted());
+                                                post.upvote();
+                                                updateData2.child("rateUp").setValue(post.getRateUp());
+                                            }
+                                            else if(flag2==1 && flag1==0){
+                                                auth.addUpvoted(postID);
+                                                post.undoDownVote();
                                                 post.upvote();
                                                 updateData1.child("upvoted").setValue(auth.getUpvoted());
-                                                updateData2.child("upvotes").setValue(post.getRateUp());
-                                                updateData2.child("downvotes").setValue(post.getRateDown());*/
-                                                gFlag++;
+                                                updateData1.child("downvoted").setValue(res2);
+                                                updateData2.child("rateUp").setValue(post.getRateUp());
+                                                updateData2.child("rateDown").setValue(post.getRateDown());
+                                            }
+                                            else{
+                                                System.out.println("ERROR ERROR ERROR UPVOTE ERROR");
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-
-                                        try {
-                                            String master = auth.getDownvoted();
-                                            String[] arrT = master.split("@");
-                                            int flag = 0;
-                                            String res = "";
-                                            for (String a : arrT) {
-                                                int toadd = 0;
-                                                String temp = a;
-
-                                                if (postID.equals(temp)) {
-                                                    //I have already upvoted this person
-                                                    //Remove from auth.upvoted, decrease upvotes of post
-                                                    flag = 1;
-                                                    toadd = 1;
-                                                    //post.downvote();
-                                                    post.upvote();
-                                                    //post.upvote();
-                                                }
-
-                                                if (!temp.equals("") && toadd == 0) {
-                                                    res += "@" + temp;
-                                                }
-                                            }
-
-                                            if (flag == 1) {
-                                                updateData1.child("upvoted").setValue(res);
-                                                updateData2.child("upvotes").setValue(post.getRateUp());
-                                                updateData2.child("downvotes").setValue(post.getRateDown());
-                                            } else {
-                                                //I have not upvoted this post
-                                                /*auth.addUpvoted(postID);
-                                                post.upvote();
-                                                updateData1.child("upvoted").setValue(auth.getUpvoted());
-                                                updateData2.child("upvotes").setValue(post.getRateUp());
-                                                updateData2.child("downvotes").setValue(post.getRateDown());*/
-                                                gFlag++;
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-
-                                        if(gFlag==2){
-                                            auth.addUpvoted(postID);
-                                            post.upvote();
-                                            updateData1.child("upvoted").setValue(auth.getUpvoted());
-                                            updateData2.child("upvotes").setValue(post.getRateUp());
-                                            updateData2.child("downvotes").setValue(post.getRateDown());
-                                        }
-
                                     }
                                 }
                             }
@@ -221,9 +196,6 @@ public class ForumMainActivity extends AppCompatActivity {
                 DatabaseReference ref = db.getReference();
                 DatabaseReference userRef = ref.child("Users");
 
-                System.out.println("HELLOWORLD"+post1.getPostID());
-                System.out.println("HELLOWORLD1"+postID);
-
                 final FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -256,92 +228,69 @@ public class ForumMainActivity extends AppCompatActivity {
                                                 .child(postSnapshot.getKey());
                                         int gFlag=0;
                                         try {
-                                            String master = auth.getUpvoted();
-                                            String[] arrT = master.split("@");
-                                            int flag = 0;
-                                            String res = "";
-                                            for (String a : arrT) {
-                                                int toadd = 0;
+                                            String master1 = auth.getUpvoted();
+                                            String master2 = auth.getDownvoted();
+                                            String[] arrT1 = master1.split("@");
+                                            String[] arrT2 = master2.split("@");
+                                            int flag1 = 0;
+                                            int flag2 = 0;
+                                            String res1 = "";
+                                            String res2 = "";
+                                            for (String a : arrT1) {
+                                                int toadd1 = 0;
                                                 String temp = a;
-
                                                 if (postID.equals(temp)) {
                                                     //I have already upvoted this person
-                                                    //Remove from auth.downvoted, decrease upvotes of post
-                                                    flag = 1;
-                                                    toadd = 1;
-                                                    post.downvote();
-                                                    //post.downvote();
+                                                    //Remove from auth.upvoted, decrease upvotes of post
+                                                    flag1 = 1;
+                                                    toadd1 = 1;
                                                 }
 
-                                                if (!temp.equals("") && toadd == 0) {
-                                                    res += "@" + temp;
+                                                if (!temp.equals("") && toadd1 == 0) {
+                                                    res1 += "@" + temp;
                                                 }
                                             }
 
-                                            if (flag == 1) {
-                                                updateData1.child("upvoted").setValue(res);
-                                                updateData2.child("upvotes").setValue(post.getRateUp());
-                                                updateData2.child("downvotes").setValue(post.getRateDown());
-                                            } else {
-                                                //I have not upvoted this post
-                                                /*auth.addUpvoted(postID);
-                                                post.upvote();
-                                                updateData1.child("upvoted").setValue(auth.getUpvoted());
-                                                updateData2.child("upvotes").setValue(post.getRateUp());
-                                                updateData2.child("downvotes").setValue(post.getRateDown());*/
-                                                gFlag++;
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-
-                                        try {
-                                            String master = auth.getDownvoted();
-                                            String[] arrT = master.split("@");
-                                            int flag = 0;
-                                            String res = "";
-                                            for (String a : arrT) {
-                                                int toadd = 0;
+                                            for (String a : arrT2) {
+                                                int toadd2 = 0;
                                                 String temp = a;
-
                                                 if (postID.equals(temp)) {
-                                                    //I have already downvoted this person
-                                                    //Remove from auth.downvoted, increase upvotes of post
-                                                    flag = 1;
-                                                    toadd = 1;
-                                                    //System.out.println("HERE12:"+post.getRateDown());
-                                                    //post.undoDownVote();
-                                                    //System.out.println("HERE13:"+post.getRateDown());
+                                                    //I have already upvoted this person
+                                                    //Remove from auth.upvoted, decrease upvotes of post
+                                                    flag2 = 1;
+                                                    toadd2 = 1;
                                                 }
 
-                                                if (!temp.equals("") && toadd == 0) {
-                                                    res += "@" + temp;
+                                                if (!temp.equals("") && toadd2 == 0) {
+                                                    res2 += "@" + temp;
                                                 }
                                             }
 
-                                            if (flag == 1) {
-                                                updateData1.child("downvoted").setValue(res);
-                                                updateData2.child("upvotes").setValue(post.getRateUp());
-                                                updateData2.child("downvotes").setValue(post.getRateDown());
-                                            } else {
-                                                //I have not downvoted this post
-                                                /*auth.addDownvoted(postID);
-                                                post.downvote();
+                                            if(flag2==1 && flag1==0){
+                                                updateData1.child("downvoted").setValue(res2);
+                                                post.undoDownVote();
+                                                updateData2.child("rateDown").setValue(post.getRateDown());
+                                            }
+                                            else if(flag1==0 && flag2==0){
+                                                auth.addDownvoted(postID);
                                                 updateData1.child("downvoted").setValue(auth.getDownvoted());
-                                                updateData2.child("upvotes").setValue(post.getRateUp());
-                                                updateData2.child("downvotes").setValue(post.getRateDown());*/
-                                                gFlag++;
+                                                post.downvote();
+                                                updateData2.child("rateDown").setValue(post.getRateDown());
+                                            }
+                                            else if(flag1==1 && flag2==0){
+                                                auth.addDownvoted(postID);
+                                                post.undoUpvote();
+                                                post.downvote();
+                                                updateData1.child("upvoted").setValue(res1);
+                                                updateData1.child("downvoted").setValue(auth.getDownvoted());
+                                                updateData2.child("rateUp").setValue(post.getRateUp());
+                                                updateData2.child("rateDown").setValue(post.getRateDown());
+                                            }
+                                            else{
+                                                System.out.println("ERROR ERROR ERROR DOWNVOTE ERROR");
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
-                                        }
-
-                                        if(gFlag==2){
-                                            auth.addDownvoted(postID);
-                                            post.downvote();
-                                            updateData1.child("downvoted").setValue(auth.getDownvoted());
-                                            updateData2.child("upvotes").setValue(post.getRateUp());
-                                            updateData2.child("downvotes").setValue(post.getRateDown());
                                         }
                                     }
                                 }
