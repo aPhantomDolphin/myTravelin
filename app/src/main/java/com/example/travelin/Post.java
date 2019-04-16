@@ -26,9 +26,9 @@ public class Post{
     //constructors
     public Post(){}
 
-    public Post(String authorEmail,/*Date datePosted,*/ String body,String postID) {
+    public Post(String authorEmail,Date datePosted, String body,String postID) {
         this.authorEmail = authorEmail;
-       // this.datePosted = datePosted;
+       this.datePosted = datePosted;
         this.postID=postID;
         this.body = body;
         rateUp=0;

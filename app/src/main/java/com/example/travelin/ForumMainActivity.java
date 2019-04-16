@@ -21,6 +21,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class ForumMainActivity extends AppCompatActivity {
 
@@ -30,13 +33,13 @@ public class ForumMainActivity extends AppCompatActivity {
     private Button upvote;
     private Button downvote;
 
-    User auth=new User();
+    User auth = new User();
     Post post1 = new Post();
     DatabaseReference updateData1;
 
 
     @Override
-    protected void onCreate (Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forum1_content_main);
@@ -52,13 +55,16 @@ public class ForumMainActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         DatabaseReference myRef1 = firebaseDatabase.getReference().child("Posts");
 
+        Date currentDate = Calendar.getInstance().getTime();
         String blah = myRef1.push().getKey();
-        post1 = new Post (firebaseUser.getEmail(),"YOOHOOO",blah);
+        post1 = new Post(firebaseUser.getEmail(), currentDate, "YOOHOOO", blah);
         //post.setPostID(blah);
         myRef1.child(blah).setValue(post1);
 
 
-        upvote.setOnClickListener(new View.OnClickListener() {
+
+
+   /*     upvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // change this to the position post id!!////////
@@ -319,6 +325,7 @@ public class ForumMainActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         String currentID = firebaseUser.getUid();
 
-    }
+    }*/
 
+    }
 }
