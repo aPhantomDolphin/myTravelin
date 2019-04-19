@@ -410,7 +410,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
 
     public void sendNotification(String title, String text) {
         if (!sent) {
-            Intent resultIntent = new Intent(this, MessageActivity.class);
+            Intent resultIntent = new Intent(this, MessageHome.class);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
             stackBuilder.addNextIntentWithParentStack(resultIntent);
             PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
