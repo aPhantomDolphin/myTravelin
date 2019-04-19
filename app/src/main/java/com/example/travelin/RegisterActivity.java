@@ -45,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register2);
+        setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -79,38 +79,39 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.createUserWithEmailAndPassword(emailView.getText().toString(), passwordView.getText().toString())
-                        .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d("EmailPassword", "createUserWithEmail:success");
-                                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
-                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                    DatabaseReference myRef = database.getReference().child("Users");
+                if(validateEmailPass()) {
+                    mAuth.createUserWithEmailAndPassword(emailView.getText().toString(), passwordView.getText().toString())
+                            .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d("EmailPassword", "createUserWithEmail:success");
+                                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
-                                    User user = new User(firebaseUser.getEmail(),nameView.getText().toString());
+                                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                        DatabaseReference myRef = database.getReference().child("Users");
 
+                                        User user = new User(firebaseUser.getEmail(), nameView.getText().toString());
 
-                                    myRef.child(firebaseUser.getUid()).setValue(user);
+                                        myRef.child(firebaseUser.getUid()).setValue(user);
 
-                                    firebaseUser.sendEmailVerification();
+                                        firebaseUser.sendEmailVerification();
 
-                                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                                        startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
 
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w("EmailPassword", "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(RegisterActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                    emailView.setError("Invalid email or password");
-                                    emailView.requestFocus();
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w("EmailPassword", "createUserWithEmail:failure", task.getException());
+                                        Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+                                        emailView.setError("Invalid email or password");
+                                        emailView.requestFocus();
+                                    }
                                 }
-                            }
-                        });
-
+                            });
+                }
             }
         });
 
@@ -126,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity {
         emailView.setError(null);
         passwordView.setError(null);
         confirmPasswordView.setError(null);
-        //usernameText.setError(null);
+        nameView.setError(null);
 
         boolean validate = false;
 

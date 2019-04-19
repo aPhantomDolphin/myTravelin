@@ -11,14 +11,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Map;
 
 public class CityPageActivity extends AppCompatActivity {
 
@@ -43,7 +40,7 @@ public class CityPageActivity extends AppCompatActivity {
         cityNameView = findViewById(R.id.city1);
         infoView = findViewById(R.id.info1);
         tag1 = findViewById(R.id.tag1);
-        tag2 = findViewById(R.id.tag2);
+        //tag2 = findViewById(R.id.tag2);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference().child("Destinations");
@@ -53,23 +50,26 @@ public class CityPageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+                    final Destinations dest = (Destinations) postSnapshot.getValue(Destinations.class);
 
-                    if(cityName.equals(postSnapshot.getKey())){
+                    if(cityName.equals(dest.getCityName()/*postSnapshot.getKey()*/)){
 
                         DatabaseReference newRef = myRef.child(cityName);
 
-
                         System.out.println(newRef.toString());
                         cityNameView.setText(cityName);
-                        //Map<String, String> map = dataSnapshot.getValue(Map.class);
-                        //infoView.setText(map.get("Info"));
-                        //infoView.setText(newRef.getKey());
+
                         newRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                infoView.setText(dataSnapshot.child("Info").getValue().toString());
-                                tag1.setText(dataSnapshot.child("Related Tags").child("Tag1").getValue().toString());
-                                tag2.setText(dataSnapshot.child("Related Tags").child("Tag2").getValue().toString());
+                                infoView.setText(dest.getInfo()/*dataSnapshot.child("Info").getValue().toString()*/);
+                                String t1=dest.getTags();
+                                String[] arr=t1.split("@");
+                                String t2="Tags: ";
+                                for(String a : arr){
+                                    t2+=a+" ";
+                                }
+                                tag1.setText(t2/*dataSnapshot.child("Related Tags").child("Tag1").getValue().toString()*/);
                             }
 
                             @Override
@@ -91,28 +91,34 @@ public class CityPageActivity extends AppCompatActivity {
             }
         });
 
-        mMainNav = (BottomNavigationView) findViewById(R.id.main_nav);
+        mMainNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Intent intent;
                 switch (menuItem.getItemId()) {
-                    case R.id.nav_home:
+                    case R.id.navigation_home:
                         intent = new Intent(CityPageActivity.this, HomeActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         return true;
 
 
-                    case R.id.nav_profile:
+                    case R.id.navigation_profile:
                         intent = new Intent(CityPageActivity.this, ProfileActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         return true;
 
+                    case R.id.navigation_forum:
+                        intent = new Intent(CityPageActivity.this, ForumMainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        return true;
 
-                    case R.id.nav_search:
+
+                    case R.id.navigation_search:
                         intent = new Intent(CityPageActivity.this, SearchFilterActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
@@ -132,6 +138,7 @@ public class CityPageActivity extends AppCompatActivity {
         if (cityName.equals("New York City")){ ha = "JFK";}
         if (cityName.equals("Miami")){ ha = "EWR";}
         if (cityName.equals("Orlando")){ ha = "MCO";}
+        if(cityName.equals("Madrid")){ha = "MAD";}
 
         findflight = findViewById(R.id.findflights);
         findflight.setOnClickListener(new View.OnClickListener() {

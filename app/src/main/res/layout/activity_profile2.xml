@@ -12,8 +12,21 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constraint1"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="350dp"
             android:background="@android:color/transparent">
+
+            <Button
+            android:id="@+id/unblock_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@null"
+            android:text="Unblock Users"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/logout_button"
@@ -66,6 +79,7 @@
                 android:text="@string/name"
                 android:textColor="@color/white"
                 android:textSize="24sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/profile_image"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -94,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@null"
                 android:text="@string/interests"
                 android:textColor="@color/white"
@@ -107,7 +121,9 @@
                 android:id="@+id/interestsView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:maxWidth="200dp"
                 android:text=""
                 android:textColor="@color/white"
                 android:textSize="18sp"
@@ -163,9 +179,9 @@
                         android:layout_marginStart="18dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="10dp"
-                        android:background="@null"
-                        android:paddingStart="16dp"
                         android:paddingEnd="10dp"
+                        android:background="@null"
+                        android:textAlignment="center"
                         android:text=""
                         android:textColor="@color/white"
                         android:textSize="24sp"
@@ -182,8 +198,8 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="10dp"
                         android:background="@null"
-                        android:paddingStart="16dp"
                         android:paddingEnd="10dp"
+                        android:textAlignment="center"
                         android:text=""
                         android:textColor="@color/white"
                         android:textSize="24sp"
@@ -219,7 +235,7 @@
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <Button
-                        android:id="@+id/reviews"
+                        android:id="@+id/reviewsLink"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -252,7 +268,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="@id/reviews" />
+                        app:layout_constraintStart_toStartOf="@id/reviewsLink" />
 
                 </TableRow>
 
@@ -262,11 +278,10 @@
                 android:id="@+id/linearlayout3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:background="@null"
                 android:orientation="horizontal"
+                android:padding="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tablelayout"
                 app:layout_constraintVertical_chainStyle="spread_inside">
@@ -275,11 +290,11 @@
                     android:id="@+id/editprofilebutton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="12dp"
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/button_border"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
                     android:text="@string/edit_profile"
                     android:textColor="@color/white"
                     android:textSize="15sp"
@@ -293,10 +308,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
                     android:background="@drawable/button_border"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
                     android:text="@string/add_pictures"
                     android:textColor="@color/white"
                     android:textSize="15sp"

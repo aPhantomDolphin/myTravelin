@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +39,12 @@ import java.util.UUID;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    //private Realm realm;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser firebaseUser = mAuth.getCurrentUser();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference userRef = database.getReference().child("Users");
+
+    private Button unblockButton;
     private Button logoutButton;
     private TextView nameView;
     private String username;
@@ -54,36 +58,138 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView dpView;
     private Button addImages;
     private TextView interests;
-    private TextView reviews;
+    private Button reviewsLink;
+    private TextView reviewsView;
+    private TextView photosView;
+    private Button photosLink;
     byte[] bArray=new byte[0];
     User usert;
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    //private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance("gs://fir-learn-f2515.appspot.com");
     private BottomNavigationView mMainNav;
 
 
-
-    private FirebaseAuth mAuth;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile2);
+        doAlways();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(data!=null) {
+            final Uri targetUri = data.getData();
 
 
-        mMainNav = findViewById(R.id.main_nav);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            final DatabaseReference myRef = database.getReference().child("Users");
+            //     User u = null;
 
+            final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+                        //User user = postSnapshot.getValue(User.class);
+                        //userlist.add(user);
+                        if (firebaseUser.getUid().equals(postSnapshot.getKey())) {
+                            //////////////////////////////////////////////////////////////////////
+
+                            try {
+                                Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
+                                bArray = stream.toByteArray();
+
+
+                                String path = "herearemyphotos/" + UUID.randomUUID() + ".png";
+                                final StorageReference storageReference = storage.getReference(path);
+                                StorageMetadata meta = new StorageMetadata.Builder()
+                                        .setCustomMetadata("yeet", "damn").build();
+                                UploadTask uploadTask = storageReference.putBytes(bArray, meta);
+
+                                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                    @Override
+                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                        if (!task.isSuccessful()) {
+                                            throw task.getException();
+                                        }
+
+                                        return storageReference.getDownloadUrl();
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        Uri downloadUri = null;
+                                        if (task.isSuccessful()) {
+                                            downloadUri = task.getResult();
+                                            postSnapshot.getValue(User.class).addPics(downloadUri.toString());
+                                            User u = postSnapshot.getValue(User.class);
+                                            u.addPics(downloadUri.toString());
+                                            DatabaseReference updateDataNew = FirebaseDatabase.getInstance().getReference("Users")
+                                                    .child(mAuth.getCurrentUser().getUid());
+
+                                            updateDataNew.child("pics").setValue(u.getPics());
+                                            doAlways();
+
+                                        } else {
+
+                                        }
+
+                                    }
+                                });
+
+
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+
+                            //////////////////////////////////////////////////////////////////////
+                        }
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+
+        if (resultCode == RESULT_OK) {
+
+        }
+
+    }
+
+    public void doAlways(){
+        mMainNav = findViewById(R.id.bottom_navigation);
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                System.out.println("CLICKED MENU AT PROFILE");
+
                 Intent intent;
+
                 switch (menuItem.getItemId()) {
 
-                    case R.id.nav_home:
-                        System.out.println("AT HOME");
+                    case R.id.navigation_home:
+
                         intent = new Intent(ProfileActivity.this, HomeActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
                         try{
                             startActivity(intent);
                         }catch (Exception e){
@@ -91,9 +197,19 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                         return true;
 
-                    case R.id.nav_search:
+                    case R.id.navigation_search:
                         intent = new Intent(ProfileActivity.this, SearchFilterActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        try{
+                            startActivity(intent);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        return true;
+
+                    case R.id.navigation_forum:
+                        intent = new Intent(ProfileActivity.this, ForumMainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         return true;
 
@@ -104,16 +220,25 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-        mAuth = FirebaseAuth.getInstance();
 
+        unblockButton = findViewById(R.id.unblock_button);
+        unblockButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, UnblockActivity.class);
+                //intent.putExtra("name", u.getName());
+                //intent.putExtra("room",roomNeeded);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
 
-        nameView = findViewById(R.id.name_profile);
+        nameView = findViewById(R.id.profile_name);
 
-        logoutButton = findViewById(R.id.Logout_button);
+        logoutButton = findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //SyncUser.current().logOut();
                 mAuth.signOut();
                 Intent intent = new Intent( ProfileActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -122,28 +247,45 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        editProfile = findViewById(R.id.edit_profile);
+        editProfile = findViewById(R.id.editprofilebutton);
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
                 Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                ProfileActivity.this.finish();
             }
         });
 
+        bioView = findViewById(R.id.bio);
+        ratingView = findViewById(R.id.ratingText);
+        dpView = findViewById(R.id.profile_image);
+        interests=findViewById(R.id.interestsView);
+        reviewsView=findViewById(R.id.reviewsText);
+        reviewsLink=findViewById(R.id.reviewsLink);
+        photosLink=findViewById(R.id.photos);
+        photosView=findViewById(R.id.photosText);
 
-        imageView = findViewById(R.id.profilepic);
-        bioView = findViewById(R.id.bio_profile);
-        emailView = findViewById(R.id.email_profile1);
-        ratingView = findViewById(R.id.rating_profile);
-        dpView = findViewById(R.id.profilepic);
+        photosLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, ProfileViewImages.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
 
-        interests=findViewById(R.id.interest_profile1);
-        reviews=findViewById(R.id.reviews_profile);
+        reviewsLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, ReviewActivity.class);
+                intent.putExtra("email",mAuth.getCurrentUser().getEmail());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
 
-        addImages = findViewById(R.id.add_pictures_profile);
+        addImages = findViewById(R.id.addpicturesbutton);
         addImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,66 +294,84 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference().child("Users");
-        User u = null;
-
-        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
-        myRef.addValueEventListener(new ValueEventListener() {
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //ArrayList<User> userlist = new ArrayList<>();
+
                 for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
-                    User user = (User) postSnapshot.getValue(User.class);
-                    //userlist.add(user);
+                    User user = postSnapshot.getValue(User.class);
+
                     if(firebaseUser.getUid().equals(postSnapshot.getKey())){
                         nameView.setText(user.getName());
                         bioView.setText(user.getBio());
-                        emailView.setText(user.getEmail());
-                        ratingView.setText(String.valueOf(user.getAvgRating()));
+                        ratingView.setText(String.valueOf(user.getAvg()));
 
-                        StorageReference fuckthis = storage.getReferenceFromUrl(user.getProfURL());
-                        final long OM = 5000 * 50000000;
-                        fuckthis.getBytes(OM).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                dpView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                System.out.println("");
-                            }
-                        });
+                        if(user.getProfURL() != null && !user.getProfURL().equals("")) {
+                            StorageReference storageRef = storage.getReferenceFromUrl(user.getProfURL());
+
+                            final long OM = 5000 * 50000000;
+                            storageRef.getBytes(OM).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    dpView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    System.out.println("");
+                                }
+                            });
+                        }
                         try {
-
                             interests.setText(user.getInterestsNew());
-                            //reviews.setText(re);
-                            String re1=user.getRev();
-                            String[] arrOfStr = re1.split("@");
-                            String res="";
+                        } catch(Exception e){
+                            e.printStackTrace();
+                            interests.setText("Please add Interests");
+                            System.out.println("REACHED NO INTERESTS");
+                            //reviews.setText("NOOL");
+                        }
+                        //reviews.setText(re);
+                        try {
+                            String re1 = user.getRev();
+                            String[] arrOfStr = re1.split("\\|");
+                            final ArrayList<String> reviews1=new ArrayList<>();
+
                             for(String a : arrOfStr){
                                 String temp=a;
-                                System.out.println("FIRST SPLIT RES::"+temp);
-                                String[] arrT = temp.split(":");
+                                String[] arrT=temp.split(":");
                                 try {
                                     String re2 = arrT[1];
-                                    System.out.println("SECOND SPLIT RES::"+re2);
-                                    res+=re2+", ";
-                                }
-                                catch(Exception e){
+                                    reviews1.add(re2);
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
-                            reviews.setText(res);
-                        }
-                        catch(Exception e){
+                            if(!user.getRev().equals("")){
+                                reviewsView.setText(String.valueOf(reviews1.size()));
+                            }
+                            else{
+                                reviewsView.setText("0");
+                            }
+
+                        }catch (Exception e){
                             e.printStackTrace();
-                            interests.setText("NoInterests");
-                            System.out.println("REACHED NO INTERESTS");
-                            reviews.setText("NOOL");
+                            reviewsView.setText("0");
                         }
+                        try{
+                            String getPics = user.getPics();
+                            String[] arrOfStr = getPics.split("\\|");
+                            if(!user.getPics().equals("")){
+                                photosView.setText(String.valueOf(arrOfStr.length));
+                            }
+                            else{
+                                photosView.setText("0");
+                            }
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            photosView.setText("0");
+                        }
+
                         break;
                     }
                 }
@@ -223,118 +383,33 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        //Realm realm=Realm.getDefaultInstance();
-        final Uri targetUri = data.getData();
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference().child("Users");
-        User u = null;
-
-        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
-
-                    final User user = (User) postSnapshot.getValue(User.class);
-                    //userlist.add(user);
-                    if(firebaseUser.getUid().equals(postSnapshot.getKey())){
-                        //////////////////////////////////////////////////////////////////////
-
-                        try {
-                            Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                            //dpView.setImageBitmap(bmp);
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
-                            bArray = stream.toByteArray();
-                            //realm.beginTransaction();
-                            //usert.addProfileImage(bArray);
-                            //realm.commitTransaction();
-
-                            String path = "herearemyphotos/" + UUID.randomUUID() + ".png";
-                            final StorageReference storageReference = storage.getReference(path);
-                            StorageMetadata meta = new StorageMetadata.Builder()
-                                    .setCustomMetadata("yeet", "damn").build();
-                            UploadTask uploadTask = storageReference.putBytes(bArray, meta);
-
-                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                                @Override
-                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                    if (!task.isSuccessful()) {
-                                        throw task.getException();
-                                    }
-
-                                    return storageReference.getDownloadUrl();
-                                }
-                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Uri> task) {
-                                    Uri downloadUri = null;
-                                    if (task.isSuccessful()) {
-                                        downloadUri = task.getResult();
-                                        user.addPics(downloadUri.toString());
-                                        final DatabaseReference updateData = FirebaseDatabase.getInstance().getReference("Users")
-                                                .child(mAuth.getCurrentUser().getUid());
-
-                                        updateData.child("pics").setValue(user.getPics());
-
-                                    } else {
-
-                                    }
-
-                                    StorageReference fuckthis = storage.getReferenceFromUrl(downloadUri.toString());
-                                    final long OM = 5000*500000000;
-                                    fuckthis.getBytes(OM).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                        @Override
-                                        public void onSuccess(byte[] bytes) {
-                                            //imageView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-
-                                        }
-                                    });
-                                }
-                            });
-
-
-
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-
-                        //////////////////////////////////////////////////////////////////////
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        } );
-
-
-        if (resultCode == RESULT_OK) {
-            //Uri targetUri = data.getData();
-
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(isTaskRoot()){
+            Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        } else{
+            ProfileActivity.this.finish();
         }
     }
 
 
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        doAlways();
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        doAlways();
+    }
 
 }

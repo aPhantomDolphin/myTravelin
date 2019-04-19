@@ -1,6 +1,8 @@
 package com.example.travelin;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 
 public class Post{
@@ -10,6 +12,8 @@ public class Post{
     private String username;
 
     private Date datePosted;
+
+    private String createdAt;
 
     private String body;
 
@@ -23,16 +27,45 @@ public class Post{
 
     private String postID;
 
-    //constructors
+    private String postTitle;
+
+    private String peopleReported="";
+
+    private ArrayList<Comment> commentsList;
+
+    private int numReports;
+
     public Post(){}
 
-    public Post(String authorEmail,Date datePosted, String body,String postID) {
+    public Post(String authorEmail, Date datePosted, String body, String postId, String postTitle, String username) {
         this.authorEmail = authorEmail;
-       this.datePosted = datePosted;
-        this.postID=postID;
+        this.datePosted = datePosted;
         this.body = body;
+        this.postID = postId;
+        this.postTitle = postTitle;
+        this.username = username;
+        this.commentsList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.createdAt=sdf.format(datePosted.getTime());
         rateUp=0;
         rateDown=0;
+        numReports=0;
+    }
+
+    public int getNumReports() {return this.numReports;}
+
+    public void addReport() {this.numReports++;}
+
+    public String getScore(){
+        return String.valueOf(getUpvotes()-getDownvotes());
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
     }
 
     public void setBody(String body) {
@@ -47,9 +80,29 @@ public class Post{
         this.rateUp++;
     }
 
+    public int getRateUp() {
+        return this.rateUp;
+    }
+
+    public int getUpvotes() { return rateUp; }
+
     public void downvote() {
         this.rateDown++;
     }
+
+    public int getRateDown(){
+        return this.rateDown;
+    }
+
+    public int getDownvotes() { return rateDown; }
+
+    public void undoUpvote(){
+        this.rateUp--;
+    }
+    public void undoDownVote(){
+        this.rateDown--;
+    }
+
 
     public String getPostID() {
         return postID;
@@ -57,14 +110,6 @@ public class Post{
 
     public void setPostID(String postID) {
         this.postID = postID;
-    }
-
-    public int getRateUp() {
-        return rateUp;
-    }
-
-    public int getRateDown() {
-        return rateDown;
     }
 
     public String getAuthorEmail() {
@@ -107,11 +152,39 @@ public class Post{
         this.username = username;
     }
 
+    public void addReported(String email) {
+        if(this.peopleReported.equals("")){
+            this.peopleReported += email;
+        }
+        else{
+            peopleReported += "|";
+            peopleReported += email;
+        }
+    }
 
-    public void undoUpvote(){
-        rateUp--;
+    public String getCreatedAt() {
+        return createdAt;
     }
-    public void undoDownVote(){
-        rateDown--;
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
+
+    public String getPeopleReported() {
+        return this.peopleReported;
+    }
+
+    public static Comparator<Post> compareByScore = new Comparator<Post>() {
+        @Override
+        public int compare(Post o1, Post o2) {
+            return o2.getScore().compareTo(o1.getScore());
+        }
+    };
+
+    public static Comparator<Post> compareByTime = new Comparator<Post>() {
+        @Override
+        public int compare(Post o1, Post o2) {
+            return o2.getCreatedAt().compareTo(o1.getCreatedAt());
+        }
+    };
 }

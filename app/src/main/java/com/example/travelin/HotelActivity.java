@@ -12,7 +12,6 @@ import android.widget.SimpleAdapter;
 
 import com.amadeus.Amadeus;
 import com.amadeus.Params;
-import com.amadeus.resources.FlightOffer;
 import com.amadeus.resources.HotelOffer;
 
 import org.json.JSONArray;
@@ -63,10 +62,10 @@ public class HotelActivity extends AppCompatActivity {
                 Intent intent;
                 switch (menuItem.getItemId()) {
 
-                    case R.id.nav_home:
+                    case R.id.navigation_home:
                         System.out.println("AT HOME");
                         intent = new Intent(HotelActivity.this, HomeActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         try{
                             startActivity(intent);
                         }catch (Exception e){
@@ -74,15 +73,21 @@ public class HotelActivity extends AppCompatActivity {
                         }
                         return true;
 
-                    case R.id.nav_profile:
+                    case R.id.navigation_profile:
                         intent = new Intent(HotelActivity.this, ProfileActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         return true;
 
-                    case R.id.nav_search:
+                    case R.id.navigation_search:
                         intent = new Intent(HotelActivity.this, SearchFilterActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        return true;
+
+                    case R.id.navigation_forum:
+                        intent = new Intent(HotelActivity.this, ForumMainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         return true;
 

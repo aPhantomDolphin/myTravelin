@@ -4,7 +4,6 @@
     <string name="prompt_password">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
-    <string name="register_account">Register Account</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -75,4 +74,21 @@
     <string name="date">Date</string>
     <string name="search_flights">Search Flights</string>
     <string name="more">more</string>
+    <string name="add_title">Add title</string>
+    <string name="add_comment">Add Comment</string>
+    <string name="reportPost">REPORT</string>
+    <string name="hide">HIDE</string>
+    <string name="delete">DELETE</string>
+    <string name="editCAPS">EDIT</string>
+    <string name="sort_by">Sort by:</string>
+    <string name="popularity">Popularity</string>
+    <string name="time">Recent</string>
+    <string name="edit_comment">Edit Comment</string>
+    <string name="edit_title">Edit Title</string>
+    <string name="saveCAPS">SAVE</string>
+    <string name="register_account">Register Account</string>
+    <string name="defaultRadio">Default</string>
+    <string name="comments">Comments</string>
+    <string name="reviewsCAPS">REVIEWS</string>
+    <string name="edit_my_review">Add/Edit Review</string>
 </resources>

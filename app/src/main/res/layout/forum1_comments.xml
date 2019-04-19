@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/input_register_background"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="100dp"
+            android:background="@null"
+            android:textStyle="bold"
+            android:text="@string/editCAPS"
+            android:textColor="@color/login_input_background"
+            android:textSize="16sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:textStyle="bold"
+            android:text="@string/delete"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/reportButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:textStyle="bold"
+            android:text="@string/report"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="16sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/blog_up_btn"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="up"
+            android:tint="@color/white2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/blog_desc"
+            app:srcCompat="@drawable/up_filled" />
+
+        <ImageView
+            android:id="@+id/blog_down_btn"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="down"
+            android:tint="@color/white2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/blog_up_btn"
+            app:layout_constraintTop_toBottomOf="@+id/blog_desc"
+            app:srcCompat="@drawable/down_filled" />
+
+        <!--<de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/blog_user_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/graylight"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/profilepic"/>-->
+
+        <TextView
+            android:id="@+id/blog_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Username"
+            android:textColor="@color/black1"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/blog_date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!--app:layout_constraintStart_toEndOf="@+id/blog_user_image"-->
+
+        <TextView
+            android:id="@+id/blog_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blog Post Date"
+            android:textColor="@color/input_register_background"
+            app:layout_constraintBottom_toTopOf="@+id/blog_title"
+            app:layout_constraintStart_toStartOf="@+id/blog_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/blog_user_name" />
+
+        <ImageView
+            android:id="@+id/blog_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/grey1"
+            android:maxHeight="300dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/blog_title" />
+
+        <TextView
+            android:id="@+id/blog_title"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:text="THIS IS THE BLOG TITLE"
+            android:textColor="@color/black1"
+            app:layout_constraintBottom_toTopOf="@+id/blog_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/blog_date" />
+
+        <TextView
+            android:id="@+id/blog_desc"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:text="Lorem ipsum dolor sit amet, soluta regione urbanitas vis in, qui elit populo ut. "
+            android:textColor="@color/input_register_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/blog_image" />
+
+        <TextView
+            android:id="@+id/blog_like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="0 Likes"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/blog_down_btn"
+            app:layout_constraintTop_toBottomOf="@+id/blog_desc" />
+
+        <TextView
+            android:id="@+id/blog_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="0 Comments"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/blog_desc" />
+
+        <ImageView
+            android:id="@+id/blog_comment_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/blog_comment_count"
+            app:layout_constraintTop_toBottomOf="@+id/blog_desc"
+            app:srcCompat="@mipmap/action_comment_icon" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/input_register_background"
+        app:layout_constraintTop_toBottomOf="@id/post" />
+
+
+    <RelativeLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="325dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider">
+
+        <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@null"
+        />
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/new_post_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white2"
+        android:ems="10"
+        android:hint="@string/add_comment"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:maxHeight="60dp"
+        android:maxLength="50"
+        android:padding="15dp"
+        android:textColor="@color/black1"
+        android:textColorHint="@color/input_register_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/send_comment"
+        app:layout_constraintBottom_toTopOf="@id/main_nav" />
+
+    <Button
+        android:id="@+id/send_comment"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        android:paddingBottom="10dp"
+        android:text=">"
+        android:textSize="40sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@color/green3"
+        app:layout_constraintTop_toTopOf="@id/new_post_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/main_nav"/>
+
+    <ImageView
+        android:id="@+id/blog_image2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/grey1"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"/>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/main_nav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        app:itemBackground="@color/login_background"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/menu">
+
+    </android.support.design.widget.BottomNavigationView>
+
+</android.support.constraint.ConstraintLayout>

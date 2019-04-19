@@ -87,40 +87,16 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
-                    android:id="@+id/tags"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
-                    android:text="@string/tags"
-                    android:textColor="@color/black1"
-                    android:textSize="30sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
-                <TextView
                     android:id="@+id/tag1"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:layout_below="@id/tags"
-                    android:layout_marginStart="20dp"
-                    android:background="@color/white"
-                    android:text="@string/tag"
-                    android:textColor="@color/black1"
-                    android:textSize="30sp"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-                <TextView
-                    android:id="@+id/tag2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_below="@id/tags"
-                    android:layout_marginStart="20dp"
-                    android:layout_toEndOf="@id/tag1"
+                    android:layout_marginStart="0dp"
                     android:background="@color/white"
                     android:text="@string/tag"
                     android:textColor="@color/black1"
                     android:textSize="30sp"
                     app:layout_constraintBottom_toBottomOf="parent" />
+
             </RelativeLayout>
         </android.support.constraint.ConstraintLayout>
 
@@ -164,19 +140,21 @@
     </LinearLayout>
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/main_nav"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
         app:itemBackground="@color/login_background"
         app:itemIconTint="@color/colorWhiteTrans"
         app:itemTextColor="@color/white"
         app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/nav_items">
+        app:menu="@menu/menu">
 
     </android.support.design.widget.BottomNavigationView>
+
 
 
 </RelativeLayout>

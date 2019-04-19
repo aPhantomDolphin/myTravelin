@@ -1,5 +1,6 @@
 package com.example.travelin;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,14 +10,21 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -27,162 +35,77 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private Button resetPass;
-    private TextInputEditText bioEdit;
-    private TextInputEditText nameEdit;
+    private EditText bioEdit;
+    private EditText nameEdit;
     private String genderEdit="Male";
     private Button saveProfile;
-    private Button homeButton;
     private Button changePassword;
+    private EditText interests;
     private ImageView dpView;
-    private Button setPic;
+    private ImageView addImg;
+    RadioGroup radioGroup;
+    RadioButton radioButtonMale;
+    RadioButton radioButtonFemale;
     byte[] bArray=new byte[0];
     Button deleteAccount;
-    private TextInputEditText interests;
-
-    private FirebaseAuth mauth;
+    private Uri sickUri = null;
     private BottomNavigationView mMainNav;
+    private User thisUser;
+
+    private FirebaseAuth mauth = FirebaseAuth.getInstance();
+    private FirebaseUser firebaseUser = mauth.getCurrentUser();
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    //private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance("gs://fir-learn-f2515.appspot.com");
+    private String mainID = firebaseUser.getUid();
+    private DatabaseReference userRef = firebaseDatabase.getReference().child("Users");
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
+        setContentView(R.layout.activity_edit_profile2);
 
-        //final Realm realm = Realm.getDefaultInstance();
-        mauth = FirebaseAuth.getInstance();
-
-
-
-        bioEdit = findViewById(R.id.bio_edit_profile);
-        /*realm.beginTransaction();
-        RealmQuery<User>*/
-        saveProfile = findViewById(R.id.save_profile);
-        nameEdit = findViewById(R.id.email_edit_profile);
-
-
-
-
-
-        resetPass = findViewById(R.id.change_password);
-        resetPass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EditProfileActivity.this, ForgotPasswordActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
-
-        deleteAccount= findViewById(R.id.delete_button);
-        deleteAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final FirebaseUser firebaseUser = mauth.getCurrentUser();
-                final String uid = firebaseUser.getUid();
-                System.out.println("THIS IS UID: "+uid);
-                AuthCredential credential = EmailAuthProvider.getCredential("student@purdue.edu","pass1234");
-                final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
-
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                            System.out.println("IN SNAPSHOT");
-                            User user = postSnapshot.getValue(User.class);
-                            if (uid.equals(postSnapshot.getKey())) {
-                                System.out.println("FOUND IT");
-                                ref.child(uid).removeValue();
-                            }
-
-                            System.out.println("User successfully deleted");
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError){
-
-                    }
-                });
-
-                firebaseUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    System.out.println("ACCOUNT DELETED");
-
-                                }
-                            }
-                        });
-                    }
-                });
-
-                Intent intent = new Intent(EditProfileActivity.this, LoginActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
-        changePassword = findViewById(R.id.change_password);
-        changePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EditProfileActivity.this,ForgotPasswordActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        dpView = findViewById(R.id.profilepic);
-        setPic = findViewById(R.id.profilepic_edit_profile);
-        setPic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 0);
-            }
-        });
-
-        mMainNav = findViewById(R.id.main_nav);
-
+        mMainNav = findViewById(R.id.bottom_navigation);
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                System.out.println("CLICKED MENU AT PROFILE");
                 Intent intent;
                 switch (menuItem.getItemId()) {
 
-                    case R.id.nav_home:
-                        System.out.println("AT HOME");
+                    case R.id.navigation_home:
                         intent = new Intent(EditProfileActivity.this, HomeActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        try{
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        try {
                             startActivity(intent);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         return true;
 
-                    case R.id.nav_profile:
+                    case R.id.navigation_profile:
                         intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        try{
-                            System.out.println("CLICKED PROFILE");
+                        try {
                             startActivity(intent);
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
                         return true;
 
-                    case R.id.nav_search:
+                    case R.id.navigation_search:
                         intent = new Intent(EditProfileActivity.this, SearchFilterActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -196,14 +119,177 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        deleteAccount = findViewById(R.id.deleteprofilebutton);
+        deleteAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(EditProfileActivity.this, ConfirmDeleteActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+            }
+        });
+
+        changePassword = findViewById(R.id.changepasswordbutton);
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditProfileActivity.this, ForgotPasswordActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
+        dpView = findViewById(R.id.profile_image);
+        addImg = findViewById(R.id.addpictures);
+        nameEdit = findViewById(R.id.editName);
+        bioEdit = findViewById(R.id.editBio);
+        interests = findViewById(R.id.editInterests);
+        radioGroup = findViewById(R.id.radio_group);
+        radioButtonMale = findViewById(R.id.radio_male);
+        radioButtonFemale = findViewById(R.id.radio_female);
+        saveProfile = findViewById(R.id.saveprofilebutton);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    thisUser = postSnapshot.getValue(User.class);
+
+                    if (firebaseUser.getUid().equals(postSnapshot.getKey())) {
+                        if (!thisUser.getUsername().isEmpty()) {
+                            nameEdit.setText(thisUser.getUsername());
+                        }
+                        if (!thisUser.getBio().isEmpty()) {
+                            bioEdit.setText(thisUser.getBio());
+                        }
+                        if (!thisUser.getInterestsNew().isEmpty()) {
+                            interests.setHint(thisUser.getInterestsNew());
+                        }
+                        if (!thisUser.getGender().isEmpty()) {
+                            if (thisUser.getGender().equals("Male")) {
+                                genderEdit = "Male";
+                                radioButtonMale.setChecked(true);
+                            } else if (thisUser.getGender().equals("Female")) {
+                                genderEdit = "Female";
+                                radioButtonFemale.setChecked(true);
+                            }
+                        }
+                        if (thisUser.getProfURL() != null && !thisUser.getProfURL().equals("")) {
+                            StorageReference storageRef = storage.getReferenceFromUrl(thisUser.getProfURL());
+
+                            final long OM = 5000 * 50000000;
+                            storageRef.getBytes(OM).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    dpView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+                        }
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        addImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 0);
+            }
+        });
 
         saveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Realm realm=Realm.getDefaultInstance();
-                interests=findViewById(R.id.intersts_edit_profile);
+                final String getName = nameEdit.getText().toString();
+                final String getBio = bioEdit.getText().toString();
+                final String getInterests = interests.getText().toString();
 
-                final String t1=interests.getText().toString();
+                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        final DatabaseReference updateData = userRef.child(mainID);
+                        if(!getName.isEmpty()) updateData.child("name").setValue(nameEdit.getText().toString());
+                        if(!getBio.isEmpty()) updateData.child("bio").setValue(bioEdit.getText().toString());
+                        if(!genderEdit.isEmpty()) updateData.child("gender").setValue(genderEdit);
+                        if(!getInterests.isEmpty()){
+                            thisUser.addInterestsNew(getInterests);
+                            updateData.child("interestsNew").setValue(thisUser.getInterestsNew());
+                        }
+                        if(sickUri != null && !sickUri.equals("")){
+                            try {
+                                Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(sickUri));
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
+                                bArray = stream.toByteArray();
+
+
+                                String path = "herearemyphotos/" + UUID.randomUUID() + ".png";
+                                final StorageReference storageReference = storage.getReference(path);
+                                StorageMetadata meta = new StorageMetadata.Builder()
+                                        .setCustomMetadata("yeet", "damn").build();
+                                UploadTask uploadTask = storageReference.putBytes(bArray, meta);
+
+                                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                    @Override
+                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                        if (!task.isSuccessful()) {
+                                            throw task.getException();
+                                        }
+
+                                        return storageReference.getDownloadUrl();
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        Uri downloadUri = null;
+                                        if (task.isSuccessful()) {
+                                            downloadUri = task.getResult();
+                                            thisUser.setProfURL(downloadUri.toString());
+                                            updateData.child("profURL").setValue(downloadUri.toString());
+                                        }
+                                    }
+                                });
+
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                goToProfile();
+
+            }
+        });
+
+
+        /*
+
+        saveProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
                 System.out.println("TAG NAME FOUND TO BE:"+t1);
                 //final Tag tag=new Tag();
                 //tag.setTagName(t1);
@@ -221,16 +307,17 @@ public class EditProfileActivity extends AppCompatActivity {
                         DataSnapshot needed = null;
                         userList.clear();
                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                            User user = postSnapshot.getValue(User.class);
+                            //User user = postSnapshot.getValue(User.class);
                             //System.out.println("NOOB "+user.getInterests().size());
                             if(mauth.getCurrentUser().getUid().equals(postSnapshot.getKey())){
+                                final User user = postSnapshot.getValue(User.class);
                                 //System.out.println("HERENOW"+user.getName());
                                 userList.add(user);
                                 try {
                                     /*Tag temp=new Tag();
                                     temp.setTagName(t1);
                                     System.out.println("NOOBAGAIN "+user.getInterests().size());
-                                    user.addInterest(temp);*/
+                                    user.addInterest(temp);
 
                                     user.addInterestsNew(t1);
                                 }
@@ -239,7 +326,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                     System.out.println("NO TAG FOUND SORRY");
                                 }
 
-                                DatabaseReference updateData = FirebaseDatabase.getInstance().getReference("Users")
+                                final DatabaseReference updateData = FirebaseDatabase.getInstance().getReference("Users")
                                         .child(mauth.getCurrentUser().getUid());
 
                                 if(!nameEdit.getText().toString().isEmpty()) updateData.child("name").setValue(nameEdit.getText().toString());
@@ -251,6 +338,62 @@ public class EditProfileActivity extends AppCompatActivity {
                                     break;
                                 }
 
+                                try {
+                                    Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(sickUri));
+                                    //dpView.setImageBitmap(bmp);
+                                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                    bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
+                                    bArray = stream.toByteArray();
+                                    //realm.beginTransaction();
+                                    //usert.addProfileImage(bArray);
+                                    //realm.commitTransaction();
+
+                                    String path = "herearemyphotos/" + UUID.randomUUID() + ".png";
+                                    final StorageReference storageReference = storage.getReference(path);
+                                    StorageMetadata meta = new StorageMetadata.Builder()
+                                            .setCustomMetadata("yeet", "damn").build();
+                                    UploadTask uploadTask = storageReference.putBytes(bArray, meta);
+
+                                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                        @Override
+                                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                            if (!task.isSuccessful()) {
+                                                throw task.getException();
+                                            }
+
+                                            return storageReference.getDownloadUrl();
+                                        }
+                                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            Uri downloadUri = null;
+                                            if (task.isSuccessful()) {
+                                                downloadUri = task.getResult();
+                                                user.setProfURL(downloadUri.toString());
+                                                updateData.child("profURL").setValue(downloadUri.toString());
+                                            } else {
+
+                                            }
+
+                                            StorageReference fuckthis = storage.getReferenceFromUrl(downloadUri.toString());
+                                            final long OM = 5000*500000000;
+                                            fuckthis.getBytes(OM).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                @Override
+                                                public void onSuccess(byte[] bytes) {
+                                                    dpView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
 
@@ -269,11 +412,16 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
     }
+    */
+
+    }
 
     public void goToProfile(){
         Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
+
 
     public void onRadioButtonClick(View view){
         boolean checked =((RadioButton) view).isChecked();
@@ -294,21 +442,28 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+            super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            Uri targetUri = data.getData();
-            try {
-                Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                dpView.setImageBitmap(bmp);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
-                bArray = stream.toByteArray();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            if (resultCode == RESULT_OK) {
+                Uri targetUri = data.getData();
+                sickUri = targetUri;
+                try {
+                    Bitmap bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                    dpView.setImageBitmap(bmp);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.PNG, 10, stream);
+                    bArray = stream.toByteArray();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+
     }
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        goToProfile();
+    }
 }

@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -70,7 +69,7 @@ public class SearchSimilarPageActivity extends AppCompatActivity {
                 Intent intent;
                 switch (menuItem.getItemId()) {
 
-                    case R.id.nav_home:
+                    case R.id.navigation_home:
                         System.out.println("AT HOME");
                         intent = new Intent(SearchSimilarPageActivity.this, HomeActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -81,7 +80,7 @@ public class SearchSimilarPageActivity extends AppCompatActivity {
                         }
                         return true;
 
-                    case R.id.nav_profile:
+                    case R.id.navigation_profile:
                         intent = new Intent(SearchSimilarPageActivity.this, ProfileActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         try{
@@ -93,9 +92,15 @@ public class SearchSimilarPageActivity extends AppCompatActivity {
 
                         return true;
 
-                    case R.id.nav_search:
+                    case R.id.navigation_search:
                         intent = new Intent(SearchSimilarPageActivity.this, SearchFilterActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        return true;
+
+                    case R.id.navigation_forum:
+                        intent = new Intent(SearchSimilarPageActivity.this, ForumMainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         return true;
 
@@ -125,17 +130,23 @@ public class SearchSimilarPageActivity extends AppCompatActivity {
                 for(String a : arrOfStr){
                     for(int j=0;j<res.size();j++){
                         int flag=0;
-                        String []tempInterest=res.get(j).getInterestsNew().split(",");
-                        for(String k:tempInterest){
-                            if(a.equals(k)){
-                                flag=1;
-                                break;
+                        try{
+                            String []tempInterest=res.get(j).getInterestsNew().split(",");
+                            for(String k: tempInterest){
+                                if(a.equals(k)){
+                                    flag=1;
+                                    break;
+                                }
+                            }
+                            if(flag==0){
+                                res.remove(j);
+                                j--;
                             }
                         }
-                        if(flag==0){
-                            res.remove(j);
-                            j--;
+                        catch(Exception e){
+                            e.printStackTrace();
                         }
+
                     }
                 }
 
@@ -145,12 +156,12 @@ public class SearchSimilarPageActivity extends AppCompatActivity {
 
                     hm.put("listview_title", res.get(i).getName());
                     hm.put("listview_discription", res.get(i).getBio());
-                    hm.put("listview_image", "NOIMG");
+
                     aList.add(hm);
                 }
 
-                String[] from = {"listview_image", "listview_title", "listview_discription"};
-                int[] to = {R.id.listview_image, R.id.listview_item_title, R.id.listview_item_short_description};
+                String[] from = {"listview_title", "listview_discription"};
+                int[] to = {R.id.listview_item_title, R.id.listview_item_short_description};
 
                 SimpleAdapter simpleAdapter = new SimpleAdapter(/*getBaseContext()*/SearchSimilarPageActivity.this, aList, R.layout.activity_listview, from, to);
                 ListView androidListView = (ListView) findViewById(R.id.list_view);

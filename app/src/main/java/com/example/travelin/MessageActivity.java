@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -22,10 +23,12 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -36,6 +39,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +48,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -69,14 +80,14 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
 
     // replace this with a real channelID from Scaledrone dashboard
     private String channelID = "SvLIfI23JVDW8Jre";
-    private String roomName = "observable-room";
+    private String defaultRoomName = "observable-room";
     private EditText editText;
     private Scaledrone scaledrone;
     private MessageAdapter messageAdapter;
     private ListView messagesView;
     private ImageButton sendImage;
     private boolean image = false;
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance("gs://fir-learn-f2515.appspot.com");
     private Bitmap bmp;
     private byte[] bArray;
     private Button camera;
@@ -84,6 +95,12 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
     private Uri outputFileUri;
     static final int CAMERA_REQUEST_CODE = 2666;
     User u = new User();
+    String uStr = "";
+    private Button addUserButton;
+    private FirebaseAuth mAuth;
+    private boolean sent = false;
+    private FloatingActionButton viewUsers;
+
 
 
     @Override
@@ -91,14 +108,117 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitivity_message);
+        mAuth = FirebaseAuth.getInstance();
+
+        final FirebaseDatabase database=FirebaseDatabase.getInstance();
+        final DatabaseReference ref=database.getReference();
+        final DatabaseReference usesRef=ref.child("Users");
+
+        final String roomName = getIntent().getExtras().getString("room");
+        final String name = getIntent().getExtras().getString("name");
+        defaultRoomName = roomName;
+
+        viewUsers = findViewById(R.id.viewUsersInRoom);
+        viewUsers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MessageActivity.this, ViewUsersInRoomActivity.class);
+                //intent.putExtra("name", u.getName());
+                intent.putExtra("room",roomName);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
 
         createNotificationChannel();
+
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+        usesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    User user = postSnapshot.getValue(User.class);
+                    if (firebaseUser.getUid().equals(postSnapshot.getKey())) {
+                        uStr = user.getName();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         editText = (EditText) findViewById(R.id.editText);
 
         messageAdapter = new MessageAdapter(this);
         messagesView = (ListView) findViewById(R.id.messages_view);
         messagesView.setAdapter(messageAdapter);
+
+        addUserButton = findViewById(R.id.adduser_button);
+        addUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MessageActivity.this);
+                alertDialog.setTitle("Invite New User");
+                alertDialog.setMessage("Enter User email");
+
+                final EditText editText = new EditText(getApplicationContext());
+                alertDialog.setView(editText);
+
+                alertDialog.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final String checkEmpty = editText.getText().toString();
+                        if (checkEmpty.equals("")) {
+                            // TODO : MAKE TOAST
+                        } else {
+                            final String userEmail = checkEmpty;
+                            usesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    User u = null;
+                                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                        u = snap.getValue(User.class);
+                                        if (userEmail.equals(u.getEmail())) {
+                                            u.addInvite(roomName);
+                                            DatabaseReference updateData = null;
+                                            updateData = FirebaseDatabase.getInstance().getReference("Users")
+                                                    .child(snap.getKey());
+
+                                            updateData.child("roomInvites").setValue(u.getRoomInvites());
+
+                                            return;
+                                        }
+                                    }
+
+                                    Toast toast = Toast.makeText(getApplicationContext(), "INVALID EMAIL ADDRESS", Toast.LENGTH_LONG);
+                                    toast.show();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }
+                    }
+                });
+
+                alertDialog.setNegativeButton("No Option", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO : MAKE TOAST
+                    }
+                });
+
+                alertDialog.show();
+            }
+        });
 
         sendImage = findViewById(R.id.sendimage_button);
         sendImage.setOnClickListener(new View.OnClickListener() {
@@ -142,15 +262,134 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
             }
         });
 
-        MemberData data = new MemberData(getRandomName(), getRandomColor());
+        MemberData data = new MemberData(uStr, getRandomColor());
 
         scaledrone = new Scaledrone(channelID, data);
         scaledrone.connect(new Listener() {
             @Override
             public void onOpen() {
                 System.out.println("Scaledrone connection open");
-                scaledrone.subscribe(roomName, MessageActivity.this);
+                //scaledrone.subscribe(roomName, MessageActivity.this);
+                Room room = scaledrone.subscribe(roomName, new RoomListener() {
+                    // implement the default RoomListener methods here
+
+                    @Override
+                    public void onOpen(Room room) {
+
+                    }
+
+                    @Override
+                    public void onOpenFailure(Room room, Exception ex) {
+
+                    }
+
+                    @Override
+                    public void onMessage(Room room, com.scaledrone.lib.Message receivedMessage) {
+                        System.out.println("pls");
+                        final ObjectMapper mapper = new ObjectMapper();
+                        try {
+                            System.out.println("what about here");
+                            final MemberData data = mapper.treeToValue(receivedMessage.getMember().getClientData(), MemberData.class);
+                            final boolean belongsToCurrentUser = receivedMessage.getClientID().equals(scaledrone.getClientID());
+                            System.out.println("did we even get to the data lol");
+                            if (receivedMessage.getData().asText().charAt(receivedMessage.getData().asText().length() - 1) == '|') {
+                                String str = receivedMessage.getData().asText().substring(0, receivedMessage.getData().asText().length() - 1);
+                                StorageReference fuckthis = storage.getReferenceFromUrl(str);
+                                final long OM = 5000*500000000;
+                                fuckthis.getBytes(OM).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    @Override
+                                    public void onSuccess(byte[] bytes) {
+                                        final Message message1 = new Message(BitmapFactory.decodeByteArray(bytes, 0, bytes.length), data, belongsToCurrentUser);
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                messageAdapter.add(message1);
+                                                messagesView.setSelection(messagesView.getCount() - 1);
+                                            }
+                                        });
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        System.out.println("fuckthisnoise");
+                                    }
+                                });
+                                sendNotification(data.getName(),"Uploaded image");
+
+                            } else {
+                                final Message message = new Message(receivedMessage.getData().asText(), data, belongsToCurrentUser);
+                                sendNotification(data.getName(),message.getText());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        messageAdapter.add(message);
+                                        messagesView.setSelection(messagesView.getCount() - 1);
+                                    }
+                                });
+
+                            }
+
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new SubscribeOptions(50));
+
+                room.listenToHistoryEvents(new HistoryRoomListener() {
+                    @Override
+                    public void onHistoryMessage(Room room, com.scaledrone.lib.Message receivedMessage) {
+                        final ObjectMapper mapper = new ObjectMapper();
+                        final MemberData data = new MemberData(" ", "#000000");
+                        final boolean belongsToCurrentUser = receivedMessage.getClientID().equals(scaledrone.getClientID());
+
+                        if (receivedMessage.getData().asText().charAt(receivedMessage.getData().asText().length() - 1) == '|') {
+                            try {
+                                String str = receivedMessage.getData().asText().substring(0, receivedMessage.getData().asText().length() - 1);
+                                StorageReference fuckthis = storage.getReferenceFromUrl(str);
+                                final long OM = 5000 * 500000000;
+                                fuckthis.getBytes(OM).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    @Override
+                                    public void onSuccess(byte[] bytes) {
+                                        final Message message1 = new Message(BitmapFactory.decodeByteArray(bytes, 0, bytes.length), data, belongsToCurrentUser);
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                messageAdapter.add(message1);
+                                                messagesView.setSelection(messagesView.getCount() - 1);
+                                            }
+                                        });
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        System.out.println("fuckthisnoise");
+                                    }
+                                });
+                            } catch (Exception e) {
+                                System.out.println("ripmessagelol");
+                            }
+
+                        } else {
+                            final Message message = new Message(receivedMessage.getData().asText(), data, belongsToCurrentUser);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    messageAdapter.add(message);
+                                    messagesView.setSelection(messagesView.getCount() - 1);
+                                }
+                            });
+
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+
+                        }
+                    }
+                });
             }
+
+
 
             @Override
             public void onOpenFailure(Exception ex) {
@@ -167,6 +406,27 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                 System.err.println(reason);
             }
         });
+    }
+
+    public void sendNotification(String title, String text) {
+        if (!sent) {
+            Intent resultIntent = new Intent(this, MessageActivity.class);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addNextIntentWithParentStack(resultIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Travelin")
+                    .setSmallIcon(R.drawable.logo)
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(text))
+                    .setPriority(NotificationCompat.PRIORITY_HIGH);
+            builder.setContentIntent(resultPendingIntent);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(10, builder.build());
+        } else {
+            sent = false;
+        }
     }
 
     @Override
@@ -252,7 +512,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                         System.out.println(downloadUri);
                         String message = downloadUri.toString() + "|";
                         if (message.length() > 0) {
-                            scaledrone.publish(roomName, message);
+                            scaledrone.publish(defaultRoomName, message);
                             editText.getText().clear();
                         }
                     } else {
@@ -260,12 +520,13 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                     }
                 }
             });
-
+            sent = true;
         } else {
             String message = editText.getText().toString();
             if (message.length() > 0) {
-                scaledrone.publish(roomName, message);
+                scaledrone.publish(defaultRoomName, message);
                 editText.getText().clear();
+                sent = true;
             }
         }
 
@@ -309,23 +570,51 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                         System.out.println("fuckthisnoise");
                     }
                 });
-
+                if (!sent) {
+                    final Message message = new Message("Uploaded image", data, belongsToCurrentUser);
                     Intent resultIntent = new Intent(this, MessageActivity.class);
                     TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                     stackBuilder.addNextIntentWithParentStack(resultIntent);
                     PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Travelin")
-                            .setSmallIcon(R.drawable.circle)
+                            .setSmallIcon(R.drawable.logo)
                             .setContentTitle(data.getName())
-                            .setContentText(str)
+                            .setContentText(receivedMessage.getData().asText())
                             .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(str))
+                                    .bigText(receivedMessage.getData().asText()))
                             .setPriority(NotificationCompat.PRIORITY_HIGH);
                     builder.setContentIntent(resultPendingIntent);
                     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                     notificationManager.notify(10, builder.build());
+                }
+                else {
+                    sent = false;
+                }
+
             } else {
                 final Message message = new Message(receivedMessage.getData().asText(), data, belongsToCurrentUser);
+                if (!sent) {
+                    System.out.println("check 1");
+                    Intent resultIntent = new Intent(this, MessageActivity.class);
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                    stackBuilder.addNextIntentWithParentStack(resultIntent);
+                    PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    System.out.println("intents OK");
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Travelin")
+                            .setSmallIcon(R.drawable.logo)
+                            .setContentTitle(data.getName())
+                            .setContentText(receivedMessage.getData().asText())
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(receivedMessage.getData().asText()))
+                            .setPriority(NotificationCompat.PRIORITY_HIGH);
+                    System.out.println("notification OK");
+                    builder.setContentIntent(resultPendingIntent);
+                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                    notificationManager.notify(10, builder.build());
+                    System.out.println("notification sent");
+                } else {
+                    sent = false;
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

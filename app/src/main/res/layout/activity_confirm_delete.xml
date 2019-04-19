@@ -24,6 +24,7 @@
             android:layout_marginBottom="20dp"
             android:background="@null"
             android:text="@string/confirm_identity"
+            android:textColor="@color/white2"
             android:textAlignment="center"
             android:textSize="30sp"
             android:textStyle="bold" />

@@ -2,66 +2,85 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
 
 
     <ImageView
         android:id="@+id/new_post_image"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="50dp"
+        android:background="@color/grey1"
+        android:contentDescription="@string/post_image"
         android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/post_placeholder"
-        android:contentDescription="@string/post_image" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/post_placeholder" />
+
+    <EditText
+        android:id="@+id/new_post_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/white2"
+        android:ems="10"
+        android:hint="@string/add_title"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:maxHeight="60dp"
+        android:maxLength="50"
+        android:padding="15dp"
+        android:textColor="@color/black1"
+        android:textColorHint="@color/input_register_background"
+        app:layout_constraintBottom_toTopOf="@id/new_post_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/new_post_image" />
 
     <EditText
         android:id="@+id/new_post_desc"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/white2"
         android:ems="10"
         android:hint="@string/add_content"
+        android:importantForAutofill="no"
         android:inputType="textMultiLine"
+        android:maxHeight="140dp"
         android:maxLength="125"
-        android:padding="16dp"
+        android:padding="15dp"
+        android:textColor="@color/black1"
+        android:textColorHint="@color/input_register_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_post_image"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/new_post_title" />
 
     <Button
         android:id="@+id/post_btn"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:backgroundTint="@color/login_background"
-        android:padding="16dp"
+        android:padding="20dp"
         android:text="@string/create_a_new_post"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_post_desc" />
-
-    <ProgressBar
-        android:id="@+id/new_post_progress"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/new_post_image" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/main_nav"
@@ -73,9 +92,9 @@
         android:layout_marginBottom="0dp"
         app:itemBackground="@color/login_background"
         app:itemIconTint="@color/colorWhiteTrans"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:itemTextColor="@color/white"
         app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/menu">
 
     </android.support.design.widget.BottomNavigationView>

@@ -1,18 +1,7 @@
 package com.example.travelin;
 
-//package com.example.travelin;
 
-import android.media.Rating;
-
-import java.util.ArrayList;
-import java.util.List;
-
-//import io.realm.RealmList;
-//import io.realm.RealmObject;
-//import io.realm.annotations.PrimaryKey;
-//import io.realm.annotations.Required;
-
-public class User /*extends RealmObject*/ {
+public class User {
 
     private String password;
 
@@ -22,93 +11,44 @@ public class User /*extends RealmObject*/ {
 
     private String gender;
 
-    private ArrayList<MyRating> myRatings;
-    private ArrayList<MyRating> reviews;
-
     private int reportCount = 0;
 
     private String bio;
 
-    private ArrayList<Tag> interests;
-
     private String interestsNew;
 
-
-    private ArrayList<User> blocked;
-
-    private boolean deleted = false;
-
-    private String name;
-
-    private ArrayList<DirectMessage> messages;
-
-    //@PrimaryKey
     private String username;
-
-    private String profilePictureURL;
-
-    private ArrayList<EventLocation> previousTrips;
-
-    private ArrayList<User> favorites;
-
-
-    private ArrayList<Post> posts;
 
     private double avgRating=0.0;
 
     private byte[] img;
 
-
-    private ArrayList<byte[]> profileImages;
-
-
-
     private double avg;
     private int numR;
-    private String profURL="https://firebasestorage.googleapis.com/v0/b/travelin-65f94.appspot.com/o/New%2Fprofilepic.png?alt=media&token=4a4f0885-395b-4c32-9094-190bd35a8dab";
-    private String pics = "";
+    private String profURL;
     private String rev;
     private String rat;
     private String block;
+
     private String upvoted;
     private String downvoted;
     private String postIDs;
 
-
-
+    private String pics;
+    private String rooms;
+    private String roomInvites;
 
     public User(){}
 
     public User(String email, /*String password,*/ String name /*,int age*/) {
         this.email = email;
-        this.name = name;
+        this.username = name;
         this.age = age;
         this.avgRating=0.0;
         /////////////////////////////////////////////////////////////////////////////////
         this.gender="";
-        this.myRatings=new ArrayList<MyRating>();
-        this.reviews=new ArrayList<MyRating>();
-        /*MyRating r=new MyRating();
-        r.setRating(3.3);
-        reviews.add(r);*/
         this.reportCount = 0;
         this.bio="";
-        this.interests=new ArrayList<Tag>();
-        /*Tag tag =new Tag();
-        tag.setTagName("ADDTAGS");
-        interests.add(tag);*/
-        this.blocked=new ArrayList<>();
-        this.deleted = false;
-        this.messages=new ArrayList<>();
-        this.username="";
-        this.profURL="https://firebasestorage.googleapis.com/v0/b/travelin-65f94.appspot.com/o/New%2Fprofilepic.png?alt=media&token=4a4f0885-395b-4c32-9094-190bd35a8dab";
-        this.profilePictureURL="";
-        this.previousTrips=new ArrayList<>();
-        this.favorites=new ArrayList<>();
-        this.posts=new ArrayList<>();
-        //private byte[] img;
-        this.profileImages=new ArrayList<>();
-
         this.interestsNew="";
         this.numR=0;
         this.rev="";
@@ -117,20 +57,14 @@ public class User /*extends RealmObject*/ {
         this.upvoted="";
         this.downvoted="";
         this.postIDs="";
+        this.pics="";
+        this.rooms="";
+        this.roomInvites="";
+
         /////////////////////////////////////////////////////////////////////////////////
 
     }
 
-
-    public void addPics(String pic) {
-        if (pics.equals("")) {
-            pics = pics+pic;
-        } else {
-            pics = pics + "|" + pic;
-        }
-    }
-
-    public String getPics() {return pics;}
 
     public void setProfURL(String profURL) {
         this.profURL = profURL;
@@ -154,9 +88,9 @@ public class User /*extends RealmObject*/ {
 
     public String getGender() { return gender; }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) { this.username = name; }
 
-    public String getName() { return name; }
+    public String getName() { return this.username; }
 
     public int getAge() { return age; }
 
@@ -166,18 +100,6 @@ public class User /*extends RealmObject*/ {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void addReview(MyRating review) {
-        this.reviews.add(review);
-    }
-
-    public ArrayList<MyRating> getReviews() {
-        return reviews;
-    }
-
-    public void removeReview(MyRating review) {
-        this.reviews.remove(review);
     }
 
     public void addReport() {
@@ -196,111 +118,9 @@ public class User /*extends RealmObject*/ {
         return bio;
     }
 
-    public void addInterest(Tag interest) {
-        this.interests.add(interest);
-    }
-
-    public void removeInterest(Tag interest) {
-        this.interests.remove(interest);
-    }
-
-    public ArrayList<Tag> getInterests() {
-        return this.interests;
-    }
-    /*public void addInterest(String interest) {
-        this.interests=interest;
-    }
-
-    public String getInterests() {
-        return this.interests;
-    }*/
-
-
-    public void addBlockedUser(User user) {
-        blocked.add(user);
-    }
-
-    public void removeBlockedUser(User user) {
-        blocked.remove(user);
-    }
-
-    public ArrayList<User> getBlockedUsers() { return blocked; }
-
-    public void addMessage(DirectMessage message) {
-        messages.add(message);
-    }
-
-    public void deleteMessage(DirectMessage message) {
-        messages.remove(message);
-    }
-
-    public ArrayList<DirectMessage> getMessages() { return messages; }
 
     public String getUsername() {
-        return username;
-    }
-
-    public void setProfilePictureURL(String url) {
-        this.profilePictureURL = url;
-    }
-
-    public String getProfilePictureURL(String url) {
-        return profilePictureURL;
-    }
-
-    public ArrayList<EventLocation> getPreviousTrips() {
-        return previousTrips;
-    }
-
-    public void addTrip(EventLocation trip) {
-        previousTrips.add(trip);
-    }
-
-    public void removeTrip(EventLocation trip) {
-        previousTrips.remove(trip);
-    }
-
-    public void addFavorite(User user) {
-        favorites.add(user);
-    }
-
-    public void removeFavorite(User user) {
-        favorites.remove(user);
-    }
-
-    public ArrayList<User> getFavorites() {
-        return favorites;
-    }
-
-    public void addPost(Post post) {
-        posts.add(post);
-    }
-
-    public void deletePost(Post post) {
-        posts.remove(post);
-    }
-
-    public ArrayList<Post> showPosts() {
-        return posts;
-    }
-
-    public void addRating(MyRating rating1) {
-        this.myRatings.add(rating1);
-        int x=myRatings.size();
-        double sum=0.0;
-        for(int i=0;i<x;i++){
-            MyRating temp = myRatings.get(i);
-            sum += temp.getRating();
-        }
-        this.avgRating=sum/x;
-    }
-
-    public ArrayList<MyRating> getRatings() {
-        return myRatings;
-    }
-
-    public ArrayList<MyRating> getReview() {
-        return reviews;
+        return this.username;
     }
 
     public double getAvgRating() {
@@ -319,37 +139,6 @@ public class User /*extends RealmObject*/ {
         this.img = img;
     }
 
-    public ArrayList<byte[]> getProfileImages() {
-        return profileImages;
-    }
-
-    public void addProfileImage(byte[] img) {
-        this.profileImages.add(img);
-    }
-
-    public void deleteUser() {
-        deleted = true;
-        setAge(0);
-        setBio("");
-        setProfilePictureURL("");
-        setGender("");
-        setName("");
-        for(EventLocation loc: previousTrips){
-            previousTrips.remove(loc);
-        }
-        for(User user: favorites){
-            favorites.remove(user);
-        }
-        for(Post post: posts){
-            posts.remove(post);
-        }
-        for(DirectMessage dm: messages){
-            messages.remove(dm);
-        }
-        for(Tag tag: interests){
-            interests.remove(tag);
-        }
-    }
 
     public String getInterestsNew() {
         return interestsNew;
@@ -381,7 +170,6 @@ public class User /*extends RealmObject*/ {
         this.avg=temp/getNumR();
     }
 
-
     public int getNumR() {
         return numR;
     }
@@ -398,10 +186,10 @@ public class User /*extends RealmObject*/ {
 
         try{
             if(this.rev.equals("") || this.rev==null){
-                this.rev="@"+auth+":"+rev;
+                this.rev="|"+auth+":"+rev;
             }
             else{
-                this.rev += "@"+auth+":"+rev;
+                this.rev += "|"+auth+":"+rev;
             }
         }
         catch(Exception e){
@@ -417,10 +205,10 @@ public class User /*extends RealmObject*/ {
 
         try{
             if(this.rat.equals("") || this.rat==null){
-                this.rat="@"+auth+":"+rat;
+                this.rat="|"+auth+":"+rat;
             }
             else{
-                this.rat += "@"+auth+":"+rat;
+                this.rat += "|"+auth+":"+rat;
             }
         }
         catch(Exception e){
@@ -446,6 +234,8 @@ public class User /*extends RealmObject*/ {
         return upvoted;
     }
 
+
+
     public void addUpvoted(String upvote) {
         try{
             if(this.upvoted.equals("") || this.upvoted==null){
@@ -460,9 +250,29 @@ public class User /*extends RealmObject*/ {
         }
     }
 
+    public String getDownvoted(){
+        return downvoted;
+    }
+
+    public void addDownvoted(String downvote){
+        try{
+            if(this.downvoted.equals("") || this.downvoted==null){
+                this.downvoted="@"+downvote;
+            }
+            else{
+                this.downvoted += "@"+downvote;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public String getPostIDs() {
         return postIDs;
     }
+
+
 
     public void addPostIDs(String postID) {
         try{
@@ -478,23 +288,58 @@ public class User /*extends RealmObject*/ {
         }
     }
 
-
-    public String getDownvoted() {
-        return downvoted;
+    public String getPics() {
+        return pics;
     }
 
-    public void addDownvoted(String downvote) {
-        try{
-            if(this.downvoted.equals("") || this.downvoted==null){
-                this.downvoted="@"+downvote;
-            }
-            else{
-                this.downvoted += "@"+downvote;
-            }
+    public void setPics(String pics) {
+        this.pics = pics;
+    }
+
+    public String getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(String rooms) {
+        this.rooms = rooms;
+    }
+
+    public String getRoomInvites() {
+        return roomInvites;
+    }
+
+    public void setRoomInvites(String roomInvites) {
+        this.roomInvites = roomInvites;
+    }
+
+    public void addPics(String pic) {
+        if (pics.equals("")) {
+            pics = pics+pic;
+        } else {
+            pics = pics + "|" + pic;
         }
-        catch(Exception e){
-            e.printStackTrace();
+    }
+
+    public void addRoom(String room) {
+        if (rooms.equals("")) {
+            rooms = rooms + room;
+        } else {
+            rooms = rooms + "|" + room;
         }
+    }
+
+    public void clearBlock() {block = ""; return;}
+
+    public void addInvite(String room) {
+        if (roomInvites.equals("")) {
+            roomInvites = roomInvites = room;
+        } else {
+            roomInvites = roomInvites + "|" + room;
+        }
+    }
+
+    public void clearInvites() {
+        roomInvites = "";
     }
 
 }

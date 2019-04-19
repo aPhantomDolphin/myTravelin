@@ -84,7 +84,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-            <TextView
+            <EditText
                 android:id="@+id/editName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,6 +93,8 @@
                 android:layout_marginEnd="20dp"
                 android:background="@color/black1"
                 android:hint="@string/editname"
+                android:textColorHint="@color/white2"
+                android:inputType="text"
                 android:padding="10dp"
                 android:singleLine="true"
                 android:textColor="@color/white"
@@ -104,15 +106,17 @@
                 app:layout_constraintTop_toTopOf="@+id/editBio" />
 
 
-            <TextView
+            <EditText
                 android:id="@+id/editBio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
+                android:inputType="text"
                 android:background="@color/black1"
                 android:hint="@string/edit_bio"
+                android:textColorHint="@color/white2"
                 android:padding="10dp"
                 android:singleLine="true"
                 android:textColor="@color/white"
@@ -124,7 +128,7 @@
                 app:layout_constraintTop_toBottomOf="@id/editName" />
 
 
-            <TextView
+            <EditText
                 android:id="@+id/editInterests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,7 +136,9 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/black1"
+                android:inputType="text"
                 android:hint="@string/add_interests"
+                android:textColorHint="@color/white2"
                 android:padding="10dp"
                 android:singleLine="true"
                 android:textColor="@color/white"
@@ -177,6 +183,7 @@
                     android:layout_marginEnd="20dp"
                     android:onClick="onRadioButtonClick"
                     android:text="@string/male"
+                    android:textColor="@color/white2"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -184,6 +191,7 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:onClick="onRadioButtonClick"
+                    android:textColor="@color/white2"
                     android:text="@string/female"
                     android:textSize="18sp" />
 

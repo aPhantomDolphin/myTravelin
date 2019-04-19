@@ -50,7 +50,7 @@ public class SearchFilterActivity extends AppCompatActivity {
                 Intent intent;
                 switch (menuItem.getItemId()) {
 
-                    case R.id.nav_home:
+                    case R.id.navigation_home:
                         System.out.println("AT HOME");
                         intent = new Intent(SearchFilterActivity.this, HomeActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -61,9 +61,21 @@ public class SearchFilterActivity extends AppCompatActivity {
                         }
                         return true;
 
-                    case R.id.nav_profile:
+                    case R.id.navigation_profile:
                         intent = new Intent(SearchFilterActivity.this, ProfileActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        return true;
+
+                    case R.id.navigation_search:
+                        intent = new Intent(SearchFilterActivity.this, SearchFilterActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        return true;
+
+                    case R.id.navigation_forum:
+                        intent = new Intent(SearchFilterActivity.this, ForumMainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         return true;
 
@@ -84,6 +96,7 @@ public class SearchFilterActivity extends AppCompatActivity {
                 try{
                     rating = star.getRating();
                     Intent intent = new Intent(SearchFilterActivity.this, SearchPageActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("gender",genderPreferance);
                     //System.out.println("YOURSET1"+rating);
                     intent.putExtra("rating",String.valueOf(rating));
@@ -140,4 +153,17 @@ public class SearchFilterActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(isTaskRoot()){
+            Intent intent = new Intent(SearchFilterActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        } else{
+            SearchFilterActivity.this.finish();
+        }
+    }
+
 }

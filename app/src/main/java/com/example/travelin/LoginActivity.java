@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login2);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -65,7 +65,9 @@ public class LoginActivity extends AppCompatActivity {
         forgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
 
@@ -73,8 +75,9 @@ public class LoginActivity extends AppCompatActivity {
         gotoregisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            }
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);            }
         });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +91,9 @@ public class LoginActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("EmailPassword", "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("EmailPassword", "signInWithEmail:failure", task.getException());

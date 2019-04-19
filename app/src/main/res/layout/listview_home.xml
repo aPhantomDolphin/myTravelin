@@ -19,7 +19,7 @@
             tools:srcCompat="@tools:sample/backgrounds/scenic[1]"
             android:contentDescription="@string/city" />
 
-        <Button
+        <!--<Button
             android:id="@+id/info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-            <!--android:onClick="cityClicked"/>-->
+            &lt;!&ndash;android:onClick="cityClicked"/>&ndash;&gt;-->
 
         <TextView
             android:id="@+id/city"

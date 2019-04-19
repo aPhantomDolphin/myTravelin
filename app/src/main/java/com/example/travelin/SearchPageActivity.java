@@ -90,10 +90,10 @@ public class SearchPageActivity extends AppCompatActivity {
                 Intent intent;
                 switch (menuItem.getItemId()) {
 
-                    case R.id.nav_home:
+                    case R.id.navigation_home:
                         System.out.println("AT HOME");
                         intent = new Intent(SearchPageActivity.this, HomeActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         try{
                             startActivity(intent);
                         }catch (Exception e){
@@ -101,21 +101,21 @@ public class SearchPageActivity extends AppCompatActivity {
                         }
                         return true;
 
-                    case R.id.nav_profile:
+                    case R.id.navigation_profile:
                         intent = new Intent(SearchPageActivity.this, ProfileActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        try{
-                            System.out.println("CLICKED PROFILE");
-                            startActivity(intent);
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
-
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                         return true;
 
-                    case R.id.nav_search:
+                    case R.id.navigation_search:
                         intent = new Intent(SearchPageActivity.this, SearchFilterActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        return true;
+
+                    case R.id.navigation_forum:
+                        intent = new Intent(SearchPageActivity.this, ForumMainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         return true;
 
@@ -145,7 +145,7 @@ public class SearchPageActivity extends AppCompatActivity {
 
                 for(int i=0;i<res.size();i++) {
                     if (!searchUN.isEmpty()) {
-                        if (res.get(i).getUsername().equals(searchUN)) {
+                        if (!res.get(i).getUsername().equals(searchUN)) {
                             res.remove(i);
                             i--;
                         }
@@ -161,8 +161,7 @@ public class SearchPageActivity extends AppCompatActivity {
                 }
 
                 for(int i=0;i<res.size();i++){
-                    //System.out.println("WOWRATING"+res.get(i).getAvg());
-                    //System.out.println("YOURSETTING"+rating);
+
                     if(res.get(i).getAvg()<Double.parseDouble(rating)){
                         res.remove(i);
                         i--;
@@ -187,12 +186,12 @@ public class SearchPageActivity extends AppCompatActivity {
 
                     hm.put("listview_title", res.get(i).getName());
                     hm.put("listview_discription", res.get(i).getBio());
-                    hm.put("listview_image", "NOIMG");
+
                     aList.add(hm);
                 }
 
-                String[] from = {"listview_image", "listview_title", "listview_discription"};
-                int[] to = {R.id.listview_image, R.id.listview_item_title, R.id.listview_item_short_description};
+                String[] from = {"listview_title", "listview_discription"};
+                int[] to = {R.id.listview_item_title, R.id.listview_item_short_description};
 
                 SimpleAdapter simpleAdapter = new SimpleAdapter(/*getBaseContext()*/SearchPageActivity.this, aList, R.layout.activity_listview, from, to);
                 ListView androidListView = (ListView) findViewById(R.id.list_view);
@@ -201,11 +200,10 @@ public class SearchPageActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String mail=res.get(position).getEmail();
-                        System.out.println("SEARCH USERS: "+mail);
                         Intent intent = new Intent(SearchPageActivity.this, OtherProfileActivity.class);
 
                         intent.putExtra("mail",mail);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     }
                 });
@@ -227,12 +225,23 @@ public class SearchPageActivity extends AppCompatActivity {
     }
 
     public void otherProfileClicked(View view){
-        System.out.println("REACHED HERE INSTEAD");
         Intent intent = new Intent(SearchPageActivity.this, OtherProfileActivity.class);
 
         //intent.putExtra("username",);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(isTaskRoot()){
+            Intent intent = new Intent(SearchPageActivity.this, SearchFilterActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        } else{
+            SearchPageActivity.this.finish();
+        }
     }
 
 }
