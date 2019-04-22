@@ -128,6 +128,30 @@ public class MessageHome extends AppCompatActivity {
                     System.out.println(mAuth.getCurrentUser().getUid());
 
                     if (mAuth.getCurrentUser().getUid().equals(snap.getKey())) {
+                     /**   final User u = snap.getValue(User.class);
+                        String roomString = u.getRooms();
+                        final String[] rooms = roomString.split("\\|");
+                        ArrayList<String> shortened = new ArrayList<>();
+                        for (int j = 0; j < rooms.length; j++) {
+                            String[] cutoffs = rooms[j].split("-");
+                            if (cutoffs.length == 2) {
+                                shortened.add(cutoffs[1]);
+                            } else {
+                                if (cutoffs[2].equals(u.getEmail())) {
+                                    shortened.add(cutoffs[1]);
+                                } else {
+                                    shortened.add(cutoffs[2]);
+                                }
+                            }
+                            //shortened.add(cutoffs[1]);
+                        }
+                        for (int j = 0; j < shortened.size(); j++) {
+                            HashMap<String, String> hm = new HashMap<>();
+
+                            hm.put("room_name", shortened.get(j));
+                            aList.add(hm);
+                        }**/
+
                         final User u = snap.getValue(User.class);
                         String roomString = u.getRooms();
                         final String[] rooms = roomString.split("\\|");

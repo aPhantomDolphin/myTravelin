@@ -170,8 +170,8 @@ public class HomeActivity extends AppCompatActivity {
 
 
                         int[] ImageView = new int[]{
-                                R.drawable.beach, R.drawable.beach, R.drawable.beach, R.drawable.beach,
-                                R.drawable.beach, R.drawable.beach
+                                R.drawable.mia1, R.drawable.chi1, R.drawable.or2, R.drawable.nyc2,
+                                R.drawable.mad, R.drawable.la1
                         };
 
                         String[] info = new String[]{
@@ -186,7 +186,21 @@ public class HomeActivity extends AppCompatActivity {
                             HashMap<String, String> hm = new HashMap<String, String>();
                             hm.put("title", dests.get(i).getCityName());
                             hm.put("info", dests.get(i).getInfo());
-                            hm.put("image", Integer.toString(ImageView[i]));
+                            if(dests.get(i).getCityName().equals("Miami")){
+                            hm.put("image", Integer.toString(ImageView[0]));}
+                            else if(dests.get(i).getCityName().equals("Chicago")){
+                                hm.put("image", Integer.toString(ImageView[1]));}
+                                else if(dests.get(i).getCityName().equals("Orlando")){
+                                hm.put("image", Integer.toString(ImageView[2]));}
+                                else if(dests.get(i).getCityName().equals("New York City")){
+                                hm.put("image", Integer.toString(ImageView[3]));}
+                            else if(dests.get(i).getCityName().equals("Los Angeles")){
+                                hm.put("image", Integer.toString(ImageView[5]));}
+                                else{
+                                    hm.put("image",Integer.toString(ImageView[4]));
+
+                            }
+
                             aList.add(hm);
                         }
 
